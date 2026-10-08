@@ -1,4 +1,4 @@
-<?php echo CHtml::activeDropDownList(Vehicle::model(), 'car_sub_model_id', CHtml::listData(VehicleCarSubModel::model()->findAllByAttributes(array('car_model_id' => $carModelId), array('order' => 'name')), 'id', 'name'), array(
+<?php echo CHtml::activeDropDownList($vehicle, 'car_sub_model_id', CHtml::listData(VehicleCarSubModel::model()->findAllByAttributes(array('car_model_id' => $carModelId), array('order' => 'name')), 'id', 'name'), array(
     'empty' => '-- Pilih Car Sub Model --',
     'onchange' => '
         $.fn.yiiGridView.update("vehicle-grid", {data: {Vehicle: {

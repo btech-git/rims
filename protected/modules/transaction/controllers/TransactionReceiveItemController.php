@@ -429,6 +429,7 @@ class TransactionReceiveItemController extends Controller {
         }
 
         $consignmentCriteria = new CDbCriteria;
+        $consignmentCriteria->addCondition("t.status_document = 'Approved'");
         $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
             'criteria' => $consignmentCriteria,
         ));

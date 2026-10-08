@@ -1,0 +1,216 @@
+<?php
+
+class StockMaterialController extends Controller {
+
+    public $layout = '//layouts/column1';
+
+    public function filters() {
+        return array(
+//            'access',
+        );
+    }
+
+    public function filterAccess($filterChain) {
+        if (
+            $filterChain->action->id === 'check' || 
+            $filterChain->action->id === 'detail'
+        ) {
+            if (!(Yii::app()->user->checkAccess('stockTireReport'))){
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        $filterChain->run();
+    }
+
+    public function actionCheck() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
+        $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
+        $subBrandSeriesId = isset($_GET['SubBrandSeriesId']) ? $_GET['SubBrandSeriesId'] : '';
+        $productId = isset($_GET['ProductId']) ? $_GET['ProductId'] : '';
+        $productName = isset($_GET['ProductName']) ? $_GET['ProductName'] : '';
+        $productCode = isset($_GET['ProductCode']) ? $_GET['ProductCode'] : '';
+        
+        if (isset($_GET['ResetFilter'])) {
+            $endDate = date('Y-m-d');
+            $brandId = '';
+            $subBrandId = '';
+            $subBrandSeriesId = '';
+            $productId = '';
+            $productName = '';
+            $productCode = '';
+        }
+        
+        $inventoryMaterialStockReport = InventoryDetail::getInventoryMaterialStockReport($endDate, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName);
+        
+        $inventoryMaterialStockReportData = array();
+        foreach ($inventoryMaterialStockReport as $inventoryMaterialStockReportItem) {
+            $inventoryMaterialStockReportData[$inventoryMaterialStockReportItem['product_id']][$inventoryMaterialStockReportItem['branch_id']] = $inventoryMaterialStockReportItem['total_stock'];
+        }
+        
+        $branches = Branch::model()->findAll();
+
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($inventoryMaterialStockReportData, $endDate, $branches);
+        }
+
+        $this->render('check', array(
+            'inventoryMaterialStockReportData' => $inventoryMaterialStockReportData,
+            'endDate' => $endDate,
+            'brandId' => $brandId,
+            'subBrandId' => $subBrandId,
+            'subBrandSeriesId' => $subBrandSeriesId,
+            'productId' => $productId,
+            'productCode' => $productCode,
+            'productName' => $productName,
+            'branches' => $branches,
+        ));
+    }
+
+    public function actionTransactionInfo($productId, $branchId, $year) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InventoryDetail::model()->searchByReport($productId, $branchId, $year, $page);
+        $branch = Branch::model()->findByPk($branchId);
+        $product = Product::model()->findByPk($productId);
+        
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'year' => $year,
+            'product' => $product,
+            'branch' => $branch,
+        ));
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
+            $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
+
+            $this->renderPartial('_productSubBrandSelect', array(
+                'brandId' => $brandId,
+                'subBrandId' => $subBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
+            $subBrandSeriesId = isset($_GET['SubBrandSeriesId']) ? $_GET['SubBrandSeriesId'] : '';
+
+            $this->renderPartial('_productSubBrandSeriesSelect', array(
+                'subBrandId' => $subBrandId,
+                'subBrandSeriesId' => $subBrandSeriesId,
+            ));
+        }
+    }
+
+    protected function saveToExcel($inventoryTireStockReportData, $startYear, $endYear, $branches) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Stok Ban per Tahun Produksi');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Stok Ban per Tahun Produksi');
+
+        $worksheet->getStyle("A1:A2")->getFont()->setBold(true);
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Stok Ban per Tahun Produksi');
+        $worksheet->setCellValue('A3', $endYear);
+
+        $columnHeaderStart = 'F';
+        $columnHeaderEnd = $columnHeaderStart;
+        foreach ($branches as $branch) {
+            $worksheet->setCellValue("{$columnHeaderStart}4", CHtml::value($branch, 'code'));
+            for ($i = 0; $i < $endYear - $startYear; $i++) {
+                $columnHeaderEnd++;
+            }
+            $worksheet->mergeCells("{$columnHeaderStart}4:{$columnHeaderEnd}4");
+            $columnHeaderStart = $columnHeaderEnd;
+            $columnHeaderStart++;
+            $columnHeaderEnd = $columnHeaderStart;
+        }
+        
+        $columnHeader = 'F';
+        $worksheet->setCellValue('A5', 'ID');
+        $worksheet->setCellValue('B5', 'Code');
+        $worksheet->setCellValue('C5', 'Name');
+        $worksheet->setCellValue('D5', 'Ukuran');
+        $worksheet->setCellValue('E5', 'Brand');
+        foreach ($branches as $branch) {
+            for ($year = $startYear; $year <= $endYear; $year++) {
+                $worksheet->setCellValue("{$columnHeader}5", $year);
+                $columnHeader++;
+            }
+        }
+        $worksheet->setCellValue("{$columnHeader}5", 'Total');
+
+        $worksheet->mergeCells("A1:{$columnHeader}1");
+        $worksheet->mergeCells("A2:{$columnHeader}2");
+        $worksheet->mergeCells("A3:{$columnHeader}3");
+        
+        $worksheet->getStyle("A1:{$columnHeader}5")->getFont()->setBold(true);
+        $worksheet->getStyle("A1:{$columnHeader}5")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A4:{$columnHeader}4")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$columnHeader}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 6;
+        foreach ($inventoryTireStockReportData as $productId => $inventoryTireStockReportItem) {
+            $columnBody = 'F'; 
+            $totalStockSum = '0.00';
+            $product = Product::model()->findByPk($productId); 
+
+            $worksheet->setCellValue("A{$counter}", CHtml::value($product, 'id'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($product, 'manufacturer_code'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($product, 'name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($product, 'tireSize.tireName'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($product, 'brand.name') . ' - ' . CHtml::value($product, 'subBrand.name') . ' - ' . CHtml::value($product, 'subBrandSeries.name'));
+            foreach ($branches as $branch) {
+                for ($year = $startYear; $year <= $endYear; $year++) {
+                    $totalStock = isset($inventoryTireStockReportItem[$branch->id][$year]) ? $inventoryTireStockReportItem[$branch->id][$year] : '0.00';
+                    $worksheet->setCellValue("{$columnBody}{$counter}", $totalStock);
+                    $totalStockSum += $totalStock;
+                    $columnBody++;
+                }
+            }
+            
+            $worksheet->setCellValue("{$columnBody}{$counter}", $totalStockSum);
+            $counter++;
+
+        }
+        
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="stok_ban_tahun_produksi.xls"');
+        header('Cache-Control: max-age=0');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+}

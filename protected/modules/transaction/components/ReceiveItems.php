@@ -157,6 +157,11 @@ class ReceiveItems extends CComponent {
             $this->header->invoice_tax_nominal = 0;
             $this->header->invoice_grand_total = 0;
             $this->header->invoice_grand_total_rounded = 0;
+        } elseif ($this->header->request_type == 'Consignment In') {
+            $this->header->invoice_sub_total = $this->subTotal;
+            $this->header->invoice_tax_nominal = 0;
+            $this->header->invoice_grand_total = $this->subTotal;
+            $this->header->invoice_grand_total_rounded = $this->subTotal;
         } else {
             $this->header->invoice_sub_total = $this->subTotal;
             $this->header->invoice_tax_nominal = $this->taxNominal;

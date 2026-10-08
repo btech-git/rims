@@ -1,5 +1,5 @@
 <div style="text-align: center">
-    <span style="text-align: center"><h2>Stok Oli</h2></span>
+    <span style="text-align: center"><h2>Stok Bahan Material</h2></span>
     <span style="text-align: center">
         <h2>Per Tanggal: <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></h2>
     </span>
@@ -12,7 +12,6 @@
                 <th style="text-align: center">ID</th>
                 <th style="text-align: center">Code</th>
                 <th style="text-align: center">Name</th>
-                <th style="text-align: center">SAE</th>
                 <th style="text-align: center">Brand</th>
                 <th style="text-align: center">Satuan</th>
                 <?php foreach ($branches as $branch): ?>
@@ -23,35 +22,26 @@
         </thead>
 
         <tbody>
-            <?php foreach ($inventoryOilStockReportData as $productId => $inventoryOilStockReportItem): ?>
+            <?php foreach ($inventoryMaterialStockReportData as $productId => $inventoryMaterialStockReportItem): ?>
                 <?php $totalStockSum = '0.00'; ?>
                 <?php $product = Product::model()->findByPk($productId); ?>
-                <?php $multiplier = $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1; ?>
                 <tr>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($product, 'oilSae.oilName')); ?></td>
                     <td>
                         <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
                     </td>
-                    <td>
-                        <?php if (empty($convertToLitre)): ?>
-                            <?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?>
-                        <?php else: ?>
-                            <?php echo 'Liter'; ?>
-                        <?php endif; ?>
-                    </td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                     <?php foreach ($branches as $branch): ?>
-                        <?php $originalStock = isset($inventoryOilStockReportItem[$branch->id]) ? $inventoryOilStockReportItem[$branch->id] : 0; ?>
-                        <?php $totalStock = $multiplier * $originalStock; ?>
-                        <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00',$totalStock)); ?></td>
+                        <?php $totalStock = isset($inventoryMaterialStockReportItem[$branch->id]) ? $inventoryMaterialStockReportItem[$branch->id] : 0; ?>
+                        <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.000', $totalStock)); ?></td>
                         <?php $totalStockSum += $totalStock; ?>
                     <?php endforeach; ?>
 
-                    <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00',$totalStockSum)); ?></td>
+                    <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.000',$totalStockSum)); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

@@ -293,9 +293,11 @@ class SiteController extends Controller {
 
     public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
             $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
 
             $this->renderPartial('_productSubBrandSelect', array(
+                'product' => $product,
                 'productBrandId' => $productBrandId,
             ));
         }
@@ -303,9 +305,11 @@ class SiteController extends Controller {
 
     public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
             $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
 
             $this->renderPartial('_productSubBrandSeriesSelect', array(
+                'product' => $product,
                 'productSubBrandId' => $productSubBrandId,
             ));
         }

@@ -19,11 +19,22 @@ $this->menu=array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl.'/transaction/consignmentInHeader/admin', array('class'=>'button cbutton right', 'visible'=>Yii::app()->user->checkAccess("transaction.consignmentInHeader.admin"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl.'/transaction/consignmentInHeader/admin', array(
+            'class'=>'button cbutton right', 
+            'visible'=>Yii::app()->user->checkAccess("transaction.consignmentInHeader.admin")
+        )); ?>
 
         <?php if($model->status_document != 'Approved' && $model->status_document != 'Rejected'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/consignmentInHeader/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.consignmentInHeader.update"))) ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/transaction/consignmentInHeader/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.consignmentInHeader.updateApproval"))) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/consignmentInHeader/update?id=' . $model->id, array(
+                'class'=>'button warning right',
+                'style'=>'margin-right:10px', 
+                'visible'=>Yii::app()->user->checkAccess("transaction.consignmentInHeader.update")
+            )); ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/transaction/consignmentInHeader/updateApproval?headerId=' . $model->id , array(
+                'class'=>'button success right',
+                'style'=>'margin-right:10px', 
+                'visible'=>Yii::app()->user->checkAccess("transaction.consignmentInHeader.updateApproval")
+            )); ?>
         <?php endif; ?>
 
         <h1>View Consignment In #<?php echo $model->consignment_in_number; ?></h1>

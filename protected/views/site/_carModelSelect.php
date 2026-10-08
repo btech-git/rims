@@ -1,4 +1,4 @@
-<?php echo CHtml::activeDropDownList(Vehicle::model(), 'car_model_id', CHtml::listData(VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carMakeId), array('order' => 'name')), 'id', 'name'), array(
+<?php echo CHtml::activeDropDownList($vehicle, 'car_model_id', CHtml::listData(VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carMakeId), array('order' => 'name')), 'id', 'name'), array(
     'empty' => '-- Pilih Car Model --',
     'onchange' =>  CHtml::ajax(array(
             'type' => 'GET',
