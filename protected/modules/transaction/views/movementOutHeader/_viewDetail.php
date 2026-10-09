@@ -38,9 +38,16 @@
                         <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?> || 
                         <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
-                        <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
-                    </td>
-                        
+                        <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?> || 
+                        <?php if ($product->product_sub_master_category_id == 26): ?>
+                            Minggu: <?php echo CHtml::encode(CHtml::value($detail, 'production_week')); ?> || 
+                            Tahun: <?php echo CHtml::encode(CHtml::value($detail, 'production_year')); ?> ||
+                            Ukuran: <?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?>
+                        <?php elseif (!empty($product->oil_sae_id)): ?>
+                            SAE: <?php echo CHtml::encode(CHtml::value($product, 'oilSae.oilName')); ?>
+                        <?php else: ?>
+                            <?php echo ''; ?> 
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -13,6 +13,7 @@
  * @property string $quantity
  * @property integer $warehouse_id
  * @property integer $production_year
+ * @property integer $production_week
  * @property integer $receive_parts_detail_id
  *
  * The followings are the available model relations:
@@ -49,12 +50,12 @@ class MovementInDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id, production_year', 'required'),
-            array('receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, warehouse_id, production_year, receive_parts_detail_id', 'numerical', 'integerOnly' => true),
+            array('movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id', 'required'),
+            array('receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, warehouse_id, production_year, production_week, receive_parts_detail_id', 'numerical', 'integerOnly' => true),
             array('quantity_transaction, quantity', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id, production_year, receive_parts_detail_id', 'safe', 'on' => 'search'),
+            array('id, receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id, production_year, production_week, receive_parts_detail_id', 'safe', 'on' => 'search'),
         );
     }
 

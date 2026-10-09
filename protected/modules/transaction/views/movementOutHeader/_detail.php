@@ -8,6 +8,7 @@
                 <th class="required">ID</th>
                 <th class="required">Product</th>
                 <th>Code</th>
+                <th>Minggu</th>
                 <th>Tahun</th>
                 <th class="required">Warehouse</th>
                 <th class="required">Qty Stock</th>
@@ -38,6 +39,13 @@
                         )); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
+                    <td>
+                        <?php echo CHtml::activeDropdownList($detail, "[$i]production_week", $weeklist, array(
+                            'empty' => '-- Pilih Minggu --', 
+                            'disabled' => !in_array($product->product_sub_master_category_id, array(26)),
+                        )); ?>
+                        <?php echo CHtml::error($detail, 'production_year'); ?>
+                    </td>
                     <td>
                         <?php echo CHtml::activeDropdownList($detail, "[$i]production_year", $yearList, array(
                             'empty' => '-- Pilih Tahun --', 
@@ -107,7 +115,7 @@
                     </td>
                 </tr>	
                 <tr style="<?php if (in_array($detail->id, $detailIdsToBeDeleted)): ?>display: none<?php endif; ?>">
-                    <td colspan="12">
+                    <td colspan="13">
                         <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?> || 

@@ -174,6 +174,11 @@ class MovementInHeaderController extends Controller {
             $yearList[$y] = $y;
         }
         
+        $weeklist = array();
+        for ($w = 1; $w <= 52; $w++) {
+            $weeklist[$w] = $w;
+        }
+        
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
         }
@@ -194,6 +199,7 @@ class MovementInHeaderController extends Controller {
             'movementInHour' => $movementInHour,
             'movementInMinute' => $movementInMinute,
             'yearList' => $yearList,
+            'weeklist' => $weeklist,
         ));
     }
 
@@ -220,6 +226,11 @@ class MovementInHeaderController extends Controller {
         $yearList = array();
         for ($y = $yearNow; $y >= $yearNow - 3; $y--) {
             $yearList[$y] = $y;
+        }
+        
+        $weeklist = array();
+        for ($w = 1; $w <= 52; $w++) {
+            $weeklist[$w] = $w;
         }
         
         if (isset($_POST['Cancel'])) {
@@ -251,6 +262,7 @@ class MovementInHeaderController extends Controller {
             'movementInHour' => $movementInHour,
             'movementInMinute' => $movementInMinute,
             'yearList' => $yearList,
+            'weeklist' => $weeklist,
         ));
     }
 
@@ -705,6 +717,7 @@ class MovementInHeaderController extends Controller {
                         $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
                         $inventoryDetail->transaction_time = date('H:i:s');
                         $inventoryDetail->production_year = $movementDetail->production_year;
+                        $inventoryDetail->production_week = $movementDetail->production_week;
 
                         $inventoryDetail->save(false);
                     }

@@ -1,0 +1,137 @@
+<div>
+    <table>
+        <thead>
+            <tr>
+                <td>Brand</td>
+                <td>Sub Brand</td>
+                <td>Sub Brand Series</td>
+                <td>Branch</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <?php echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        'empty' => '-- All --',
+                        'order' => 'name',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSelect'),
+                            'update' => '#product_sub_brand',
+                        )),
+                    )); ?>
+                </td>
+
+                <td>
+                    <div id="product_sub_brand">
+                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                            'empty' => '-- All --',
+                            'order' => 'name',
+                            'onchange' => CHtml::ajax(array(
+                                'type' => 'GET',
+                                'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSeriesSelect'),
+                                'update' => '#product_sub_brand_series',
+                            )),
+                        )); ?>
+                    </div>
+                </td>
+
+                <td>
+                    <div id="product_sub_brand_series">
+                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                            'empty' => '-- All --',
+                            'order' => 'name',
+                        )); ?>
+                    </div>
+                </td>
+                
+                <td>
+                    <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
+                        'empty'=>'-- All Branch --',
+                        'disabled' => Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : 'disabled',
+                    )); ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Code</td>
+                <td>Name</td>
+                <td colspan="2">Periode</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    <?php echo CHtml::activeTextField($product, 'id', array(
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
+                            'update' => '#product_stock_table',
+                        )),
+                    )); ?>
+                </td>
+
+                <td>
+                    <?php echo CHtml::activeTextField($product, 'manufacturer_code', array(
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
+                            'update' => '#product_stock_table',
+                        )),
+                    )); ?>
+                </td>
+
+                <td>
+                    <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
+                    <?php echo CHtml::activeTextField($product, 'name', array(
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
+                            'update' => '#product_stock_table',
+                        )),
+                    )); ?>
+                </td>
+                <td>
+                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        'name' => 'StartDate',
+                        'options' => array(
+                            'dateFormat' => 'yy-mm-dd',
+                            'changeMonth'=>true,
+                            'changeYear'=>true,
+                        ),
+                        'htmlOptions' => array(
+                            'readonly' => true,
+                            'placeholder' => 'Mulai',
+                        ),
+                    )); ?>
+                </td>
+                <td>
+                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        'name' => 'EndDate',
+                        'options' => array(
+                            'dateFormat' => 'yy-mm-dd',
+                            'changeMonth'=>true,
+                            'changeYear'=>true,
+                        ),
+                        'htmlOptions' => array(
+                            'readonly' => true,
+                            'placeholder' => 'Sampai',
+                        ),
+                    )); ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
+        <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
+        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+    </div>
+</div>

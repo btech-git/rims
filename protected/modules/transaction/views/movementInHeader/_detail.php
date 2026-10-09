@@ -5,9 +5,10 @@
                 <th class="required">ID</th>
                 <th class="required">Code</th>
                 <th class="required">Product</th>
+                <th>Minggu</th>
                 <th>Tahun</th>
-                <th class="required">Warehouse</th>
-                <th class="required">Transaction Quantity</th>
+                <th class="required">Gudang</th>
+                <th class="required">Order Quantity</th>
                 <th class="required">Quantity</th>
                 <th class="required">Satuan</th>
                 <th>Action</th>
@@ -31,6 +32,13 @@
                             'readonly' => true, 
                             'value' => $detail->product_id != "" ? $detail->product->name : '',
                         )); ?>
+                    </td>
+                    <td>
+                        <?php echo CHtml::activeDropdownList($detail, "[$i]production_week", $weeklist, array(
+                            'empty' => '-- Pilih Minggu --', 
+                            'disabled' => !in_array($product->product_sub_master_category_id, array(26)),
+                        )); ?>
+                        <?php echo CHtml::error($detail, 'production_year'); ?>
                     </td>
                     <td>
                         <?php echo CHtml::activeDropdownList($detail, "[$i]production_year", $yearList, array(
@@ -81,7 +89,7 @@
                     </td>
                 </tr>	
                 <tr>
-                    <td colspan="9">
+                    <td colspan="10">
                         <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?> || 

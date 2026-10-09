@@ -48,6 +48,11 @@
                                         'visible' => Yii::app()->user->checkAccess('stockCardItemReport'),
                                     ),
                                     array(
+                                        'label' => 'Kartu Stok Bahan Material', 
+                                        'url' => array('/report/stockCardMaterial/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardItemReport'),
+                                    ),
+                                    array(
                                         'label' => 'Stok Ban per Tahun Produksi', 
                                         'url' => array('/report/stockTire/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockTireReport'),

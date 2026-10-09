@@ -1,6 +1,6 @@
 <?php
 
-class StockCardController extends Controller {
+class StockCardMaterialController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
@@ -32,7 +32,7 @@ class StockCardController extends Controller {
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
 
-        $stockCardSummary = new StockCardSummary($product->searchByStockCard());
+        $stockCardSummary = new StockCardMaterialSummary($product->searchByStockCard());
         $stockCardSummary->setupLoading();
         $stockCardSummary->setupPaging($pageSize, $currentPage);
         $stockCardSummary->setupSorting();
@@ -78,26 +78,6 @@ class StockCardController extends Controller {
 
             $this->renderPartial('_productSubBrandSeriesSelect', array(
                 'productSubBrandId' => $productSubBrandId,
-            ));
-        }
-    }
-
-    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
-
-            $this->renderPartial('_productSubMasterCategorySelect', array(
-                'productMasterCategoryId' => $productMasterCategoryId,
-            ));
-        }
-    }
-
-    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
-
-            $this->renderPartial('_productSubCategorySelect', array(
-                'productSubMasterCategoryId' => $productSubMasterCategoryId,
             ));
         }
     }
@@ -159,7 +139,7 @@ class StockCardController extends Controller {
         $worksheet->getStyle('A1:P5')->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Kartu Stok');
+        $worksheet->setCellValue('A2', 'Kartu Stok Material Bahan');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:P5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -199,7 +179,7 @@ class StockCardController extends Controller {
                 $worksheet->setCellValue("B{$counter}", $header->id);
                 $worksheet->setCellValue("C{$counter}", $header->name);
                 $worksheet->setCellValue("D{$counter}", $header->manufacturer_code);
-                $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'masterSubCategoryCode'));
+                $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'productMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubCategory.name'));
                 $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'brand.name') . ' - ' . CHtml::value($header, 'subBrand.name') . ' - ' . CHtml::value($header, 'subBrandSeries.name'));
                 $worksheet->setCellValue("G{$counter}", $stockRow['transaction_date']);
                 $worksheet->setCellValue("H{$counter}", $stockRow['transaction_type']);
@@ -227,7 +207,7 @@ class StockCardController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="kartu_stok.xls"');
+        header('Content-Disposition: attachment;filename="kartu_stok_material_bahan.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

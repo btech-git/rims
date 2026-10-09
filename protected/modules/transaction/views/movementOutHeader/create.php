@@ -13,7 +13,7 @@ $this->breadcrumbs = array(
   ); */
 ?>
 
-<!--<h1>Create MovementOutHeader</h1>-->
+<h1>Create Movement Out</h1>
 
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
@@ -22,5 +22,6 @@ $this->breadcrumbs = array(
         'movementOutHour' => $movementOutHour,
         'movementOutMinute' => $movementOutMinute,
         'yearList' => $yearList,
+        'weeklist' => $weeklist,
     )); ?>
 </div>

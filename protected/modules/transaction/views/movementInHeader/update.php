@@ -16,7 +16,7 @@ $this->breadcrumbs=array(
 );*/
 ?>
 
-<!--<h1>Update MovementInHeader <?php echo $movementIn->header->id; ?></h1>-->
+<h1>Update <?php echo $movementIn->header->id; ?></h1>
 
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
@@ -25,5 +25,6 @@ $this->breadcrumbs=array(
         'movementInHour' => $movementInHour,
         'movementInMinute' => $movementInMinute,
         'yearList' => $yearList,
+        'weeklist' => $weeklist,
     )); ?>
 </div>

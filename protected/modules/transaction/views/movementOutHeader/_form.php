@@ -247,6 +247,7 @@
                         <?php $this->renderPartial('_detail', array(
                             'movementOut' => $movementOut,
                             'yearList' => $yearList,
+                            'weeklist' => $weeklist,
                         )); ?>
                     </div>
                 </div>	

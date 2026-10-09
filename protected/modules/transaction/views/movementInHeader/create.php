@@ -9,6 +9,8 @@ $this->breadcrumbs = array(
 
 ?>
 
+<h1>Create Movement In</h1>
+
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
         'movementIn' => $movementIn,
@@ -16,5 +18,6 @@ $this->breadcrumbs = array(
         'movementInHour' => $movementInHour,
         'movementInMinute' => $movementInMinute,
         'yearList' => $yearList,
+        'weeklist' => $weeklist,
     )); ?>
 </div>

@@ -16,6 +16,7 @@
  * @property string $notes
  * @property string $purchase_price
  * @property integer $production_year
+ * @property integer $production_week
  *
  * The followings are the available model relations:
  * @property Inventory $inventory
@@ -39,12 +40,12 @@ class InventoryDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array(' product_id, warehouse_id, transaction_type, transaction_number, transaction_date', 'required'),
-            array('inventory_id, product_id, warehouse_id, production_year', 'numerical', 'integerOnly' => true),
+            array('inventory_id, product_id, warehouse_id, production_year, production_week', 'numerical', 'integerOnly' => true),
             array('transaction_type, stock_in, stock_out', 'length', 'max' => 10),
             array('transaction_number', 'length', 'max' => 50),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, inventory_id, product_id, warehouse_id, transaction_type, transaction_number, transaction_date, stock_in, stock_out, notes, purchase_price, production_year', 'safe', 'on' => 'search'),
+            array('id, inventory_id, product_id, warehouse_id, transaction_type, transaction_number, transaction_date, stock_in, stock_out, notes, purchase_price, production_year, production_week', 'safe', 'on' => 'search'),
         );
     }
 
@@ -80,18 +81,6 @@ class InventoryDetail extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -114,12 +103,6 @@ class InventoryDetail extends CActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return InventoryDetail the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
