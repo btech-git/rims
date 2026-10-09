@@ -18,6 +18,7 @@
                     <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
                 <?php endforeach; ?>
                 <th style="text-align: center">Total</th>
+                <th style="text-align: center">Pricelist</th>
                 <th style="text-align: center">Sell Price</th>
                 <th style="text-align: center">Frekuensi Jual</th>
             </tr>
@@ -52,6 +53,9 @@
                     <?php endforeach; ?>
 
                     <td><?php echo CHtml::encode($totalStock); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($product, 'retail_price'))); ?>
+                    </td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($product, 'recommended_selling_price'))); ?>
                     </td>
