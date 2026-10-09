@@ -247,9 +247,9 @@ class InsuranceCompany extends CActiveRecord {
         }
         
         $sql = "
-            SELECT i.invoice_number, i.invoice_date, due_date, v.plate_number AS plate_number, c.name as customer_name, COALESCE(i.total_price, 0) AS total_price, 
+            SELECT i.invoice_number, i.invoice_date, due_date, v.plate_number AS plate_number, c.name as customer_name, COALESCE(i.invoice_amount, 0) AS total_price, 
                 COALESCE(p.amount, 0) + COALESCE(p.tax_service_amount, 0) + COALESCE(p.discount_amount, 0) + COALESCE(p.bank_administration_fee, 0) + 
-                COALESCE(p.merimen_fee, 0) + COALESCE(p.downpayment_amount, 0) AS amount, i.total_price - COALESCE(p.amount, 0) - 
+                COALESCE(p.merimen_fee, 0) + COALESCE(p.downpayment_amount, 0) AS amount, i.invoice_amount - COALESCE(p.amount, 0) - 
                 COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - 
                 COALESCE(p.downpayment_amount, 0) AS remaining, m.name AS car_make, o.name AS car_model, s.name AS car_sub_model
             FROM " . InvoiceHeader::model()->tableName() . " i

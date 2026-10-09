@@ -39,6 +39,8 @@
                             <th>Total DPP</th>
                             <th>Ppn</th>
                             <th>Pph</th>
+                            <th>DP</th>
+                            <th>OR</th>
                             <th class="width2-7">Grand Total</th>
                             <th class="width2-8">Payment</th>
                             <th class="width2-9">Remaining</th>
@@ -109,6 +111,12 @@
                                     <td style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $receivableReportItem['pph_total'])); ?>
                                     </td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $receivableReportItem['downpayment_amount'])); ?>
+                                    </td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $receivableReportItem['insurance_own_risk_amount'])); ?>
+                                    </td>
                                     <td class="width2-7" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $revenue)); ?>
                                     </td>
@@ -124,7 +132,7 @@
                                 <?php $totalReceivable += $paymentLeft; ?>
                             <?php endforeach; ?>
                             <tr>
-                                <td colspan="13" style="text-align: right; font-weight: bold">TOTAL</td>
+                                <td colspan="15" style="text-align: right; font-weight: bold">TOTAL</td>
                                 <td class="width2-7" style="text-align: right; font-weight: bold"> 
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?>
                                 </td>
