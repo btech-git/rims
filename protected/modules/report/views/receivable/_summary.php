@@ -63,7 +63,7 @@
                             <?php $totalPayment = '0.00'; ?>
                             <?php $totalReceivable = '0.00'; ?>
                             <?php foreach ($receivableReportData[$customer->id] as $receivableReportItem): ?>
-                                <?php $revenue = $receivableReportItem['total_price']; ?>
+                                <?php $revenue = $receivableReportItem['invoice_amount']; ?>
                                 <?php $paymentAmount = isset($receivablePaymentReportData[$receivableReportItem['id']]) ? $receivablePaymentReportData[$receivableReportItem['id']] : '0.00'; ?>
                                 <?php $paymentLeft = $revenue - $paymentAmount; ?>
                                 <tr>
