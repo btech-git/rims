@@ -60,7 +60,7 @@
                                     array(
                                         'label' => 'Stok Bahan Material', 
                                         'url' => array('/report/stockMaterial/check'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockOilReport'),
+//                                        'visible' => Yii::app()->user->checkAccess('stockOilReport'),
                                     ),
                                     array(
                                         'label' => 'Pengiriman Barang', 
