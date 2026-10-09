@@ -42,7 +42,7 @@ class ReceivableSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT i.id FROM " . InvoiceHeader::model()->tableName() . " i
             WHERE t.id = i.customer_id AND i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL AND
-                i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND i.total_price - (
+                i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND i.invoice_amount - (
                     SELECT COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + 
                         d.downpayment_amount + d.own_risk_amount), 0)
                     FROM " . PaymentInDetail::model()->tableName() . " d
