@@ -198,7 +198,7 @@ class ReceivableController extends Controller {
         $totalReceivableSum = '0.00';
         foreach ($receivableSummary->dataProvider->data as $customer) {            
             foreach ($receivableReportData[$customer->id] as $receivableReportItem) {
-                $revenue = $receivableReportItem['total_price'];
+                $revenue = $receivableReportItem['invoice_amount'];
                 $paymentAmount = isset($receivablePaymentReportData[$receivableReportItem['id']]) ? $receivablePaymentReportData[$receivableReportItem['id']] : '0.00';
                 $paymentLeft = $revenue - $paymentAmount;
                 $agingDays = date_diff(date_create($receivableReportItem['invoice_date']), date_create(date('Y-m-d')));
