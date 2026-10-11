@@ -35,22 +35,22 @@
                             'endDate' => $endDate,
                         ), true),
                     ),
-                    'Ban' => array(
-                        'content' => $this->renderPartial('_viewTire', array(
-                            'tireDataProvider' => $tireDataProvider,
-                            'product' => $product, 
-                            'branches' => $branches,
-                            'sectionWidth' => $sectionWidth,
-                            'aspectRatio' => $aspectRatio,
-                            'constructionType' => $constructionType,
-                            'rimDiameter' => $rimDiameter,
-                            'loadRating' => $loadRating,
-                            'speedRating' => $speedRating,
-                            'endDate' => $endDate,
-                            'yearList' => $yearList,
-                            'productionYear' => $productionYear,
-                        ), true),
-                    ),
+//                    'Ban' => array(
+//                        'content' => $this->renderPartial('_viewTire', array(
+//                            'tireDataProvider' => $tireDataProvider,
+//                            'tire' => $tire, 
+//                            'branches' => $branches,
+//                            'sectionWidth' => $sectionWidth,
+//                            'aspectRatio' => $aspectRatio,
+//                            'constructionType' => $constructionType,
+//                            'rimDiameter' => $rimDiameter,
+//                            'loadRating' => $loadRating,
+//                            'speedRating' => $speedRating,
+//                            'endDate' => $endDate,
+//                            'yearList' => $yearList,
+//                            'productionYear' => $productionYear,
+//                        ), true),
+//                    ),
 //                    'Oli' => array(
 //                        'content' => $this->renderPartial('_viewOil', array(
 //                            'productDataProvider' => $productDataProvider, 

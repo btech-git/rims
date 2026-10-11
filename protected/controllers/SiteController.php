@@ -49,12 +49,13 @@ class SiteController extends Controller {
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
         $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
+        $tire = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
 
         $endDate = date('Y-m-d');
         $vehicleDataProvider = $vehicle->searchByDashboard();
-        $productDataProvider = $product->searchByDashboard();
         $customerDataProvider = $customer->searchByDashboard();
         $serviceDataProvider = $service->searchByDashboard();
+        
         $followUpDataProvider = $vehicle->searchByMarketingFollowUp();
         $followUpDataProvider->criteria->compare('t.plate_number', $plateNumber, true);
         $followUpDataProvider->criteria->compare('customer.name', $customerName, true);
@@ -79,7 +80,8 @@ class SiteController extends Controller {
         $speedRating = isset($_GET['SpeedRating']) ? $_GET['SpeedRating'] : '';
         $productionYear = isset($_GET['ProductionYear']) ? $_GET['ProductionYear'] : $yearNow;
         
-        $tireDataProvider = $product->searchByStockCard();
+        $tireDataProvider = $tire->searchByStockCard();
+        $tireDataProvider->pagination->pageVar = 'page_dialog';
         $tireDataProvider->criteria->addCondition("t.product_sub_master_category_id = 26");
         $tireDataProvider->criteria->together = true;
         $tireDataProvider->criteria->with = array('tireSize');
@@ -89,6 +91,9 @@ class SiteController extends Controller {
         $tireDataProvider->criteria->compare('tireSize.rim_diameter', $rimDiameter);
         $tireDataProvider->criteria->compare('tireSize.load_rating', $loadRating);
         $tireDataProvider->criteria->compare('tireSize.speed_rating', $speedRating);
+        
+        $productDataProvider = $product->searchByDashboard();
+        $productDataProvider->pagination->pageVar = 'page_dialog';
         
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
@@ -145,6 +150,7 @@ class SiteController extends Controller {
             'endDate' => $endDate,
             'plateNumber' => $plateNumber,
             'customerName' => $customerName,
+            'tire' => $tire,
             'tireDataProvider' => $tireDataProvider,
             'sectionWidth' => $sectionWidth,
             'aspectRatio' => $aspectRatio,
@@ -210,7 +216,8 @@ class SiteController extends Controller {
             $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
             $endDate = date('Y-m-d');
             $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
-            $productDataProvider = $product->search(); //ByStockCheck($pageNumber, $endDate, '<>');
+            $productDataProvider = $product->searchByDashboard();
+            $productDataProvider->pagination->pageVar = 'page_dialog';
             $branches = Branch::model()->findAll();
 
             $this->renderPartial('_productStockTable', array(
@@ -237,6 +244,7 @@ class SiteController extends Controller {
             $productionYear = isset($_GET['ProductionYear']) ? $_GET['ProductionYear'] : '';
 
             $tireDataProvider = $product->searchByStockCard();
+            $tireDataProvider->pagination->pageVar = 'page_dialog';
             $tireDataProvider->criteria->addCondition("t.product_sub_master_category_id = 26");
             $tireDataProvider->criteria->together = true;
             $tireDataProvider->criteria->with = array('tireSize');

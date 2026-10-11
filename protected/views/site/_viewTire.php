@@ -14,7 +14,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <?php echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($tire, 'brand_id', CHtml::listData(Brand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'order' => 'name',
                             'onchange' => CHtml::ajax(array(
@@ -32,7 +32,7 @@
 
                     <td>
                         <div id="product_sub_brand">
-                            <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                            <?php echo CHtml::activeDropDownList($tire, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
                                 'empty' => '-- All --',
                                 'order' => 'name',
                                 'onchange' => CHtml::ajax(array(
@@ -51,7 +51,7 @@
 
                     <td>
                         <div id="product_sub_brand_series">
-                            <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                            <?php echo CHtml::activeDropDownList($tire, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
                                 'empty' => '-- All --',
                                 'order' => 'name',
                                 'onchange' => CHtml::ajax(array(
@@ -64,7 +64,7 @@
                     </td>
 
                     <td>
-                        <?php echo CHtml::activeTextField($product, 'id', array(
+                        <?php echo CHtml::activeTextField($tire, 'id', array(
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
                                 'url' => CController::createUrl('ajaxHtmlUpdateTireStockTable'),
@@ -74,7 +74,7 @@
                     </td>
 
                     <td>
-                        <?php echo CHtml::activeTextField($product, 'manufacturer_code', array(
+                        <?php echo CHtml::activeTextField($tire, 'manufacturer_code', array(
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
                                 'url' => CController::createUrl('ajaxHtmlUpdateTireStockTable'),
@@ -84,7 +84,7 @@
                     </td>
 
                     <td>
-                        <?php echo CHtml::activeTextField($product, 'name', array(
+                        <?php echo CHtml::activeTextField($tire, 'name', array(
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
                                 'url' => CController::createUrl('ajaxHtmlUpdateTireStockTable'),
