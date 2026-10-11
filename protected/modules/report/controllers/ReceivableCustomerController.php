@@ -235,7 +235,7 @@ class ReceivableCustomerController extends Controller {
             $totalReceivable = '0.00';
             
             foreach ($receivableReportData[$customer->id] as $receivableReportItem) {
-                $revenue = $receivableReportItem['total_price'];
+                $revenue = $receivableReportItem['invoice_amount'];
                 $paymentAmount = isset($receivablePaymentReportData[$receivableReportItem['id']]) ? $receivablePaymentReportData[$receivableReportItem['id']] : '0.00';
                 $paymentLeft = $revenue - $paymentAmount;
                 $totalRevenue += $revenue;
