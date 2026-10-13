@@ -73,5 +73,4 @@
             'pages' => $tireDataProvider->pagination,
         )); ?>
     </div>
-    <br /><br />
 </div>

@@ -165,6 +165,11 @@
         <div class="row buttons" style="text-align: center">
             <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
             <?php echo CHtml::submitButton('Export Excel', array('name' => 'ExportProductExcel'));  ?>
+            <?php echo CHtml::link('Stok Ban', array("showTireList"), array(
+                'class' => 'button info right', 
+                'style' => 'margin-right:10px', 
+                'target' => '_blank',
+            )); ?>
         </div>
 
         <hr />

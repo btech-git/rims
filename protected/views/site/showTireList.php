@@ -1,4 +1,13 @@
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div class="row">
+    <?php echo CHtml::beginForm(array(''), 'get'); ?>
     <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
         <table>
             <thead>
@@ -19,8 +28,8 @@
                             'order' => 'name',
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSelect'),
-                                'update' => '#product_sub_brand',
+                                'url' => CController::createUrl('ajaxHtmlUpdateTireSubBrandSelect'),
+                                'update' => '#tire_sub_brand',
                             )) . 
                             CHtml::ajax(array(
                                 'type' => 'GET',
@@ -31,14 +40,14 @@
                     </td>
 
                     <td>
-                        <div id="product_sub_brand">
-                            <?php echo CHtml::activeDropDownList($tire, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        <div id="tire_sub_brand">
+                            <?php echo CHtml::activeDropDownList($tire, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAllByAttributes(array('brand_id' => $tire->brand_id), array('order' => 'name ASC')), 'id', 'name'), array(
                                 'empty' => '-- All --',
                                 'order' => 'name',
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'GET',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSeriesSelect'),
-                                    'update' => '#product_sub_brand_series',
+                                    'url' => CController::createUrl('ajaxHtmlUpdateTireSubBrandSeriesSelect'),
+                                    'update' => '#tire_sub_brand_series',
                                 )) . 
                                 CHtml::ajax(array(
                                     'type' => 'GET',
@@ -50,8 +59,8 @@
                     </td>
 
                     <td>
-                        <div id="product_sub_brand_series">
-                            <?php echo CHtml::activeDropDownList($tire, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        <div id="tire_sub_brand_series">
+                            <?php echo CHtml::activeDropDownList($tire, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAllByAttributes(array('sub_brand_id' => $tire->sub_brand_id), array('order' => 'name ASC')), 'id', 'name'), array(
                                 'empty' => '-- All --',
                                 'order' => 'name',
                                 'onchange' => CHtml::ajax(array(
@@ -195,4 +204,5 @@
             )); ?>
         </div>
     </div>
+    <?php echo CHtml::endForm(); ?>
 </div>

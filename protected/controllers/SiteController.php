@@ -49,7 +49,6 @@ class SiteController extends Controller {
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
         $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
-        $tire = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
 
         $endDate = date('Y-m-d');
         $vehicleDataProvider = $vehicle->searchByDashboard();
@@ -71,36 +70,8 @@ class SiteController extends Controller {
         ) > 3");
         $followUpDataProvider->pagination->pageVar = 'page_follow_up';
         
-        $yearNow = date('Y');
-        $sectionWidth = isset($_GET['SectionWidth']) ? $_GET['SectionWidth'] : '';
-        $aspectRatio = isset($_GET['AspectRatio']) ? $_GET['AspectRatio'] : '';
-        $constructionType = isset($_GET['ConstructionType']) ? $_GET['ConstructionType'] : '';
-        $rimDiameter = isset($_GET['RimDiameter']) ? $_GET['RimDiameter'] : '';
-        $loadRating = isset($_GET['LoadRating']) ? $_GET['LoadRating'] : '';
-        $speedRating = isset($_GET['SpeedRating']) ? $_GET['SpeedRating'] : '';
-        $productionYear = isset($_GET['ProductionYear']) ? $_GET['ProductionYear'] : $yearNow;
-        
-        $tireDataProvider = $tire->searchByStockCard();
-        $tireDataProvider->pagination->pageVar = 'page_dialog';
-        $tireDataProvider->criteria->addCondition("t.product_sub_master_category_id = 26");
-        $tireDataProvider->criteria->together = true;
-        $tireDataProvider->criteria->with = array('tireSize');
-        $tireDataProvider->criteria->compare('tireSize.section_width', $sectionWidth);
-        $tireDataProvider->criteria->compare('tireSize.aspect_ratio', $aspectRatio);
-        $tireDataProvider->criteria->compare('tireSize.construction_type', $constructionType);
-        $tireDataProvider->criteria->compare('tireSize.rim_diameter', $rimDiameter);
-        $tireDataProvider->criteria->compare('tireSize.load_rating', $loadRating);
-        $tireDataProvider->criteria->compare('tireSize.speed_rating', $speedRating);
-        
         $productDataProvider = $product->searchByDashboard();
-        $productDataProvider->pagination->pageVar = 'page_dialog';
-        
-        $yearList = array();
-        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
-            if ($y >= 2024) {
-                $yearList[$y] = $y;
-            }
-        }
+        $productDataProvider->pagination->pageVar = 'page_parts';
         
         $branches = Branch::model()->findAll();
 
@@ -147,9 +118,47 @@ class SiteController extends Controller {
             'serviceDataProvider' => $serviceDataProvider,
             'followUpDataProvider' => $followUpDataProvider,
             'branches' => $branches,
-            'endDate' => $endDate,
             'plateNumber' => $plateNumber,
             'customerName' => $customerName,
+            'endDate' => $endDate,
+        ));
+    }
+        
+    public function actionShowTireList() {
+        
+        $yearNow = date('Y');
+        $tire = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+        $sectionWidth = isset($_GET['SectionWidth']) ? $_GET['SectionWidth'] : '';
+        $aspectRatio = isset($_GET['AspectRatio']) ? $_GET['AspectRatio'] : '';
+        $constructionType = isset($_GET['ConstructionType']) ? $_GET['ConstructionType'] : '';
+        $rimDiameter = isset($_GET['RimDiameter']) ? $_GET['RimDiameter'] : '';
+        $loadRating = isset($_GET['LoadRating']) ? $_GET['LoadRating'] : '';
+        $speedRating = isset($_GET['SpeedRating']) ? $_GET['SpeedRating'] : '';
+        $productionYear = isset($_GET['ProductionYear']) ? $_GET['ProductionYear'] : $yearNow;
+        
+        $endDate = date('Y-m-d');
+        $tireDataProvider = $tire->searchByStockCard();
+//        $tireDataProvider->pagination->pageVar = 'page_tire';
+        $tireDataProvider->criteria->addCondition("t.product_sub_master_category_id = 26");
+        $tireDataProvider->criteria->together = true;
+        $tireDataProvider->criteria->with = array('tireSize');
+        $tireDataProvider->criteria->compare('tireSize.section_width', $sectionWidth);
+        $tireDataProvider->criteria->compare('tireSize.aspect_ratio', $aspectRatio);
+        $tireDataProvider->criteria->compare('tireSize.construction_type', $constructionType);
+        $tireDataProvider->criteria->compare('tireSize.rim_diameter', $rimDiameter);
+        $tireDataProvider->criteria->compare('tireSize.load_rating', $loadRating);
+        $tireDataProvider->criteria->compare('tireSize.speed_rating', $speedRating);
+        
+        $yearList = array();
+        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
+            if ($y >= 2024) {
+                $yearList[$y] = $y;
+            }
+        }
+        
+        $branches = Branch::model()->findAll();
+
+        $this->render('showTireList', array(
             'tire' => $tire,
             'tireDataProvider' => $tireDataProvider,
             'sectionWidth' => $sectionWidth,
@@ -160,9 +169,11 @@ class SiteController extends Controller {
             'speedRating' => $speedRating,
             'yearList' => $yearList,
             'productionYear' => $productionYear,
+            'endDate' => $endDate,
+            'branches' => $branches,
         ));
     }
-        
+    
     public function actionShowCustomer($id) {
         $model = Customer::model()->findByPk($id);
         $vehicleDetails = Vehicle::model()->findAllByAttributes(array('customer_id' => $id), array('limit' => 100, 'order' => 'id DESC'));
@@ -213,7 +224,7 @@ class SiteController extends Controller {
 
     public function actionAjaxHtmlUpdateProductStockTable() {
         if (Yii::app()->request->isAjaxRequest) {
-            $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+//            $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
             $endDate = date('Y-m-d');
             $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
             $productDataProvider = $product->searchByDashboard();
@@ -232,28 +243,28 @@ class SiteController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
 //            $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
             $endDate = date('Y-m-d');
-            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+            $tire = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
             $branches = Branch::model()->findAll();
 
-            $sectionWidth = isset($_GET['SectionWidth']) ? $_GET['SectionWidth'] : '';
-            $aspectRatio = isset($_GET['AspectRatio']) ? $_GET['AspectRatio'] : '';
-            $constructionType = isset($_GET['ConstructionType']) ? $_GET['ConstructionType'] : '';
-            $rimDiameter = isset($_GET['RimDiameter']) ? $_GET['RimDiameter'] : '';
-            $loadRating = isset($_GET['LoadRating']) ? $_GET['LoadRating'] : '';
-            $speedRating = isset($_GET['SpeedRating']) ? $_GET['SpeedRating'] : '';
-            $productionYear = isset($_GET['ProductionYear']) ? $_GET['ProductionYear'] : '';
+//            $sectionWidth = isset($_GET['SectionWidth']) ? $_GET['SectionWidth'] : '';
+//            $aspectRatio = isset($_GET['AspectRatio']) ? $_GET['AspectRatio'] : '';
+//            $constructionType = isset($_GET['ConstructionType']) ? $_GET['ConstructionType'] : '';
+//            $rimDiameter = isset($_GET['RimDiameter']) ? $_GET['RimDiameter'] : '';
+//            $loadRating = isset($_GET['LoadRating']) ? $_GET['LoadRating'] : '';
+//            $speedRating = isset($_GET['SpeedRating']) ? $_GET['SpeedRating'] : '';
+            $productionYear = isset($_GET['ProductionYear']) ? $_GET['ProductionYear'] : '2026';
 
-            $tireDataProvider = $product->searchByStockCard();
-            $tireDataProvider->pagination->pageVar = 'page_dialog';
+            $tireDataProvider = $tire->searchByStockCard();
+//            $tireDataProvider->pagination->pageVar = 'page_dialog';
             $tireDataProvider->criteria->addCondition("t.product_sub_master_category_id = 26");
-            $tireDataProvider->criteria->together = true;
-            $tireDataProvider->criteria->with = array('tireSize');
-            $tireDataProvider->criteria->compare('tireSize.section_width', $sectionWidth);
-            $tireDataProvider->criteria->compare('tireSize.aspect_ratio', $aspectRatio);
-            $tireDataProvider->criteria->compare('tireSize.construction_type', $constructionType);
-            $tireDataProvider->criteria->compare('tireSize.rim_diameter', $rimDiameter);
-            $tireDataProvider->criteria->compare('tireSize.load_rating', $loadRating);
-            $tireDataProvider->criteria->compare('tireSize.speed_rating', $speedRating);
+//            $tireDataProvider->criteria->together = true;
+//            $tireDataProvider->criteria->with = array('tireSize');
+//            $tireDataProvider->criteria->compare('tireSize.section_width', $sectionWidth);
+//            $tireDataProvider->criteria->compare('tireSize.aspect_ratio', $aspectRatio);
+//            $tireDataProvider->criteria->compare('tireSize.construction_type', $constructionType);
+//            $tireDataProvider->criteria->compare('tireSize.rim_diameter', $rimDiameter);
+//            $tireDataProvider->criteria->compare('tireSize.load_rating', $loadRating);
+//            $tireDataProvider->criteria->compare('tireSize.speed_rating', $speedRating);
         
             $this->renderPartial('_tireStockTable', array(
                 'tireDataProvider' => $tireDataProvider,
@@ -295,6 +306,30 @@ class SiteController extends Controller {
             $this->renderPartial('_carSubModelSelect', array(
                 'vehicle' => $vehicle,
                 'carModelId' => $carModelId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateTireSubBrandSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tire = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+            $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
+
+            $this->renderPartial('_tireSubBrandSelect', array(
+                'tire' => $tire,
+                'productBrandId' => $productBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateTireSubBrandSeriesSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tire = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+            $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
+
+            $this->renderPartial('_tireSubBrandSeriesSelect', array(
+                'tire' => $tire,
+                'productSubBrandId' => $productSubBrandId,
             ));
         }
     }

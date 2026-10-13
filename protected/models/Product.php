@@ -621,6 +621,9 @@ class Product extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                "defaultOrder" => "t.name ASC",
+            ),
             'pagination' => array(
                 'pageSize' => 500,
             ),
