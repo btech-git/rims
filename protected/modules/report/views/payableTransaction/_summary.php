@@ -65,7 +65,7 @@
                             <?php $paymentLeft = $payableRow['payment_left']; ?>
                             <tr>
                                 <td class="width2-2">
-                                    <?php echo CHtml::encode($payableRow['purchase_number'], Yii::app()->createUrl("report/payableTransaction/redirectTransaction", array(
+                                    <?php echo CHtml::link($payableRow['purchase_number'], Yii::app()->createUrl("report/payableTransaction/redirectTransaction", array(
                                         "codeNumber" => $payableRow['purchase_number']
                                     )), array('target' => '_blank'));?>
                                 </td>

@@ -42,9 +42,11 @@ Yii::app()->clientScript->registerCss('_report', '
                             <th class="width1-1">Invoice #</th>
                             <th class="width1-2">Tanggal</th>
                             <th class="width1-3">Jatuh Tempo</th>
+                            <th class="width1-3">TOP (hari)</th>
                             <th class="width1-2">Umur (hari)</th>
                             <th class="width1-5">Plat #</th>
                             <th class="width1-6">Kendaraan</th>
+                            <th class="width1-7">Status Piutang</th>
                             <th class="width1-7">invoice</th>
                             <th class="width1-8">Payment</th>
                             <th class="width1-9">Remaining</th>
@@ -70,6 +72,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                 <?php $paymentAmount += $paymentInDetail->totalAmount; ?>
                             <?php endforeach; ?>
                             <?php $paymentLeft = $revenue - $paymentAmount; ?>
+                            <?php $isReceivableOverdue = date('Y-m-d') > $invoiceHeader->due_date; ?>
 
                             <tr class="items1">
                                 <td>
@@ -80,6 +83,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                 </td>
                                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceHeader->invoice_date))); ?></td>
                                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceHeader->due_date))); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.tenor')); ?></td>
                                 <td>
                                     <?php $outstandingDays = date_diff(date_create($invoiceHeader->invoice_date), date_create(date('Y-m-d'))); ?>
                                     <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
@@ -90,13 +94,14 @@ Yii::app()->clientScript->registerCss('_report', '
                                     <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carModel.name')); ?> -
                                     <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carSubModel.name')); ?>
                                 </td>
-                                <td style="text-align: right">
+                                <td style="text-align: right; color: <?php echo $isReceivableOverdue ? 'red' : 'black'; ?>"><?php echo $isReceivableOverdue ? 'Overdue' : 'Outstanding'; ?></td>
+                                <td style="text-align: right; color: <?php echo $isReceivableOverdue ? 'red' : 'black'; ?>">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $revenue)); ?>
                                 </td>
-                                <td style="text-align: right">
+                                <td style="text-align: right; color: <?php echo $isReceivableOverdue ? 'red' : 'black'; ?>">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentAmount)); ?>
                                 </td>
-                                <td style="text-align: right">
+                                <td style="text-align: right; color: <?php echo $isReceivableOverdue ? 'red' : 'black'; ?>">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentLeft)); ?>
                                 </td>
                             </tr>
@@ -108,7 +113,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6">TOTAL</td>
+                            <td colspan="8">TOTAL</td>
                             <td style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $revenueSum)); ?>
                             </td>

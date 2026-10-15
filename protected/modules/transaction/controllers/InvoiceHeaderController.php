@@ -923,9 +923,32 @@ class InvoiceHeaderController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
-
-        $dataProvider = new CActiveDataProvider('InvoiceHeader');
+        $model = new InvoiceHeader('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['InvoiceHeader'])) {
+            $model->attributes = $_GET['InvoiceHeader'];
+        }
+        
+        $dataProvider = $model->searchByAdmin();
+        $dataProvider->criteria->addCondition('t.user_id_cancelled IS NULL AND t.is_sent_to_customer = 0');
+        
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
+        
+        if (isset($_POST['SentToCustomer'])) {
+            $invoiceHeaderIds = isset($_POST['SelectedIds']) ? $_POST['SelectedIds'] : array();
+            
+            foreach ($invoiceHeaderIds as $invoiceHeaderId) {
+                $invoiceHeader = InvoiceHeader::model()->findByPk($invoiceHeaderId);
+                $invoiceHeader->is_sent_to_customer = 1;
+                $invoiceHeader->update(array('is_sent_to_customer'));
+            }
+        }
+        
         $this->render('index', array(
+            'model' => $model,
             'dataProvider' => $dataProvider,
         ));
     }
