@@ -17,10 +17,10 @@ Yii::app()->clientScript->registerCss('_report', '
 <?php echo CHtml::beginForm(array(''), 'get'); ?>
                     
 <div class="row buttons">
-    <?php echo CHtml::textField('startDate', $startDate); ?>
-    <?php echo CHtml::textField('endDate', $endDate); ?>
-    <?php echo CHtml::textField('customerId', $customerId); ?>
-    <?php echo CHtml::textField('branchId', $branchId); ?>
+    <?php echo CHtml::hiddenField('startDate', $startDate); ?>
+    <?php echo CHtml::hiddenField('endDate', $endDate); ?>
+    <?php echo CHtml::hiddenField('customerId', $customerId); ?>
+    <?php echo CHtml::hiddenField('branchId', $branchId); ?>
     <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
 </div>
 

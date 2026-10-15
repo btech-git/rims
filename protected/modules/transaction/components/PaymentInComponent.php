@@ -49,7 +49,7 @@ class PaymentInComponent extends CComponent {
             $detail = new PaymentInDetail;
             $detail->invoice_header_id = $invoiceId;
             $detail->registration_transaction_id = $invoiceHeader->registration_transaction_id;
-            $detail->total_invoice = $invoiceHeader->invoice_amount;
+            $detail->total_invoice = $invoiceHeader->total_price;
             $this->details[] = $detail;
         }
     }
