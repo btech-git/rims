@@ -104,7 +104,7 @@ class SaleInvoiceCoretaxController extends Controller {
             } catch (Exception $e) {
                 $dbTransaction->rollback();
                 $valid = false;
-                $this->header->addError('error', $e->getMessage());
+                $this->addError('error', $e->getMessage());
             }
             
             if (!$valid) {
