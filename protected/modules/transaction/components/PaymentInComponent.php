@@ -290,7 +290,7 @@ class PaymentInComponent extends CComponent {
         $total = '0.00';
         
         foreach ($this->details as $detail) {
-            $total += $detail->total_invoice;
+            $total += $detail->invoiceRemaining;
             
 //            if (empty($detail->invoice_header_id)) {
 //                $total += $detail->total_invoice;
