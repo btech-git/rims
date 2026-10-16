@@ -194,10 +194,10 @@ $this->breadcrumbs=array(
                                 <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($detail, 'qty_received')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'purchaseOrderDetail.price_before_tax'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'purchaseOrderDetail.price_before_tax'))); ?>
                                 </td>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'totalPrice'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'totalPrice'))); ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -206,32 +206,32 @@ $this->breadcrumbs=array(
                         <tr>
                             <td colspan="8" style="text-align: right">TOTAL</td>
                             <td style="text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'subTotal'))); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'subTotal'))); ?>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="8" style="text-align: right">PPn <?php echo CHtml::encode(CHtml::value($receiveItem, 'purchaseOrder.tax_percentage')); ?>%</td>
                             <td style="text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'taxNominal'))); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'taxNominal'))); ?>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="8" style="text-align: right">SUB TOTAL</td>
                             <td style="text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'grandTotal'))); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'grandTotal'))); ?>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="8" style="text-align: right">PEMBULATAN</td>
                             <td style="text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_rounding_nominal'))); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'invoice_rounding_nominal'))); ?>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="8" style="text-align: right">GRAND TOTAL</td>
                             <td style="text-align: right">
                                 <span id="grand_total">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_grand_total_rounded'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'invoice_grand_total_rounded'))); ?>
                                 </span>
                             </td>
                         </tr>
@@ -244,7 +244,11 @@ $this->breadcrumbs=array(
             <div class="small-12 medium-6 columns">			 
                 <div class="field buttons text-center">
                     <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-                    <?php echo CHtml::submitButton('Approve', array('class' => 'button cbutton', 'name' => 'Approve', 'confirm' => 'Are you sure you want to approve?')); ?>
+                    <?php echo CHtml::submitButton('Approve', array(
+                        'class' => 'button cbutton', 
+                        'name' => 'Approve', 
+                        'confirm' => 'Are you sure you want to approve?'
+                    )); ?>
                 </div>
             </div>
         </div>
