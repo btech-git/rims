@@ -98,19 +98,19 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Faktur Pembelian PPn');
 
-        $worksheet->mergeCells('A1:O1');
-        $worksheet->mergeCells('A2:O2');
-        $worksheet->mergeCells('A3:O3');
+        $worksheet->mergeCells('A1:R1');
+        $worksheet->mergeCells('A2:R2');
+        $worksheet->mergeCells('A3:R3');
         
-        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:O5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:R5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:R5')->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($purchaseOrderHeader, 'mainBranch.name'));
         $worksheet->setCellValue('A2', 'Faktur Pembelian PPn (Rincian & Detail)');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:O5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:O5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:R5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:R5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'PO #');
@@ -122,11 +122,14 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         $worksheet->setCellValue('H5', 'SJ #');
         $worksheet->setCellValue('I5', 'Faktur Pajak #');
         $worksheet->setCellValue('J5', 'Ppn/Non');
-        $worksheet->setCellValue('K5', 'Price Bruto (Rp)');
+        $worksheet->setCellValue('K5', 'DPP (Rp)');
         $worksheet->setCellValue('L5', 'Disc (Rp)');
-        $worksheet->setCellValue('M5', 'DPP (Rp)');
+        $worksheet->setCellValue('M5', 'Sub Total (Rp)');
         $worksheet->setCellValue('N5', 'PPn (Rp)');
         $worksheet->setCellValue('O5', 'Total (Rp)');
+        $worksheet->setCellValue('P5', 'Retur (Rp)');
+        $worksheet->setCellValue('Q5', 'Pembayaran (Rp)');
+        $worksheet->setCellValue('R5', 'Hutang (Rp)');
 
         $counter = 6;
         $ordinalNumber = 1;
@@ -153,9 +156,12 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
                 $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'taxStatus'));
                 $worksheet->setCellValue("K{$counter}", CHtml::value($receiveItem, 'totalRetailPrice'));
                 $worksheet->setCellValue("L{$counter}", CHtml::value($receiveItem, 'totalPurchaseDiscount'));
-                $worksheet->setCellValue("M{$counter}", CHtml::value($receiveItem, 'subTotal'));
-                $worksheet->setCellValue("N{$counter}", CHtml::value($receiveItem, 'taxNominal'));
-                $worksheet->setCellValue("O{$counter}", CHtml::value($receiveItem, 'grandTotal'));
+                $worksheet->setCellValue("M{$counter}", CHtml::value($receiveItem, 'invoice_sub_total'));
+                $worksheet->setCellValue("N{$counter}", CHtml::value($receiveItem, 'invoice_tax_nominal'));
+                $worksheet->setCellValue("O{$counter}", CHtml::value($receiveItem, 'invoice_grand_total'));
+                $worksheet->setCellValue("P{$counter}", CHtml::value($receiveItem, 'purchase_return_amount'));
+                $worksheet->setCellValue("Q{$counter}", CHtml::value($receiveItem, 'invoice_payment_amount'));
+                $worksheet->setCellValue("R{$counter}", CHtml::value($receiveItem, 'invoice_payment_remaining'));
 
                 $counter++; $ordinalNumber++;
             }
@@ -170,7 +176,7 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=faktur_pembelian_ppn.xls");
+        header("Content-Disposition: attachment;filename=faktur_pembelian_ppn_rincian_detail.xls");
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

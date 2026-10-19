@@ -973,6 +973,11 @@
                                         'url' => array('/report/productLatestTransaction/summary'), 
 //                                        'visible' => Yii::app()->user->checkAccess('materialRequestReport'),
                                     ),
+                                    array(
+                                        'label' => 'WO Re-work', 
+                                        'url' => array('/report/workOrderRework/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('materialRequestReport'),
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

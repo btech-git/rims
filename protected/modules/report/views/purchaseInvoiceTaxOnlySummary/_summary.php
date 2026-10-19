@@ -34,6 +34,7 @@
                 <th>PPn (Rp)</th>
                 <th>Total</th>
                 <th>Retur</th>
+                <th>Pembayaran</th>
                 <th>Hutang</th>
             </tr>
         </thead>
@@ -89,6 +90,9 @@
                         </td>
                         <td style="text-align: right">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'purchase_return_amount'))); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'invoice_payment_amount'))); ?>
                         </td>
                         <td style="text-align: right">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'invoice_payment_remaining'))); ?>
