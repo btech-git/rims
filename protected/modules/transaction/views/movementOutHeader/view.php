@@ -55,6 +55,9 @@ $this->menu = array(
                     'style' => 'margin-right:10px', 
                     'target' => 'blank'
                 )); ?>
+            <?php endif; ?>
+        <?php endif; ?>
+
 
                 <?php echo CHtml::button('Update Delivered', array(
                     'id' => 'detail-button',
@@ -74,9 +77,6 @@ $this->menu = array(
                         })
                     '
                 )); ?>
-            <?php endif; ?>
-        <?php endif; ?>
-
         <?php if (Yii::app()->user->checkAccess("inventoryHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
                 'class' => 'button alert right', 
