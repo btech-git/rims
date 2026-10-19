@@ -133,10 +133,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
             <div class="relative">
                 <div class="reportDisplay">
-                    <?php /*$dataCount = count($purchaseInvoiceSummary); ?>
-                    <?php if ($dataCount > 0): ?>
-                        <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
-                    <?php endif;*/ ?>
+                    <?php echo ReportHelper::summaryText($purchaseInvoiceSummary->dataProvider); ?>
                 </div>
 
                 <?php $this->renderPartial('_summary', array(
