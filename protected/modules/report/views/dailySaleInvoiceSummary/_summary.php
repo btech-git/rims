@@ -27,6 +27,7 @@
                 <th>Tanggal</th>
                 <th>Customer</th>
                 <th>Plat #</th>
+                <th>Frame #</th>
                 <th>Asuransi</th>
                 <th>Amount</th>
                 <th>Parts (Rp)</th>
@@ -68,6 +69,7 @@
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.frame_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->subTotalAfterTax))); ?>

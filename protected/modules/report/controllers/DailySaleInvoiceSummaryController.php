@@ -125,43 +125,44 @@ class DailySaleInvoiceSummaryController extends Controller {
         $worksheet->mergeCells('A2:X2');
         $worksheet->mergeCells('A3:X3');
        
-        $worksheet->getStyle('A1:AA5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:AA5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:AB5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:AB5')->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Faktur Penjualan Harian (Rincian & Detail)');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:AA5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:AA5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:AB5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:AB5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Tanggal');
         $worksheet->setCellValue('C5', 'Faktur #');
         $worksheet->setCellValue('D5', 'Customer');
         $worksheet->setCellValue('E5', 'Plat #');
-        $worksheet->setCellValue('F5', 'Kendaraan');
-        $worksheet->setCellValue('G5', 'Asuransi');
-        $worksheet->setCellValue('H5', 'Amount');
-        $worksheet->setCellValue('I5', 'Parts (Rp)');
-        $worksheet->setCellValue('J5', 'Jasa (Rp)');
-        $worksheet->setCellValue('K5', 'DPP Parts');
-        $worksheet->setCellValue('L5', 'DPP Jasa');
-        $worksheet->setCellValue('M5', 'Total DPP');
-        $worksheet->setCellValue('N5', 'Ppn');
-        $worksheet->setCellValue('O5', 'Pph');
-        $worksheet->setCellValue('P5', 'Total');
-        $worksheet->setCellValue('Q5', 'WO #');
-        $worksheet->setCellValue('R5', 'SPK Customer #');
-        $worksheet->setCellValue('S5', 'DMS Reference #');
-        $worksheet->setCellValue('T5', 'V-TAG');
-        $worksheet->setCellValue('U5', 'Resi Pengiriman #');
-        $worksheet->setCellValue('V5', 'Warranty Report');
-        $worksheet->setCellValue('W5', 'Faktur Pajak #');
-        $worksheet->setCellValue('X5', 'Tanggal Faktur Pajak');
-        $worksheet->setCellValue('Y5', 'FP DPP');
-        $worksheet->setCellValue('Z5', 'FP PPn');
-        $worksheet->setCellValue('AA5', 'Bupot #');
+        $worksheet->setCellValue('F5', 'Frame #');
+        $worksheet->setCellValue('G5', 'Kendaraan');
+        $worksheet->setCellValue('H5', 'Asuransi');
+        $worksheet->setCellValue('I5', 'Amount');
+        $worksheet->setCellValue('J5', 'Parts (Rp)');
+        $worksheet->setCellValue('K5', 'Jasa (Rp)');
+        $worksheet->setCellValue('L5', 'DPP Parts');
+        $worksheet->setCellValue('M5', 'DPP Jasa');
+        $worksheet->setCellValue('N5', 'Total DPP');
+        $worksheet->setCellValue('O5', 'Ppn');
+        $worksheet->setCellValue('P5', 'Pph');
+        $worksheet->setCellValue('Q5', 'Total');
+        $worksheet->setCellValue('R5', 'WO #');
+        $worksheet->setCellValue('S5', 'SPK Customer #');
+        $worksheet->setCellValue('T5', 'DMS Reference #');
+        $worksheet->setCellValue('U5', 'V-TAG');
+        $worksheet->setCellValue('V5', 'Resi Pengiriman #');
+        $worksheet->setCellValue('W5', 'Warranty Report');
+        $worksheet->setCellValue('X5', 'Faktur Pajak #');
+        $worksheet->setCellValue('Y5', 'Tanggal Faktur Pajak');
+        $worksheet->setCellValue('Z5', 'FP DPP');
+        $worksheet->setCellValue('AA5', 'FP PPn');
+        $worksheet->setCellValue('AB5', 'Bupot #');
 
         $counter = 6;
 
@@ -191,28 +192,29 @@ class DailySaleInvoiceSummaryController extends Controller {
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'invoice_number'));
             $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'customer.name'));
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
-            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'insuranceCompany.name'));
-            $worksheet->setCellValue("H{$counter}", $subTotalAfterTax);
-            $worksheet->setCellValue("I{$counter}", $productPriceAfterTax);
-            $worksheet->setCellValue("J{$counter}", $servicePriceAfterTax);
-            $worksheet->setCellValue("K{$counter}", $productPrice);
-            $worksheet->setCellValue("L{$counter}", $servicePrice);
-            $worksheet->setCellValue("M{$counter}", $subTotal);
-            $worksheet->setCellValue("N{$counter}", $ppnTotal);
-            $worksheet->setCellValue("O{$counter}", $pphTotal);
-            $worksheet->setCellValue("P{$counter}", $totalPrice);
-            $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'registrationTransaction.work_order_number'));
-            $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'registrationTransaction.customer_work_order_number'));
-            $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'registrationTransaction.customer_document_order_number'));
-            $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'registrationTransaction.technical_code_number'));
-            $worksheet->setCellValue("U{$counter}", CHtml::value($header, 'delivery_receipt_number'));
-            $worksheet->setCellValue("V{$counter}", CHtml::value($header, 'registrationTransaction.warranty_report'));
-            $worksheet->setCellValue("W{$counter}", CHtml::value($header, 'transaction_tax_number'));
-            $worksheet->setCellValue("X{$counter}", CHtml::value($header, 'transaction_tax_date'));
-            $worksheet->setCellValue("Y{$counter}", CHtml::value($header, 'grand_total_coretax'));
-            $worksheet->setCellValue("Z{$counter}", CHtml::value($header, 'tax_amount_coretax'));
-            $worksheet->setCellValue("AA{$counter}", CHtml::value($header, 'coretax_receipt_number'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.frame_number'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'insuranceCompany.name'));
+            $worksheet->setCellValue("I{$counter}", $subTotalAfterTax);
+            $worksheet->setCellValue("J{$counter}", $productPriceAfterTax);
+            $worksheet->setCellValue("K{$counter}", $servicePriceAfterTax);
+            $worksheet->setCellValue("L{$counter}", $productPrice);
+            $worksheet->setCellValue("M{$counter}", $servicePrice);
+            $worksheet->setCellValue("N{$counter}", $subTotal);
+            $worksheet->setCellValue("O{$counter}", $ppnTotal);
+            $worksheet->setCellValue("P{$counter}", $pphTotal);
+            $worksheet->setCellValue("Q{$counter}", $totalPrice);
+            $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'registrationTransaction.work_order_number'));
+            $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'registrationTransaction.customer_work_order_number'));
+            $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'registrationTransaction.customer_document_order_number'));
+            $worksheet->setCellValue("U{$counter}", CHtml::value($header, 'registrationTransaction.technical_code_number'));
+            $worksheet->setCellValue("V{$counter}", CHtml::value($header, 'delivery_receipt_number'));
+            $worksheet->setCellValue("W{$counter}", CHtml::value($header, 'registrationTransaction.warranty_report'));
+            $worksheet->setCellValue("X{$counter}", CHtml::value($header, 'transaction_tax_number'));
+            $worksheet->setCellValue("Y{$counter}", CHtml::value($header, 'transaction_tax_date'));
+            $worksheet->setCellValue("Z{$counter}", CHtml::value($header, 'grand_total_coretax'));
+            $worksheet->setCellValue("AA{$counter}", CHtml::value($header, 'tax_amount_coretax'));
+            $worksheet->setCellValue("AB{$counter}", CHtml::value($header, 'coretax_receipt_number'));
             
             $grandTotalSubAfterTax += $subTotalAfterTax;
             $grandTotalProductPriceAfterTax += $productPriceAfterTax;
@@ -228,19 +230,19 @@ class DailySaleInvoiceSummaryController extends Controller {
         }
 
         $worksheet->getStyle("A{$counter}:AB{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:AA{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:AB{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
-        $worksheet->setCellValue("F{$counter}", 'Total');
-        $worksheet->setCellValue("G{$counter}", 'Rp');
-        $worksheet->setCellValue("H{$counter}", $grandTotalSubAfterTax);
-        $worksheet->setCellValue("I{$counter}", $grandTotalProductPriceAfterTax);
-        $worksheet->setCellValue("J{$counter}", $grandTotalServicePriceAfterTax);
-        $worksheet->setCellValue("K{$counter}", $grandTotalProductPrice);
-        $worksheet->setCellValue("L{$counter}", $grandTotalServicePrice);
-        $worksheet->setCellValue("M{$counter}", $grandTotalSubTotal);
-        $worksheet->setCellValue("N{$counter}", $grandTotalPpnTotal);
-        $worksheet->setCellValue("O{$counter}", $grandTotalPphTotal);
-        $worksheet->setCellValue("P{$counter}", $grandTotalPrice);
+        $worksheet->setCellValue("G{$counter}", 'Total');
+        $worksheet->setCellValue("H{$counter}", 'Rp');
+        $worksheet->setCellValue("I{$counter}", $grandTotalSubAfterTax);
+        $worksheet->setCellValue("J{$counter}", $grandTotalProductPriceAfterTax);
+        $worksheet->setCellValue("K{$counter}", $grandTotalServicePriceAfterTax);
+        $worksheet->setCellValue("L{$counter}", $grandTotalProductPrice);
+        $worksheet->setCellValue("M{$counter}", $grandTotalServicePrice);
+        $worksheet->setCellValue("N{$counter}", $grandTotalSubTotal);
+        $worksheet->setCellValue("O{$counter}", $grandTotalPpnTotal);
+        $worksheet->setCellValue("P{$counter}", $grandTotalPphTotal);
+        $worksheet->setCellValue("Q{$counter}", $grandTotalPrice);
 
         $counter++;
 
