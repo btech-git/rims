@@ -10,7 +10,6 @@ $this->breadcrumbs=array(
 $this->menu=array(
 	array('label'=>'List TireSize', 'url'=>array('index')),
 	array('label'=>'Create TireSize', 'url'=>array('create')),
-	array('label'=>'View TireSize', 'url'=>array('view', 'id'=>$model->id)),
 	array('label'=>'Manage TireSize', 'url'=>array('admin')),
 );
 ?>
