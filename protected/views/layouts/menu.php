@@ -684,30 +684,10 @@
         <li class="mdropdown"><a href="#">HRD</a>
             <?php $this->widget('zii.widgets.CMenu', array(
                 'items' => array(
-                    array(
-                        'label' => 'Data Karyawan', 
-                        'url' => array('/master/employee/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('masterEmployeeCreate') || Yii::app()->user->checkAccess('masterEmployeeEdit') || 
-                            Yii::app()->user->checkAccess('masterEmployeeView') || Yii::app()->user->checkAccess('masterEmployeeApproval')
-                    ),
-                    array(
-                        'label' => 'Kategori Ketidakhadiran', 
-                        'url' => array('/master/employeeOnleaveCategory/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryCreate') || Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryEdit') || 
-                            Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryView') || Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryApproval')
-                    ),
-                    array(
-                        'label' => 'Public Holiday', 
-                        'url' => array('/master/publicDayOff/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit') || 
-                            Yii::app()->user->checkAccess('masterHolidayView') || Yii::app()->user->checkAccess('masterHolidayApproval')
-                    ),
-                    array(
-                        'label' => 'Absensi Karyawan', 
-                        'url' => array('/master/employeeTimesheet/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('employeeTimesheetCreate') || Yii::app()->user->checkAccess('employeeTimesheetEdit') || 
-                            Yii::app()->user->checkAccess('employeeTimesheetView')
-                    ),
+                    array('label' => 'PENGAJUAN', 'url' => array('#'), 'itemOptions' => array(
+                        'class' => 'title', 
+                        'style' => 'text-decoration: underline'
+                    )),
                     array(
                         'label' => 'Pengajuan Cuti Karyawan', 
                         'url' => array('/master/employeeDayoff/adminDraft'), 
@@ -715,16 +695,26 @@
                             Yii::app()->user->checkAccess('employeeLeaveApplicationView')
                     ),
                     array(
-                        'label' => 'Data Cuti Karyawan', 
+                        'label' => 'Tukar Hari Libur Karyawan', 
+                        'url' => array('/master/employeeExchangeDayoff/admin'), 
+//                        'visible' => Yii::app()->user->checkAccess('employeeAbsencyReport')
+                    ),
+                    array(
+                        'label' => 'Approval Cuti Karyawan', 
                         'url' => array('/master/employeeDayoff/admin'), 
                         'visible' => Yii::app()->user->checkAccess('employeeLeaveApplicationEdit') || Yii::app()->user->checkAccess('employeeLeaveApplicationView') || 
                             Yii::app()->user->checkAccess('employeeLeaveApplicationApproval')
                     ),
                     array(
-                        'label' => 'Payroll', 
-                        'url' => array('/master/employeePayroll/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('payrollReport')
+                        'label' => 'Import Absensi Karyawan', 
+                        'url' => array('/master/employeeTimesheet/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('employeeTimesheetCreate') || Yii::app()->user->checkAccess('employeeTimesheetEdit') || 
+                            Yii::app()->user->checkAccess('employeeTimesheetView')
                     ),
+                    array('label' => 'REPORT', 'url' => array('#'), 'itemOptions' => array(
+                        'class' => 'title', 
+                        'style' => 'text-decoration: underline'
+                    )),
                     array(
                         'label' => 'Jadwal Karyawan', 
                         'url' => array('/master/employeeSchedule/index'), 
@@ -746,15 +736,37 @@
                         'visible' => Yii::app()->user->checkAccess('employeeAbsencyReport')
                     ),
                     array(
-                        'label' => 'Tukar Hari Libur Karyawan', 
-                        'url' => array('/master/employeeExchangeDayoff/admin'), 
-//                        'visible' => Yii::app()->user->checkAccess('employeeAbsencyReport')
-                    ),
-                    array(
                         'label' => 'Ulang Tahun Karyawan', 
                         'url' => array('/master/employee/index'), 
                         'visible' => Yii::app()->user->checkAccess('employeeBirthdateReport')
                     ),
+                    array('label' => 'SETTING', 'url' => array('#'), 'itemOptions' => array(
+                        'class' => 'title', 
+                        'style' => 'text-decoration: underline'
+                    )),
+                    array(
+                        'label' => 'Data Karyawan', 
+                        'url' => array('/master/employee/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('masterEmployeeCreate') || Yii::app()->user->checkAccess('masterEmployeeEdit') || 
+                            Yii::app()->user->checkAccess('masterEmployeeView') || Yii::app()->user->checkAccess('masterEmployeeApproval')
+                    ),
+                    array(
+                        'label' => 'Kategori Ketidakhadiran', 
+                        'url' => array('/master/employeeOnleaveCategory/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryCreate') || Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryEdit') || 
+                            Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryView') || Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryApproval')
+                    ),
+                    array(
+                        'label' => 'Public Holiday', 
+                        'url' => array('/master/publicDayOff/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit') || 
+                            Yii::app()->user->checkAccess('masterHolidayView') || Yii::app()->user->checkAccess('masterHolidayApproval')
+                    ),
+//                    array(
+//                        'label' => 'Payroll', 
+//                        'url' => array('/master/employeePayroll/admin'), 
+//                        'visible' => Yii::app()->user->checkAccess('payrollReport')
+//                    ),
                 ),
             )); ?>
         </li>

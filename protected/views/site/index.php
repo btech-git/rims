@@ -23,7 +23,44 @@
 <div style="font-size: 16px; text-align: center">
     <div style="font-size: 30px">Raperind Information Management System (RIMS) Dashboard</div>
     <br /><br/>
-    
+
+    <div style="font-weight: bold">
+        <div>Today's Employee Birthday</div>
+        <div>
+            <?php $employeeList = Employee::model()->findAll(array('condition' => "MONTH(t.birth_date) = MONTH(CURDATE()) AND DAY(t.birth_date) = DAY(CURDATE()) AND t.status = 'Active'")); ?>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Umur</th>
+                    <th>ID</th>
+                    <th>Division</th>
+                    <th>Position</th>
+                    <th>Level</th>
+                    <th>Status</th>
+                    <th>Lama Kerja</th>
+                </tr>
+                <?php foreach ($employeeList as $employee): ?>
+                    <?php $birthDate = new DateTime($employee->birth_date); ?>
+                    <?php $today = new DateTime('today'); ?>
+                    <?php $age = $birthDate->diff($today); ?>
+                    <tr>
+                        <td><?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></td>
+                        <td><?php echo CHtml::encode($age->y); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($employee, 'id_card')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($employee, 'division.name')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($employee, 'position.name')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($employee, 'level.name')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($employee, 'employment_type')); ?></td>
+                        <td>
+                            <?php $employmentDays = date_diff(date_create($employee->recruitment_date), date_create(date('Y-m-d'))); ?>
+                            <?php echo CHtml::encode($employmentDays->format("%a days")); ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        </div>
+    </div>
+
     <div>
         <?php /*echo CHtml::beginForm(array('')); ?>
         <?php echo CHtml::textField('SearchAsk', ''); ?>
@@ -49,6 +86,4 @@
         )); ?>
         <?php echo CHtml::endForm();*/ ?>
     </div>
-    
-    <div id="answer-box"></div>
 </div>
