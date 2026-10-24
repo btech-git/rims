@@ -28,36 +28,15 @@
         <div>Today's Employee Birthday</div>
         <div>
             <?php $employeeList = Employee::model()->findAll(array('condition' => "MONTH(t.birth_date) = MONTH(CURDATE()) AND DAY(t.birth_date) = DAY(CURDATE()) AND t.status = 'Active'")); ?>
-            <table>
-                <tr>
-                    <th>Name</th>
-                    <th>Umur</th>
-                    <th>ID</th>
-                    <th>Division</th>
-                    <th>Position</th>
-                    <th>Level</th>
-                    <th>Status</th>
-                    <th>Lama Kerja</th>
-                </tr>
-                <?php foreach ($employeeList as $employee): ?>
-                    <?php $birthDate = new DateTime($employee->birth_date); ?>
-                    <?php $today = new DateTime('today'); ?>
-                    <?php $age = $birthDate->diff($today); ?>
-                    <tr>
-                        <td><?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></td>
-                        <td><?php echo CHtml::encode($age->y); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($employee, 'id_card')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($employee, 'division.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($employee, 'position.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($employee, 'level.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($employee, 'employment_type')); ?></td>
-                        <td>
-                            <?php $employmentDays = date_diff(date_create($employee->recruitment_date), date_create(date('Y-m-d'))); ?>
-                            <?php echo CHtml::encode($employmentDays->format("%a days")); ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </table>
+            
+            <?php foreach ($employeeList as $employee): ?>
+                <?php $birthDate = new DateTime($employee->birth_date); ?>
+                <?php $today = new DateTime('today'); ?>
+                <?php $age = $birthDate->diff($today); ?>
+                <?php $employmentDays = date_diff(date_create($employee->recruitment_date), date_create(date('Y-m-d'))); ?>
+                <p>Happy <?php echo CHtml::encode($age->y); ?>th Birthday, <?php echo CHtml::encode(CHtml::value($employee, 'name')); ?> (<?php echo CHtml::encode(CHtml::value($employee, 'level.name')); ?> <?php echo CHtml::encode(CHtml::value($employee, 'position.name')); ?>)!!!</p>
+                <p>Raperind Motor want to wish you all the best and thank you for being with us for <?php echo CHtml::encode($employmentDays->format("%a days")); ?></p>
+            <?php endforeach; ?>
         </div>
     </div>
 
