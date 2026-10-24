@@ -242,7 +242,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
         
         $criteria->compare('t.is_synchronized', 0);
-        $criteria->addCondition("t.user_id_cancelled IS NULL AND t.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND CURDATE()");
+        $criteria->addCondition("t.user_id_cancelled IS NULL AND t.status NOT IN ('Rejected') AND t.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND CURDATE()");
         $criteria->order = 't.payment_date DESC';
 
         return new CActiveDataProvider($this, array(
