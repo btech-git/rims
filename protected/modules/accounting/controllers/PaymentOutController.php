@@ -436,9 +436,6 @@ class PaymentOutController extends Controller {
                         'kode_transaksi' => $paymentOut->payment_number,
                     ));
 
-                    $paymentOut->status = 'Approved';
-                    $paymentOut->save(false);
-
                     if (!empty($paymentOut->paymentType->coa_id)) {
                         $coaId = $paymentOut->paymentType->coa_id;
                     } elseif ($paymentOut->payment_type_id == 12) {
@@ -498,8 +495,9 @@ class PaymentOutController extends Controller {
                                 $valid = $valid && $assetPurchase->update(array('total_payment', 'payment_remaining'));
                             } 
 
+                            $paymentOut->status = 'Approved';
                             $paymentOut->is_synchronized = 1;
-                            $valid = $valid && $paymentOut->update(array('is_synchronized'));
+                            $valid = $valid && $paymentOut->update(array('is_synchronized', 'status'));
                         }
                     }
 
