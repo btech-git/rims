@@ -142,17 +142,10 @@ class VehicleCarModel extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 't.name',
-                'attributes' => array(
-                    'car_make' => array(
-                        'asc' => 'carMake.name ASC',
-                        'desc' => 'carMake.name DESC',
-                    ),
-                    '*',
-                ),
+                'defaultOrder' => 'carMake.name ASC, t.name ASC',
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 50,
             ),
         ));
     }

@@ -87,41 +87,35 @@ class SubBrandSeries extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('sub_brand_id', $this->sub_brand_id);
-        $criteria->compare('name', $this->name, true);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
+        $criteria->compare('t.name', $this->name, true);
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'subBrand' => array(
+                'with' => array(
+                    'brand'
+                ),
+            ),
+        );
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 't.name ASC',
+                'defaultOrder' => 'brand.name ASC, subBrand.name ASC, t.name ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
             ),
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return SubBrandSeries the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }

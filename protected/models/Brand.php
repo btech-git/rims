@@ -108,8 +108,8 @@ class Brand extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('name', $this->name, true);
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.name', $this->name, true);
         $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
         $criteria->compare('t.user_id', $this->user_id);
         $criteria->compare('t.date_posting', $this->date_posting);

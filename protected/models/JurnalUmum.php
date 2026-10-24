@@ -348,45 +348,6 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     }
     
-//    public static function getTransactionJournalBalances($coaIds, $startDate, $endDate, $branchId) {
-//        $inIdsSql = 'NULL';
-//        if (!empty($coaIds)) {
-//            $inIdsSql = implode(',', $coaIds);
-//        }
-//        
-//        $branchConditionSql = '';
-//        
-//        $params = array(
-//            ':start_date' => $startDate,
-//            ':end_date' => $endDate,
-//        );
-//        
-//        if (!empty($branchId)) {
-//            $branchConditionSql = ' AND j.branch_id = :branch_id';
-//            $params[':branch_id'] = $branchId;
-//        }
-//        
-//        $sql = "
-//            SELECT j.coa_id, IF(a.normal_balance = 'Debit', COALESCE(SUM(j.amount), 0), COALESCE(SUM(j.amount), 0) * -1) AS beginning_balance 
-//            FROM (
-//                SELECT coa_id, tanggal_transaksi, total AS debit, 0 AS credit, branch_id
-//                FROM " . JurnalUmum::model()->tableName() . "
-//                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
-//                UNION ALL
-//                SELECT coa_id, tanggal_transaksi, 0 AS debit, total AS credit, branch_id
-//                FROM " . JurnalUmum::model()->tableName() . "
-//                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
-//            ) j
-//            INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
-//            WHERE j.coa_id IN ({$inIdsSql}) AND j.tanggal_transaksi < :start_date " . $branchConditionSql . " 
-//            GROUP BY j.coa_id
-//        ";
-//
-//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
-//
-//        return $resultSet;
-//    }
-
     public static function getTransactionJournalData($startDate, $endDate, $branchId, $transactionType, $remark) {
         $branchConditionSql = '';
         $remarkConditionSql = '';
