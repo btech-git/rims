@@ -14,7 +14,7 @@ $this->menu=array(
 );
 ?>
 
-<h1>Update Ukuran Ban <?php echo $model->id; ?></h1>
+<h1>Update Ukuran Ban <?php echo $tireSize->header->id; ?></h1>
 
 <?php $this->renderPartial('_form', array(
     'tireSize' => $tireSize,
