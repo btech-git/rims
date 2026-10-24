@@ -1,18 +1,10 @@
-<?php
-Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 3% }
-    .width1-2 { width: 5% }
-    .width1-3 { width: 7% }
-    .width1-4 { width: 8% }
-    .width1-5 { width: 8% }
-    .width1-6 { width: 10% }
-    .width1-7 { width: 10% }
-    .width1-8 { width: 10% }
-    .width1-9 { width: 8% }
-    .width1-10 { width: 8% }
-    .width1-11 { width: 8% }
-');
-?>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div style="font-weight: bold; text-align: center">
     <?php $branch = Branch::model()->findByPk($branchId); ?>
@@ -31,78 +23,84 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <br />
 
-<table class="report">
-    <thead style="position: sticky; top: 0">
-        <tr id="header1">
-            <th class="width1-1">No</th>
-            <th class="width1-2">KM</th>
-            <th class="width1-3">Tanggal</th>
-            <th class="width1-4">WO #</th>
-            <th class="width1-5">Invoice #</th>
-            <th class="width1-6">Asuransi</th>
-            <th class="width1-7">Salesman</th>
-            <th class="width1-8">Mechanic</th>
-            <th class="width1-9">Invoice (Rp)</th>
-            <th class="width1-10">Jasa (Rp)</th>
-            <th class="width1-11">Parts (Rp)</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php $totalInvoice = '0.00'; ?>
-        <?php $totalService = '0.00'; ?>
-        <?php $totalProduct = '0.00'; ?>
-        <?php foreach ($dataProvider->data as $i => $header): ?>
-            <?php $totalPrice = CHtml::value($header, 'total_price'); ?>
-            <?php $servicePrice = CHtml::value($header, 'service_price'); ?>
-            <?php $productPrice = CHtml::value($header, 'product_price'); ?>
-            <tr class="items1">
-                <td><?php echo $i + 1; ?></td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'registrationTransaction.vehicle_mileage'))); ?>
+<div class="table_wrapper">
+    <table class="responsive">
+        <thead style="position: sticky; top: 0">
+            <tr id="header1">
+                <th class="width1-1">No</th>
+                <th class="width1-2">KM</th>
+                <th class="width1-3">Tanggal</th>
+                <th class="width1-4">WO #</th>
+                <th class="width1-5">Invoice #</th>
+                <th class="width1-6">Asuransi</th>
+                <th class="width1-7">Salesman</th>
+                <th class="width1-8">Mechanic</th>
+                <th class="width1-10">Jasa</th>
+                <th class="width1-11">Parts</th>
+                <th class="width1-9">Invoice (Rp)</th>
+                <th class="width1-10">Jasa (Rp)</th>
+                <th class="width1-11">Parts (Rp)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $totalInvoice = '0.00'; ?>
+            <?php $totalService = '0.00'; ?>
+            <?php $totalProduct = '0.00'; ?>
+            <?php foreach ($dataProvider->data as $i => $header): ?>
+                <?php $totalPrice = CHtml::value($header, 'total_price'); ?>
+                <?php $servicePrice = CHtml::value($header, 'service_price'); ?>
+                <?php $productPrice = CHtml::value($header, 'product_price'); ?>
+                <tr class="items1">
+                    <td><?php echo $i + 1; ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'registrationTransaction.vehicle_mileage'))); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($header->invoice_date))); ?></td>
+                    <td>
+                        <?php echo CHtml::link(CHtml::value($header, 'registrationTransaction.work_order_number'), array(
+                            '/frontDesk/registrationTransaction/view',
+                            'id' => $header->registration_transaction_id, 
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td>
+                        <?php echo CHtml::link(CHtml::value($header, 'invoice_number'), array(
+                            '/transaction/invoiceHeader/view',
+                            'id' => $header->id, 
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.employeeIdAssignMechanic.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'serviceLists')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'productLists')); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPrice)); ?>
+                    </td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $servicePrice)); ?>
+                    </td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $productPrice)); ?>
+                    </td>
+                </tr>
+                <?php $totalInvoice += $totalPrice; ?>
+                <?php $totalService += $servicePrice; ?>
+                <?php $totalProduct += $productPrice; ?>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td style="font-weight: bold; text-align: right; border-top: 1px solid" colspan="8">TOTAL</td>
+                <td style="font-weight: bold; text-align: right; border-top: 1px solid">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalInvoice)); ?>
                 </td>
-                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($header->invoice_date))); ?></td>
-                <td>
-                    <?php echo CHtml::link(CHtml::value($header, 'registrationTransaction.work_order_number'), array(
-                        '/frontDesk/registrationTransaction/view',
-                        'id' => $header->registration_transaction_id, 
-                    ), array('target' => '_blank')); ?>
+                <td style="font-weight: bold; text-align: right; border-top: 1px solid">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalService)); ?>
                 </td>
-                <td>
-                    <?php echo CHtml::link(CHtml::value($header, 'invoice_number'), array(
-                        '/transaction/invoiceHeader/view',
-                        'id' => $header->id, 
-                    ), array('target' => '_blank')); ?>
-                </td>
-                <td><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.employeeIdAssignMechanic.name')); ?></td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPrice)); ?>
-                </td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $servicePrice)); ?>
-                </td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $productPrice)); ?>
+                <td style="font-weight: bold; text-align: right; border-top: 1px solid">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalProduct)); ?>
                 </td>
             </tr>
-            <?php $totalInvoice += $totalPrice; ?>
-            <?php $totalService += $servicePrice; ?>
-            <?php $totalProduct += $productPrice; ?>
-        <?php endforeach; ?>
-    </tbody>
-    <tfoot>
-        <tr>
-            <td style="font-weight: bold; text-align: right; border-top: 1px solid" colspan="8">TOTAL</td>
-            <td style="font-weight: bold; text-align: right; border-top: 1px solid">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalInvoice)); ?>
-            </td>
-            <td style="font-weight: bold; text-align: right; border-top: 1px solid">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalService)); ?>
-            </td>
-            <td style="font-weight: bold; text-align: right; border-top: 1px solid">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalProduct)); ?>
-            </td>
-        </tr>
-    </tfoot>
-</table>
+        </tfoot>
+    </table>
+</div>

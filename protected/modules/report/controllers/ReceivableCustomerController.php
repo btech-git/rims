@@ -123,9 +123,9 @@ class ReceivableCustomerController extends Controller {
             'params' => $params,
         ));
         
-//        if (isset($_GET['SaveExcelDetail'])) {
-//            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $customer);
-//        }
+        if (isset($_GET['SaveExcelDetail'])) {
+            $this->saveToExcelDetailTransaction($invoiceHeaders, $startDate, $endDate, $customer);
+        }
 
         $this->render('transactionInfo', array(
             'invoiceHeaders' => $invoiceHeaders,
@@ -287,7 +287,7 @@ class ReceivableCustomerController extends Controller {
         Yii::app()->end();
     }
 
-    protected function saveToExcelDetailTransaction($dataProvider, $endDate, $coa) {
+    protected function saveToExcelDetailTransaction($invoiceHeaders, $startDate, $endDate, $customer) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -304,64 +304,87 @@ class ReceivableCustomerController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Piutang Customer Detail');
 
-        $worksheet->mergeCells('A1:G1');
-        $worksheet->mergeCells('A2:G2');
-        $worksheet->mergeCells('A3:G3');
+        $worksheet->mergeCells('A1:L1');
+        $worksheet->mergeCells('A2:L2');
+        $worksheet->mergeCells('A3:L3');
         
-        $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L5')->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Piutang Customer ' . CHtml::value($coa, 'name'));
+        $worksheet->setCellValue('A2', 'Piutang Customer ' . CHtml::value($customer, 'name'));
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:G5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:G5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:L5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:L5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
-        $worksheet->setCellValue('A5', 'Transaksi #');
+        $worksheet->setCellValue('A5', 'Invoice #');
         $worksheet->setCellValue('B5', 'Tanggal');
-        $worksheet->setCellValue('C5', 'Keterangan');
-        $worksheet->setCellValue('D5', 'Note');
-        $worksheet->setCellValue('E5', 'Invoice');
-        $worksheet->setCellValue('F5', 'Pembayaran');
-        $worksheet->setCellValue('G5', 'Saldo');
+        $worksheet->setCellValue('C5', 'Jatuh Tempo');
+        $worksheet->setCellValue('D5', 'TOP (hari)');
+        $worksheet->setCellValue('E5', 'Umur (hari)');
+        $worksheet->setCellValue('F5', 'Plat #');
+        $worksheet->setCellValue('G5', 'Kendaraan');
+        $worksheet->setCellValue('H5', 'Terkirim?');
+        $worksheet->setCellValue('I5', 'Status Piutang');
+        $worksheet->setCellValue('J5', 'Invoice');
+        $worksheet->setCellValue('K5', 'Pembayaran');
+        $worksheet->setCellValue('L5', 'Remaining');
         
         $counter = 6;
 
-        $totalDebit = '0.00';
-        $totalCredit = '0.00';
-        $balanceAmount = '0.00';
-
-        foreach ($dataProvider->data as $header) {
-            if ($header->debet_kredit == 'D') {
-                $amountDebit = $header->total;
-                $amountCredit = '0.00';
-            } else {
-                $amountDebit = '0.00';
-                $amountCredit = $header->total;
+        $revenueSum = '0.00';
+        $paymentAmountSum = '0.00';
+        $paymentLeftSum = '0.00';
+        
+        foreach ($invoiceHeaders as $invoiceHeader) {
+            $revenue = CHtml::value($invoiceHeader, 'total_price');
+            $paymentAmount = '0.00';
+            $paymentInDetails = PaymentInDetail::model()->with('paymentIn')->findAll(array(
+                'condition' => 't.invoice_header_id = :invoice_id AND paymentIn.payment_date BETWEEN :start_date AND :end_date AND paymentIn.user_id_cancelled IS NULL',
+                'params' => array(
+                    ':start_date' => $startDate,
+                    ':end_date' => $endDate,
+                    ':invoice_id' => $invoiceHeader->id,
+                )
+            ));
+            foreach ($paymentInDetails as $paymentInDetail) {
+                $paymentAmount += $paymentInDetail->totalAmount;
             }
-            $balanceAmount += $amountDebit - $amountCredit;
+            $paymentLeft = $revenue - $paymentAmount; 
+            $isReceivableOverdue = date('Y-m-d') > $invoiceHeader->due_date;
+            $outstandingDays = date_diff(date_create($invoiceHeader->due_date), date_create(date('Y-m-d')));
+            if ($isReceivableOverdue) {
+                $worksheet->getStyle("I{$counter}:L{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
             
-            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'kode_transaksi'));
-            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'tanggal_transaksi'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'remark'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'transaction_subject'));
-            $worksheet->setCellValue("E{$counter}", $amountDebit);
-            $worksheet->setCellValue("F{$counter}", $amountCredit);
-            $worksheet->setCellValue("G{$counter}", $balanceAmount);
+            $worksheet->setCellValue("A{$counter}", CHtml::value($invoiceHeader, 'invoice_number'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($invoiceHeader, 'invoice_date'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($invoiceHeader, 'due_date'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($invoiceHeader, 'customer.tenor'));
+            $worksheet->setCellValue("E{$counter}", $outstandingDays->format("%a days"));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($invoiceHeader, 'vehicle.plate_number'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($invoiceHeader, 'vehicle.carMake.name') . ' - ' . CHtml::value($invoiceHeader, 'vehicle.carModel.name') . ' - ' . CHtml::value($invoiceHeader, 'vehicle.carSubModel.name'));
+            $worksheet->setCellValue("H{$counter}", $invoiceHeader->is_sent_to_customer === 1 ? 'Terkirim' : 'Belum');
+            $worksheet->setCellValue("I{$counter}", $isReceivableOverdue ? 'Overdue' : 'Outstanding');
+            $worksheet->setCellValue("J{$counter}", $revenue);
+            $worksheet->setCellValue("K{$counter}", $paymentAmount);
+            $worksheet->setCellValue("L{$counter}", $paymentLeft);
             
-            $totalDebit += $amountDebit;
-            $totalCredit += $amountCredit;
+            $revenueSum += $revenue;
+            $paymentAmountSum += $paymentAmount;
+            $paymentLeftSum += $paymentLeft;
 
             $counter++;
         }
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->mergeCells("A{$counter}:D{$counter}");
         
-        $worksheet->setCellValue("A{$counter}", 'Total');
-        $worksheet->setCellValue("E{$counter}", $totalDebit);
-        $worksheet->setCellValue("F{$counter}", $totalCredit);
+        $worksheet->getStyle("A{$counter}:L{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:L{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $worksheet->setCellValue("I{$counter}", 'Total');
+        $worksheet->setCellValue("J{$counter}", $revenueSum);
+        $worksheet->setCellValue("K{$counter}", $paymentAmountSum);
+        $worksheet->setCellValue("L{$counter}", $paymentLeftSum);
 
         $counter++;
 

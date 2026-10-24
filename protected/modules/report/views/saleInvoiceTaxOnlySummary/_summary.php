@@ -38,7 +38,11 @@
                 <th>Total</th>
                 <th>WO #</th>
                 <th>SPK Customer #</th>
-                <th>Customer WO #</th>
+                <th>DMS Ref #</th>
+                <th>V-TAG</th>
+                <th>Resi Kirim #</th>
+                <th>Sudah Kirim?</th>
+                <th>Warranty Report</th>
                 <th>Faktur Pajak #</th>
                 <th>Tanggal F Pajak</th>
                 <th>FP DPP</th>
@@ -93,6 +97,10 @@
                     <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_work_order_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_document_order_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.technical_code_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'delivery_receipt_number')); ?></td>
+                    <td><?php echo $header->is_sent_to_customer === 1 ? 'Terkirim' : 'Belum'; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.warranty_report')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'transaction_tax_number')); ?></td>
                     <td><?php echo $header->transaction_tax_date == null ? '' : CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transaction_tax_date))); ?></td>
                     <td style="text-align: right">

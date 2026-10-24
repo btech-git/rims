@@ -1,18 +1,14 @@
 <?php
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
-
-Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 10% }
-    .width1-2 { width: 7% }
-    .width1-3 { width: 8% }
-    .width1-4 { width: 20% }
-    .width1-5 { width: 10% }
-    .width1-6 { width: 20% }
-    .width1-7 { width: 10% }
-    .width1-8 { width: 10% }
-    .width1-9 { width: 10% }
-');
 ?>
+
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div class="tab reportTab">
     <div class="tabHead">
@@ -27,7 +23,7 @@ Yii::app()->clientScript->registerCss('_report', '
     
     <?php echo CHtml::beginForm('', 'get'); ?>
         <div class="row buttons">
-            <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
+            <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
         </div>
     <?php echo CHtml::endForm(); ?>
 
@@ -35,8 +31,8 @@ Yii::app()->clientScript->registerCss('_report', '
     
     <div class="tabBody">
         <div id="detail_div">
-            <div class="relative">
-                <table class="report">
+            <div class="table_wrapper">
+                <table class="responsive">
                     <thead style="position: sticky; top: 0">
                         <tr id="header1">
                             <th class="width1-1">Invoice #</th>
@@ -46,6 +42,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <th class="width1-2">Umur (hari)</th>
                             <th class="width1-5">Plat #</th>
                             <th class="width1-6">Kendaraan</th>
+                            <th class="width1-6">Terkirim?</th>
                             <th class="width1-7">Status Piutang</th>
                             <th class="width1-7">invoice</th>
                             <th class="width1-8">Payment</th>
@@ -85,7 +82,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceHeader->due_date))); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.tenor')); ?></td>
                                 <td>
-                                    <?php $outstandingDays = date_diff(date_create($invoiceHeader->invoice_date), date_create(date('Y-m-d'))); ?>
+                                    <?php $outstandingDays = date_diff(date_create($invoiceHeader->due_date), date_create(date('Y-m-d'))); ?>
                                     <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
                                 </td>
                                 <td><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.plate_number')); ?></td>
@@ -94,7 +91,10 @@ Yii::app()->clientScript->registerCss('_report', '
                                     <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carModel.name')); ?> -
                                     <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carSubModel.name')); ?>
                                 </td>
-                                <td style="text-align: right; color: <?php echo $isReceivableOverdue ? 'red' : 'black'; ?>"><?php echo $isReceivableOverdue ? 'Overdue' : 'Outstanding'; ?></td>
+                                <td><?php echo $invoiceHeader->is_sent_to_customer === 1 ? 'Terkirim' : 'Belum'; ?></td>
+                                <td style="text-align: right; color: <?php echo $isReceivableOverdue ? 'red' : 'black'; ?>">
+                                    <?php echo $isReceivableOverdue ? 'Overdue' : 'Outstanding'; ?>
+                                </td>
                                 <td style="text-align: right; color: <?php echo $isReceivableOverdue ? 'red' : 'black'; ?>">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $revenue)); ?>
                                 </td>
@@ -113,7 +113,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="8">TOTAL</td>
+                            <td colspan="9">TOTAL</td>
                             <td style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $revenueSum)); ?>
                             </td>

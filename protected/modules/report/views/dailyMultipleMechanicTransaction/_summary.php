@@ -61,7 +61,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_company_quantity']); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detailItem['service_quantity'])); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $detailItem['service_quantity'])); ?></td>
                 <td></td>
                 <td></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_service'])); ?></td>

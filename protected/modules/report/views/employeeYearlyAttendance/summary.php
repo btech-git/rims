@@ -50,6 +50,7 @@
 
             <div style="font-weight: bold; text-align: center">
                 <?php $employee = Employee::model()->findByPK($employeeId); ?>
+                <div style="font-size: larger">Raperind Motor</div>
                 <div style="font-size: larger">Laporan Attendance Employee <?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></div>
                 <div><?php echo CHtml::encode($year); ?></div>
             </div>
