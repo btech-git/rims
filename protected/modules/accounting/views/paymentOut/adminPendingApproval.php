@@ -140,7 +140,7 @@ $('.search-form form').submit(function(){
         ),
         array(
             'header' => 'Approval Status',
-            'value' => 'empty($data->paymentOutApprovals) ? "N/A" : $data->getApprovalStatus()'
+            'value' => '$data->status'
         ),
         array(
             'header' => 'Tanggal Input',
