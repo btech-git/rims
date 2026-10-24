@@ -4,7 +4,6 @@
 
 $this->breadcrumbs=array(
 	'Tire Sizes'=>array('index'),
-	$model->section_width=>array('view','id'=>$model->id),
 	'Update',
 );
 
