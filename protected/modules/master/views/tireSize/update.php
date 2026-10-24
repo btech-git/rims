@@ -19,10 +19,12 @@ $this->menu=array(
 <h1>Update Ukuran Ban <?php echo $model->id; ?></h1>
 
 <?php $this->renderPartial('_form', array(
-    'model'=>$model,
+    'tireSize' => $tireSize,
     'carModel' => $carModel,
     'carModelDataProvider' => $carModelDataProvider,
     'subBrandSeries' => $subBrandSeries,
-    'subBrandSeriesDataProvider' => $subBrandSeriesDataProvider,
+    'premiumOptionDataProvider' => $premiumOptionDataProvider,
+    'standardOptionDataProvider' => $standardOptionDataProvider,
+    'economicOptionDataProvider' => $economicOptionDataProvider,
     'brandId' => $brandId,
 )); ?>

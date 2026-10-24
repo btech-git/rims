@@ -120,23 +120,59 @@ class TireSizeController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $model = $this->loadModel($id);
-        $model->user_id_updated = Yii::app()->user->id;
-        $model->updated_datetime = date('Y-m-d H:i:s');
+        $tireSize = $this->instantiate($id, 'create');
+        $tireSize->header->user_id_updated = Yii::app()->user->id;
+        $tireSize->header->updated_datetime = date('Y-m-d H:i:s');
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $carModel = new VehicleCarModel('search');
+        $carModel->unsetAttributes();  // clear any default values
+        if (isset($_GET['VehicleCarModel'])) {
+            $carModel->attributes = $_GET['VehicleCarModel'];
+        }
+        $carModelDataProvider = $carModel->search();
 
-        if (isset($_POST['TireSize'])) {
-            $model->attributes = $_POST['TireSize'];
-            if ($model->save()) {
-                $this->saveMasterLog($model);
-                $this->redirect(array('view', 'id' => $model->id));
+        $brandId = (isset($_GET['BrandId'])) ? $_GET['BrandId'] : '';
+        $subBrandSeries = new SubBrandSeries('search');
+        $subBrandSeries->unsetAttributes();  // clear any default values
+        if (isset($_GET['SubBrandSeries'])) {
+            $subBrandSeries->attributes = $_GET['SubBrandSeries'];
+        }
+        
+        $premiumOptionDataProvider = $subBrandSeries->search();
+        $premiumOptionDataProvider->pagination->pageVar = 'premium_page_dialog';
+        if (!empty($brandId)) {
+            $premiumOptionDataProvider->criteria->compare('subBrand.brand_id', $brandId);
+        }
+
+        $standardOptionDataProvider = $subBrandSeries->search();
+        $standardOptionDataProvider->pagination->pageVar = 'standard_page_dialog';
+        if (!empty($brandId)) {
+            $standardOptionDataProvider->criteria->compare('subBrand.brand_id', $brandId);
+        }
+
+        $economicOptionDataProvider = $subBrandSeries->search();
+        $economicOptionDataProvider->pagination->pageVar = 'economic_page_dialog';
+        if (!empty($brandId)) {
+            $economicOptionDataProvider->criteria->compare('subBrand.brand_id', $brandId);
+        }
+
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($tireSize);
+            
+            if ($tireSize->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $tireSize->header->id));
             }
         }
 
         $this->render('update', array(
-            'model' => $model,
+            'tireSize' => $tireSize,
+            'carModel' => $carModel,
+            'carModelDataProvider' => $carModelDataProvider,
+            'subBrandSeries' => $subBrandSeries,
+            'premiumOptionDataProvider' => $premiumOptionDataProvider,
+            'standardOptionDataProvider' => $standardOptionDataProvider,
+            'economicOptionDataProvider' => $economicOptionDataProvider,
+            'brandId' => $brandId,
         ));
     }
 
