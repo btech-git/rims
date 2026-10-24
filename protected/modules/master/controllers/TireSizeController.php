@@ -2,7 +2,7 @@
 
 class TireSizeController extends Controller {
 
-    public $layout = '//layouts/column2';
+    public $layout = '//layouts/backend';
 
     public function filters() {
         return array(
@@ -58,23 +58,59 @@ class TireSizeController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new TireSize;
-        $model->user_id_created = Yii::app()->user->id;
-        $model->created_datetime = date('Y-m-d H:i:s');
+        $tireSize = $this->instantiate(null, 'create');
+        $tireSize->header->user_id_created = Yii::app()->user->id;
+        $tireSize->header->created_datetime = date('Y-m-d H:i:s');
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $carModel = new VehicleCarModel('search');
+        $carModel->unsetAttributes();  // clear any default values
+        if (isset($_GET['VehicleCarModel'])) {
+            $carModel->attributes = $_GET['VehicleCarModel'];
+        }
+        $carModelDataProvider = $carModel->search();
 
-        if (isset($_POST['TireSize'])) {
-            $model->attributes = $_POST['TireSize'];
-            if ($model->save()) {
-                $this->saveMasterLog($model);
-                $this->redirect(array('view', 'id' => $model->id));
+        $brandId = (isset($_GET['BrandId'])) ? $_GET['BrandId'] : '';
+        $subBrandSeries = new SubBrandSeries('search');
+        $subBrandSeries->unsetAttributes();  // clear any default values
+        if (isset($_GET['SubBrandSeries'])) {
+            $subBrandSeries->attributes = $_GET['SubBrandSeries'];
+        }
+        
+        $premiumOptionDataProvider = $subBrandSeries->search();
+        $premiumOptionDataProvider->pagination->pageVar = 'premium_page_dialog';
+        if (!empty($brandId)) {
+            $premiumOptionDataProvider->criteria->compare('subBrand.brand_id', $brandId);
+        }
+
+        $standardOptionDataProvider = $subBrandSeries->search();
+        $standardOptionDataProvider->pagination->pageVar = 'standard_page_dialog';
+        if (!empty($brandId)) {
+            $standardOptionDataProvider->criteria->compare('subBrand.brand_id', $brandId);
+        }
+
+        $economicOptionDataProvider = $subBrandSeries->search();
+        $economicOptionDataProvider->pagination->pageVar = 'economic_page_dialog';
+        if (!empty($brandId)) {
+            $economicOptionDataProvider->criteria->compare('subBrand.brand_id', $brandId);
+        }
+
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($tireSize);
+            
+            if ($tireSize->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $tireSize->header->id));
             }
         }
 
         $this->render('create', array(
-            'model' => $model,
+            'tireSize' => $tireSize,
+            'carModel' => $carModel,
+            'carModelDataProvider' => $carModelDataProvider,
+            'subBrandSeries' => $subBrandSeries,
+            'premiumOptionDataProvider' => $premiumOptionDataProvider,
+            'standardOptionDataProvider' => $standardOptionDataProvider,
+            'economicOptionDataProvider' => $economicOptionDataProvider,
+            'brandId' => $brandId,
         ));
     }
 
@@ -166,13 +202,126 @@ class TireSizeController extends Controller {
         ));
     }
 
-    /**
-     * Returns the data model based on the primary key given in the GET variable.
-     * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return TireSize the loaded model
-     * @throws CHttpException
-     */
+    public function actionAjaxHtmlAddCarModels($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tireSize = $this->instantiate($id, '');
+            $this->loadState($tireSize);
+
+            if (isset($_POST['CarModelIds'])) {
+                foreach ($_POST['CarModelIds'] as $carModelId) {
+                    $tireSize->addCarModel($carModelId);
+                }
+            }
+
+            $this->renderPartial('_detailCarModel', array(
+                'tireSize' => $tireSize,
+            ));
+        }
+    }
+ 
+    public function actionAjaxHtmlRemoveCarModelDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tireSize = $this->instantiate($id, '');
+            $this->loadState($tireSize);
+
+            $tireSize->removeCarModelDetailAt($index);
+
+            $this->renderPartial('_detailCarModel', array(
+                'tireSize' => $tireSize,
+            ));
+        }
+    }
+    
+    public function actionAjaxHtmlAddPremiumOptions($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tireSize = $this->instantiate($id, '');
+            $this->loadState($tireSize);
+
+            if (isset($_POST['SubBrandSeriesPremiumIds'])) {
+                foreach ($_POST['SubBrandSeriesPremiumIds'] as $subBrandSeriesId) {
+                    $tireSize->addPremiumOption($subBrandSeriesId);
+                }
+            }
+
+            $this->renderPartial('_detailPremiumOption', array(
+                'tireSize' => $tireSize,
+            ));
+        }
+    }
+ 
+    public function actionAjaxHtmlRemovePremiumOptionDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tireSize = $this->instantiate($id, '');
+            $this->loadState($tireSize);
+
+            $tireSize->removePremiumOptionDetailAt($index);
+
+            $this->renderPartial('_detailPremiumOption', array(
+                'tireSize' => $tireSize,
+            ));
+        }
+    }
+    
+    public function actionAjaxHtmlAddStandardOptions($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tireSize = $this->instantiate($id, '');
+            $this->loadState($tireSize);
+
+            if (isset($_POST['SubBrandSeriesStandardIds'])) {
+                foreach ($_POST['SubBrandSeriesStandardIds'] as $subBrandSeriesId) {
+                    $tireSize->addStandardOption($subBrandSeriesId);
+                }
+            }
+
+            $this->renderPartial('_detailStandardOption', array(
+                'tireSize' => $tireSize,
+            ));
+        }
+    }
+ 
+    public function actionAjaxHtmlRemoveStandardOptionDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tireSize = $this->instantiate($id, '');
+            $this->loadState($tireSize);
+
+            $tireSize->removeStandardOptionDetailAt($index);
+
+            $this->renderPartial('_detailStandardOption', array(
+                'tireSize' => $tireSize,
+            ));
+        }
+    }
+    
+    public function actionAjaxHtmlAddEconomicOptions($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tireSize = $this->instantiate($id, '');
+            $this->loadState($tireSize);
+
+            if (isset($_POST['SubBrandSeriesEconomicIds'])) {
+                foreach ($_POST['SubBrandSeriesEconomicIds'] as $subBrandSeriesId) {
+                    $tireSize->addEconomicOption($subBrandSeriesId);
+                }
+            }
+
+            $this->renderPartial('_detailEconomicOption', array(
+                'tireSize' => $tireSize,
+            ));
+        }
+    }
+ 
+    public function actionAjaxHtmlRemoveEconomicOptionDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tireSize = $this->instantiate($id, '');
+            $this->loadState($tireSize);
+
+            $tireSize->removeEconomicOptionDetailAt($index);
+
+            $this->renderPartial('_detailEconomicOption', array(
+                'tireSize' => $tireSize,
+            ));
+        }
+    }
+    
     public function loadModel($id) {
         $model = TireSize::model()->findByPk($id);
         if ($model === null) {
@@ -180,6 +329,92 @@ class TireSizeController extends Controller {
         }
         
         return $model;
+    }
+
+    public function instantiate($id, $actionType) {
+        
+        if (empty($id)) {
+            $tireSizeRecommendation = new TireSizeRecommendation($actionType, new TireSize(), array(), array(), array(), array());
+        } else {
+            $tireSize = $this->loadModel($id);
+            $tireSizeRecommendation = new TireSizeRecommendation($actionType, $tireSize, $tireSize->tireSizeCarModelRecommendations, $tireSize->tireSizePremiumOptions, $tireSize->tireSizeStandardOptions, $tireSize->tireSizeEconomicOptions);
+        }
+        
+        return $tireSizeRecommendation;
+    }
+
+    public function loadState($tireSize) {
+        if (isset($_POST['TireSize'])) {
+            $tireSize->header->attributes = $_POST['TireSize'];
+        }
+        
+        if (isset($_POST['TireSizeCarModelRecommendation'])) {
+            foreach ($_POST['TireSizeCarModelRecommendation'] as $i => $item) {
+                if (isset($tireSize->carModelDetails[$i])) {
+                    $tireSize->carModelDetails[$i]->attributes = $item;
+                } else {
+                    $detail = new TireSizeCarModelRecommendation();
+                    $detail->attributes = $item;
+                    $tireSize->carModelDetails[] = $detail;
+                }
+            }
+            if (count($_POST['TireSizeCarModelRecommendation']) < count($tireSize->carModelDetails)) {
+                array_splice($tireSize->carModelDetails, $i + 1);
+            }
+        } else {
+            $tireSize->carModelDetails = array();
+        }
+        
+        if (isset($_POST['TireSizePremiumOption'])) {
+            foreach ($_POST['TireSizePremiumOption'] as $i => $item) {
+                if (isset($tireSize->premiumOptionDetails[$i])) {
+                    $tireSize->premiumOptionDetails[$i]->attributes = $item;
+                } else {
+                    $detail = new TireSizePremiumOption();
+                    $detail->attributes = $item;
+                    $tireSize->premiumOptionDetails[] = $detail;
+                }
+            }
+            if (count($_POST['TireSizePremiumOption']) < count($tireSize->premiumOptionDetails)) {
+                array_splice($tireSize->premiumOptionDetails, $i + 1);
+            }
+        } else {
+            $tireSize->premiumOptionDetails = array();
+        }
+        
+        if (isset($_POST['TireSizeStandardOption'])) {
+            foreach ($_POST['TireSizeStandardOption'] as $i => $item) {
+                if (isset($tireSize->standardOptionDetails[$i])) {
+                    $tireSize->standardOptionDetails[$i]->attributes = $item;
+                } else {
+                    $detail = new TireSizeStandardOption();
+                    $detail->attributes = $item;
+                    $tireSize->standardOptionDetails[] = $detail;
+                }
+            }
+            if (count($_POST['TireSizeStandardOption']) < count($tireSize->standardOptionDetails)) {
+                array_splice($tireSize->standardOptionDetails, $i + 1);
+            }
+        } else {
+            $tireSize->standardOptionDetails = array();
+        }
+        
+        if (isset($_POST['TireSizeEconomicOption'])) {
+            foreach ($_POST['TireSizeEconomicOption'] as $i => $item) {
+                if (isset($tireSize->economicOptionDetails[$i])) {
+                    $tireSize->economicOptionDetails[$i]->attributes = $item;
+                } else {
+                    $detail = new TireSizeEconomicOption();
+                    $detail->attributes = $item;
+                    $tireSize->economicOptionDetails[] = $detail;
+                }
+            }
+            if (count($_POST['TireSizeEconomicOption']) < count($tireSize->economicOptionDetails)) {
+                array_splice($tireSize->economicOptionDetails, $i + 1);
+            }
+        } else {
+            $tireSize->economicOptionDetails = array();
+        }
     }
 
     /**

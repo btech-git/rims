@@ -16,6 +16,13 @@ $this->menu=array(
 );
 ?>
 
-<h1>Update Tire Specifications <?php echo $model->id; ?></h1>
+<h1>Update Ukuran Ban <?php echo $model->id; ?></h1>
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php $this->renderPartial('_form', array(
+    'model'=>$model,
+    'carModel' => $carModel,
+    'carModelDataProvider' => $carModelDataProvider,
+    'subBrandSeries' => $subBrandSeries,
+    'subBrandSeriesDataProvider' => $subBrandSeriesDataProvider,
+    'brandId' => $brandId,
+)); ?>

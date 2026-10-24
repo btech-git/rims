@@ -13,6 +13,15 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create Tire Specifications</h1>
+<h1>Create Ukuran Ban</h1>
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php $this->renderPartial('_form', array(
+    'tireSize' => $tireSize,
+    'carModel' => $carModel,
+    'carModelDataProvider' => $carModelDataProvider,
+    'subBrandSeries' => $subBrandSeries,
+    'premiumOptionDataProvider' => $premiumOptionDataProvider,
+    'standardOptionDataProvider' => $standardOptionDataProvider,
+    'economicOptionDataProvider' => $economicOptionDataProvider,
+    'brandId' => $brandId,
+)); ?>
