@@ -30,7 +30,16 @@
         <tbody>
             <?php $runningNumber = 1; ?>
             <?php foreach ($dataProvider->data as $activeRegistrationItem): ?>
-                <tr style="background-color: <?php echo $activeRegistrationItem->status == 'Finished' ? 'greenyellow' : 'salmon'; ?>">
+                <?php $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $activeRegistrationItem->id)); ?>
+                <?php $backgroundColor = ''; ?>
+                <?php if (!empty($invoiceHeader) && $invoiceHeader->payment_left > 0): ?>
+                    <?php $backgroundColor = 'yellow'; ?>
+                <?php elseif ($activeRegistrationItem->status == 'Finished'): ?>
+                    <?php $backgroundColor = 'greenyellow'; ?>
+                <?php else: ?>
+                    <?php $backgroundColor = 'salmon'; ?>
+                <?php endif; ?>
+                <tr style="background-color: <?php echo $backgroundColor; ?>">
                     <td><?php echo CHtml::encode($runningNumber); ?></td>
                     <td>
                         <?php echo CHtml::link($activeRegistrationItem->transaction_number, array("view", "id"=>$activeRegistrationItem->id), array(

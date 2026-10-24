@@ -223,7 +223,7 @@ $this->breadcrumbs = array(
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                         
-                        <?php if ($model->status == 'Finished'): ?>
+                        <?php if (!empty($invoices)): ?>
                             <?php echo CHtml::link('WO Rework', array("/frontDesk/bodyRepairRegistration/reworkTransaction", "id" => $model->id), array(
                                 'class' => 'button warning right', 
                                 'style' => 'margin-right:10px',

@@ -45,7 +45,9 @@ Yii::app()->clientScript->registerScript('search', "
                 <a href="#" class="search-button right button cbutton secondary" id="menushow">Advanced Search</a>
             </div>
         </div>
+        
         <div class="clearfix"></div>
+        
         <div class="search-form" style="display:none">
             <?php $this->renderPartial('_search', array(
                 'model' => $model,
@@ -63,6 +65,10 @@ Yii::app()->clientScript->registerScript('search', "
 </div>
 
 <br />
+
+<div style="width: 200px; height: 25px; background-color: salmon; text-align: center; display: inline-block; font-weight: bold;">No Invoice</div>
+<div style="width: 200px; height: 25px; background-color: yellow; text-align: center; display: inline-block; font-weight: bold;">Invoice no payment</div>
+<div style="width: 200px; height: 25px; background-color: greenyellow; text-align: center; display: inline-block; font-weight: bold;">Finished</div>
 
 <div class="relative">
     <div class="table_wrapper">

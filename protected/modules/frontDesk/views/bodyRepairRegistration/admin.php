@@ -64,6 +64,10 @@ Yii::app()->clientScript->registerScript('search', "
 
 <br />
 
+<div style="width: 200px; height: 25px; background-color: salmon; text-align: center; display: inline-block; font-weight: bold;">No Invoice</div>
+<div style="width: 200px; height: 25px; background-color: yellow; text-align: center; display: inline-block; font-weight: bold;">Invoice no payment</div>
+<div style="width: 200px; height: 25px; background-color: greenyellow; text-align: center; display: inline-block; font-weight: bold;">Finished</div>
+
 <div class="relative">
     <div class="table_wrapper">
         <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
