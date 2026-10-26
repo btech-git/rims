@@ -32,7 +32,7 @@ $('.search-form form').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <h2>Manage Tanda Terima Penjualan</h2>
+                <h2>Manage Rekap Tagihan</h2>
                 
                 <?php echo CHtml::link('<span class="fa fa-plus"></span>Rekap by Customer', Yii::app()->baseUrl . '/accounting/saleReceipt/customerList', array(
                     'class' => 'button success right',

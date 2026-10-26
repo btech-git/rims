@@ -52,6 +52,7 @@ class SaleReceiptController extends Controller {
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
         $customerDataProvider->criteria->order = 't.name ASC';
+        $customerDataProvider->criteria->addCondition("t.customer_type = 'Company' AND t.status = 'Active'");
 
         $this->render('customerList', array(
             'customer' => $customer,
@@ -64,6 +65,7 @@ class SaleReceiptController extends Controller {
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
         $insuranceCompanyDataProvider = $insuranceCompany->search();
         $insuranceCompanyDataProvider->criteria->order = 't.name ASC';
+        $insuranceCompanyDataProvider->criteria->addCondition("t.is_approved = 1");
 
         $this->render('insuranceList', array(
             'insuranceCompany' => $insuranceCompany,

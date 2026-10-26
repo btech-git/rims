@@ -33,7 +33,7 @@
                 <?php $today = new DateTime('today'); ?>
                 <?php $age = $birthDate->diff($today); ?>
                 <?php $employmentDays = date_diff(date_create($employee->recruitment_date), date_create(date('Y-m-d'))); ?>
-            <p><h3>Happy <?php echo CHtml::encode($age->y); ?>th Birthday, <?php echo CHtml::encode(CHtml::value($employee, 'name')); ?> (<?php echo CHtml::encode(CHtml::value($employee, 'level.name')); ?> <?php echo CHtml::encode(CHtml::value($employee, 'position.name')); ?>)!!!</h3></p>
+                <p><h3>Happy <?php echo CHtml::encode($age->y); ?>th Birthday, <?php echo CHtml::encode(CHtml::value($employee, 'name')); ?> (<?php echo CHtml::encode(CHtml::value($employee, 'level.name')); ?> <?php echo CHtml::encode(CHtml::value($employee, 'position.name')); ?>)!!!</h3></p>
                 <p>Raperind Motor want to wish you all the best and thank you for being with us for <?php echo CHtml::encode($employmentDays->format("%a days")); ?></p>
             <?php endforeach; ?>
         </div>

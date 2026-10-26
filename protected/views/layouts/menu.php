@@ -310,7 +310,7 @@
                         'visible' => (Yii::app()->user->checkAccess('coretaxInvoiceView'))
                     ),
                     array(
-                        'label' => 'Rekap Faktur Penjualan', 
+                        'label' => 'Rekap Tagihan', 
                         'url' => array('/accounting/saleReceipt/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit') || 
                             Yii::app()->user->checkAccess('saleInvoiceView'))

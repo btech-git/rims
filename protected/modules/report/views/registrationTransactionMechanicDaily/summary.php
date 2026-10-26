@@ -29,24 +29,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <label class="prefix">Halaman saat ini</label>
+                                    <span class="prefix">Mekanik</span>
                                 </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                 <div class="small-8 columns">
+                                    <?php echo CHtml::activeDropDownlist($registrationTransaction, 'employee_id_assign_mechanic', CHtml::listData(Employee::model()->findAllbyAttributes(array(
+                                        'status' => 'Active', 
+                                        'position_id' => 1,
+                                    ), array('order' => 't.name ASC')), 'id','name'), array('empty'=>'-- All Mechanic --',)); ?>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -90,6 +87,17 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
+                                    <label class="prefix">Halaman saat ini</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
                                     <span class="prefix">Branch </span>
                                 </div>
                                  <div class="small-8 columns">
@@ -102,7 +110,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="clear"></div>
 
                 <div class="row buttons">

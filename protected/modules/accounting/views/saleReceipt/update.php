@@ -5,7 +5,7 @@ $this->breadcrumbs=array(
 );
 ?>
 
-<h1>Update Tanda Terima Penjualan</h1>
+<h1>Update Rekap Tagihan</h1>
 
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(

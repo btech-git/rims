@@ -135,6 +135,7 @@ class RegistrationTransactionMechanicDailyController extends Controller {
             $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'vehicle.color.name'));
             $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'vehicle_entry_datetime'));
             $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'vehicle_exit_datetime'));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'rework_transaction_number'));
             $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'work_order_number'));
             $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'work_order_date'));
             $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'work_order_time'));

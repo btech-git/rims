@@ -37,7 +37,7 @@ $this->breadcrumbs = array(
             )); ?>
         <?php endif; ?>
         
-        <h1>View Tanda Terima Penjualan #<?php echo $model->id; ?></h1>
+        <h1>View Rekap Tagihan #<?php echo $model->id; ?></h1>
     </div>
     
     <div class="row">
@@ -49,7 +49,7 @@ $this->breadcrumbs = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Tanda Terima #</span>
+                                    <span class="prefix">Rekap #</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
