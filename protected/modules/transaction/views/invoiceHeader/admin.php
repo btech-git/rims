@@ -33,7 +33,7 @@ $('#invoiceSearch').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <a class="button warning right" href="<?php echo Yii::app()->baseUrl.'/transaction/invoiceHeader/index'; ?>">Invoice Belum Terkirim</a>
+                <!--<a class="button warning right" href="<?php // echo Yii::app()->baseUrl.'/transaction/invoiceHeader/index'; ?>">Invoice Belum Terkirim</a>-->
                 <h2>Manage Invoices</h2>
             </div>
 

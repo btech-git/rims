@@ -48,12 +48,12 @@ $this->breadcrumbs = array(
             )); ?>
         <?php endif; ?>
 
-        <?php if ($model->status != "CANCELLED!!!" && $model->technical_code_number == null && $model->warranty_report == null): ?>
+        <?php /*if ($model->status != "CANCELLED!!!" && $model->technical_code_number == null && $model->warranty_report == null): ?>
             <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Resi Kirim', array("updateTechnicalNumber", "id" => $model->id), array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px'
             )); ?>
-        <?php endif; ?>
+        <?php endif;*/ ?>
 
         <?php if ($model->status != 'PAID'): ?> 
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Invoice', array("pdf", "id" => $model->id), array(
