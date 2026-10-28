@@ -72,6 +72,12 @@
                             'followUpDataProvider' => $followUpDataProvider, 
                         ), true),
                     ),
+                    'Katalog Opsi Ban' => array(
+                        'content' => $this->renderPartial('_viewTireOption', array(
+                        'tireSize' => $tireSize,
+                        'tireSizeDataProvider' => $tireSizeDataProvider,
+                        ), true),
+                    ),
                 ),
                 // additional javascript options for the tabs plugin
                 'options' => array(
