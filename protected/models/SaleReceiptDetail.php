@@ -65,9 +65,24 @@ class SaleReceiptDetail extends CActiveRecord {
             'memo' => 'Memo',
             'sale_receipt_header_id' => 'Sale Receipt Header',
             'invoice_header_id' => 'Invoice Header',
+            'insurance_own_risk_amount' => 'Insurance Own Risk Amount',
+            'downpayment_amount' => 'Downpayment Amount',
+            'receivable_amount' => 'Receivable Amount',
         );
     }
 
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -96,4 +111,5 @@ class SaleReceiptDetail extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
+
 }

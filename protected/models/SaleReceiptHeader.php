@@ -23,19 +23,26 @@
  * @property string $total_downpayment_amount
  * @property string $total_own_risk_amount
  * @property string $total_receivable_amount
+ * @property string $delivery_receipt_number
+ * @property string $tax_item_percentage
+ * @property string $tax_service_percentage
+ * @property string $tax_item_amount
+ * @property string $tax_service_amount
+ * @property integer $company_bank_id
  *
  * The followings are the available model relations:
  * @property SaleReceiptDetail[] $saleReceiptDetails
+ * @property CompanyBank $companyBank
  * @property Branch $branch
  * @property Customer $customer
+ * @property Users $userIdCancelled
  * @property Users $userIdCreated
  * @property Users $userIdUpdated
- * @property Users $userIdCancelled
- * @property InsuranceCompany $insuranceCompany
  */
 class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'SRC';
+
     /**
      * @return string the associated database table name
      */
@@ -50,15 +57,16 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, status, branch_id, user_id_created, created_datetime', 'required'),
-            array('customer_id, branch_id, user_id_created, user_id_updated, user_id_cancelled, insurance_company_id', 'numerical', 'integerOnly' => true),
-            array('transaction_number', 'length', 'max' => 60),
+            array('transaction_number, transaction_date, due_date, status, branch_id, user_id_created, created_datetime', 'required'),
+            array('customer_id, branch_id, user_id_created, user_id_updated, user_id_cancelled, insurance_company_id, company_bank_id', 'numerical', 'integerOnly' => true),
+            array('transaction_number, delivery_receipt_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 20),
-            array('total_invoice_amount, total_downpayment_amount, total_own_risk_amount, total_receivable_amount', 'length', 'max' => 18),
+            array('total_invoice_amount, total_downpayment_amount, total_own_risk_amount, total_receivable_amount, tax_item_amount, tax_service_amount', 'length', 'max' => 18),
+            array('tax_item_percentage, tax_service_percentage', 'length', 'max' => 10),
             array('note, updated_datetime, cancelled_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, due_date, status, note, total_invoice_amount, customer_id, branch_id, user_id_created, created_datetime, user_id_updated, updated_datetime, user_id_cancelled, cancelled_datetime, insurance_company_id, total_downpayment_amount, total_own_risk_amount, total_receivable', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, due_date, status, note, total_invoice_amount, customer_id, branch_id, user_id_created, created_datetime, user_id_updated, updated_datetime, user_id_cancelled, cancelled_datetime, insurance_company_id, total_downpayment_amount, total_own_risk_amount, total_receivable_amount, delivery_receipt_number, tax_item_percentage, tax_service_percentage, tax_item_amount, tax_service_amount, company_bank_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -70,12 +78,12 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'saleReceiptDetails' => array(self::HAS_MANY, 'SaleReceiptDetail', 'sale_receipt_header_id'),
+            'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
             'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
             'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
-            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
-            'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
         );
     }
 
@@ -100,6 +108,15 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
             'user_id_cancelled' => 'User Id Cancelled',
             'cancelled_datetime' => 'Cancelled Datetime',
             'insurance_company_id' => 'Insurance Company',
+            'total_downpayment_amount' => 'Total Downpayment Amount',
+            'total_own_risk_amount' => 'Total Own Risk Amount',
+            'total_receivable_amount' => 'Total Receivable Amount',
+            'delivery_receipt_number' => 'Delivery Receipt Number',
+            'tax_item_percentage' => 'Tax Item Percentage',
+            'tax_service_percentage' => 'Tax Service Percentage',
+            'tax_item_amount' => 'Tax Item Amount',
+            'tax_service_amount' => 'Tax Service Amount',
+            'company_bank_id' => 'Company Bank',
         );
     }
 
@@ -136,6 +153,15 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('user_id_cancelled', $this->user_id_cancelled);
         $criteria->compare('cancelled_datetime', $this->cancelled_datetime, true);
         $criteria->compare('insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('total_downpayment_amount', $this->total_downpayment_amount, true);
+        $criteria->compare('total_own_risk_amount', $this->total_own_risk_amount, true);
+        $criteria->compare('total_receivable_amount', $this->total_receivable_amount, true);
+        $criteria->compare('delivery_receipt_number', $this->delivery_receipt_number, true);
+        $criteria->compare('tax_item_percentage', $this->tax_item_percentage, true);
+        $criteria->compare('tax_service_percentage', $this->tax_service_percentage, true);
+        $criteria->compare('tax_item_amount', $this->tax_item_amount, true);
+        $criteria->compare('tax_service_amount', $this->tax_service_amount, true);
+        $criteria->compare('company_bank_id', $this->company_bank_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -151,5 +177,24 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-
+    
+    public function getTotalPartsAmount() {
+        $total = '0.00';
+        
+        foreach ($this->saleReceiptDetails as $detail) {
+            $total += $detail->invoiceHeader->product_price;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalServiceAmount() {
+        $total = '0.00';
+        
+        foreach ($this->saleReceiptDetails as $detail) {
+            $total += $detail->invoiceHeader->service_price;
+        }
+        
+        return $total;
+    }
 }

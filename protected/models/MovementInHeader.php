@@ -38,6 +38,7 @@
 class MovementInHeader extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'MI';
+    public $search_product;
 
     public $receive_item_number;
     public $return_item_number;
@@ -219,6 +220,15 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
         $movementInApproval = MovementInApproval::model()->findByAttributes(array('movement_in_id' => $this->id), array('order' => 'id DESC'));
         
         return empty($movementInApproval) ? '' : $movementInApproval->supervisor->username;
-        
+    }
+    
+    public function getProductLists() {
+        $products = array();
+
+        foreach ($this->movementInDetails as $detail) {
+            $products[] = empty($detail->product_id) ? '' : $detail->product->name . ' - ' . $detail->quantity . ', ';
+        }
+
+        return $this->search_product = implode('', $products);
     }
 }

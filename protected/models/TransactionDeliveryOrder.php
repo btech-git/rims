@@ -50,6 +50,7 @@
 class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'DO';
+    public $search_product;
 
     public $branch_name;
     public $customer_name;
@@ -295,5 +296,15 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         $diff = $date2->diff($date1)->format("%r%a");
 
         return (int)$diff;
+    }
+    
+    public function getProductLists() {
+        $products = array();
+
+        foreach ($this->transactionDeliveryOrderDetails as $detail) {
+            $products[] = empty($detail->product_id) ? '' : $detail->product->name . ' - ' . $detail->quantity_delivery . ', ';
+        }
+
+        return $this->search_product = implode('', $products);
     }
 }

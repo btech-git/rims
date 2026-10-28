@@ -424,8 +424,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             SELECT d.invoice_header_id 
             FROM " . SaleReceiptDetail::model()->tableName() . " d
             INNER JOIN " . SaleReceiptHeader::model()->tableName() . " h ON h.id = d.sale_receipt_header_id
-            WHERE h.user_id_cancelled IS NULL
-        )";
+            WHERE t.id = d.invoice_header_id AND h.user_id_cancelled IS NULL
+        ) AND user_id_cancelled IS NULL";
         
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

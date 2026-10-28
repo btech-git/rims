@@ -45,6 +45,8 @@
 class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'TR';
+    public $search_product;
+    
     const STATUS_PENDING = 0;
     const STATUS_APPROVED = 1;
     const STATUS_REJECTED = 2;
@@ -385,5 +387,15 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         $diff = $date2->diff($date1)->format("%r%a");
 
         return (int)$diff;
+    }
+    
+    public function getProductLists() {
+        $products = array();
+
+        foreach ($this->transactionTransferRequestDetails as $detail) {
+            $products[] = empty($detail->product_id) ? '' : $detail->product->name . ' - ' . $detail->quantity . ', ';
+        }
+
+        return $this->search_product = implode('', $products);
     }
 }

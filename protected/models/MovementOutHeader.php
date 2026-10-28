@@ -43,6 +43,7 @@
 class MovementOutHeader extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'MO';
+    public $search_product;
 
     public $branch_name;
     public $delivery_order_number;
@@ -253,5 +254,15 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
         
         return empty($movementOutApproval) ? '' : $movementOutApproval->supervisor->username;
         
+    }
+    
+    public function getProductLists() {
+        $products = array();
+
+        foreach ($this->movementOutDetails as $detail) {
+            $products[] = empty($detail->product_id) ? '' : $detail->product->name . ' - ' . $detail->quantity . ', ';
+        }
+
+        return $this->search_product = implode('', $products);
     }
 }

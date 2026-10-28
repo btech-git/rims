@@ -75,6 +75,7 @@
 class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'RCI';
+    public $search_product;
 
     /**
      * Returns the static model of the specified AR class.
@@ -718,4 +719,13 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
+    public function getProductLists() {
+        $products = array();
+
+        foreach ($this->transactionReceiveItemDetails as $detail) {
+            $products[] = empty($detail->product_id) ? '' : $detail->product->name . ' - ' . $detail->qty_received . ', ';
+        }
+
+        return $this->search_product = implode('', $products);
+    }    
 }
