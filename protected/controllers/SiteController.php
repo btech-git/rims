@@ -47,6 +47,7 @@ class SiteController extends Controller {
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : '');
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
+        $tireSize = Search::bind(new TireSize('search'), isset($_GET['TireSize']) ? $_GET['TireSize'] : '');
         $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
 
@@ -74,6 +75,9 @@ class SiteController extends Controller {
         $productDataProvider->pagination->pageVar = 'page_parts';
         
         $branches = Branch::model()->findAll();
+        
+        $tireSizeDataProvider = $tireSize->search();
+        $tireSizeDataProvider->pagination->pageVar = 'page_tire_size';
 
         $vehicleDataProvider->criteria->with = array(
             'customer',
@@ -121,6 +125,8 @@ class SiteController extends Controller {
             'plateNumber' => $plateNumber,
             'customerName' => $customerName,
             'endDate' => $endDate,
+            'tireSize' => $tireSize,
+            'tireSizeDataProvider' => $tireSizeDataProvider,
         ));
     }
         
@@ -235,6 +241,20 @@ class SiteController extends Controller {
                 'productDataProvider' => $productDataProvider,
                 'branches' => $branches,
                 'endDate' => $endDate,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateTireOptionTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $tireSize = Search::bind(new TireSize('search'), isset($_GET['TireSize']) ? $_GET['TireSize'] : '');
+            $tireSizeDataProvider = $tireSize->search();
+            $tireSizeDataProvider->pagination->pageVar = 'page_tire_size';
+
+
+            $this->renderPartial('_tireOptionTable', array(
+                'tireSize' => $tireSize,
+                'tireSizeDataProvider' => $tireSizeDataProvider,
             ));
         }
     }
