@@ -59,6 +59,9 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php $receivableData = $header->getReceivableDetailReport($startDate, $endDate, $branchId); ?>
                     <?php foreach ($receivableData as $receivableRow): ?>
                         <?php $transactionNumber = $receivableRow['kode_transaksi']; ?>
+                        <?php $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('invoice_number' => $transactionNumber)); ?>
+                        <?php $outstandingDays = empty($invoiceHeader) ? 0 : date_diff(date_create($invoiceHeader->due_date), date_create(date('Y-m-d'))); ?>
+                    
                         <?php if ($receivableRow['transaction_type'] == 'D'): ?>
                             <?php $amountDebit = $receivableRow['amount']; ?>
                             <?php $amountCredit = '0.00'; ?>
@@ -77,8 +80,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                 )), array('target' => '_blank')); ?>
                             </td>
                             <td>
-                                <?php $outstandingDays = date_diff(date_create($receivableRow['tanggal_transaksi']), date_create(date('Y-m-d'))); ?>
-                                <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
+                                <?php echo empty($invoiceHeader) ? 0 : CHtml::encode($outstandingDays->format("%a days")); ?>
                             </td>
                             <td><?php echo CHtml::encode($receivableRow['remark']); ?></td>
                             <td><?php echo CHtml::encode($receivableRow['transaction_subject']); ?></td>

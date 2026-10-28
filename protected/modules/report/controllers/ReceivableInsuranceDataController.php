@@ -236,7 +236,7 @@ class ReceivableInsuranceDataController extends Controller {
             $totalPrice = CHtml::value($header, 'total_price'); 
             $paymentTotal = CHtml::value($header, 'payment_amount');
             $paymentLeft = CHtml::value($header, 'payment_left');
-            $outstandingDays = date_diff(date_create($header->invoice_date), date_create(date('Y-m-d')));
+            $outstandingDays = date_diff(date_create($header->due_date), date_create(date('Y-m-d')));
             
             $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'invoice_number'));
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_date'));

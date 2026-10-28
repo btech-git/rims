@@ -201,7 +201,7 @@ class ReceivableController extends Controller {
                 $revenue = $receivableReportItem['invoice_amount'];
                 $paymentAmount = isset($receivablePaymentReportData[$receivableReportItem['id']]) ? $receivablePaymentReportData[$receivableReportItem['id']] : '0.00';
                 $paymentLeft = $revenue - $paymentAmount;
-                $agingDays = date_diff(date_create($receivableReportItem['invoice_date']), date_create(date('Y-m-d')));
+                $agingDays = date_diff(date_create($receivableReportItem['due_date']), date_create(date('Y-m-d')));
                 
                 $worksheet->setCellValue("A{$counter}", CHtml::value($customer, 'name'));
                 $worksheet->setCellValue("B{$counter}", CHtml::value($customer, 'customer_type'));

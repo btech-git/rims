@@ -86,13 +86,11 @@ Yii::app()->clientScript->registerCss('_report', '
     </div>
 </div>
 
-<div>
-    <div class="right">
-        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $dataProvider->pagination->itemCount,
-            'pageSize' => $dataProvider->pagination->pageSize,
-            'currentPage' => $dataProvider->pagination->getCurrentPage(false),
-        )); ?>
-    </div>
-    <div class="clear"></div>
+<div class="right">
+    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+        'itemCount' => $dataProvider->pagination->itemCount,
+        'pageSize' => $dataProvider->pagination->pageSize,
+        'currentPage' => $dataProvider->pagination->getCurrentPage(false),
+    )); ?>
 </div>
+<div class="clear"></div>

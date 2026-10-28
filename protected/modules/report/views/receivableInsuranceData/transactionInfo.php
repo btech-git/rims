@@ -78,7 +78,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
                                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->due_date))); ?></td>
                                 <td class="width2-3">
-                                    <?php $outstandingDays = date_diff(date_create($header->invoice_date), date_create(date('Y-m-d'))); ?>
+                                    <?php $outstandingDays = date_diff(date_create($header->due_date), date_create(date('Y-m-d'))); ?>
                                     <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
                                 </td>
                                 <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>

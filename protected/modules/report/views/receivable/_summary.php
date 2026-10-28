@@ -74,7 +74,7 @@
                                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableReportItem['due_date']))); ?>
                                     </td>
                                     <td>
-                                        <?php $agingDays = date_diff(date_create($receivableReportItem['invoice_date']), date_create(date('Y-m-d'))); ?>
+                                        <?php $agingDays = date_diff(date_create($receivableReportItem['due_date']), date_create(date('Y-m-d'))); ?>
                                         <?php echo CHtml::encode($agingDays->format("%a days")); ?>
                                     </td>
                                     <td class="width2-3">

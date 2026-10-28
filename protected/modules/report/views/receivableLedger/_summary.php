@@ -30,12 +30,12 @@ Yii::app()->clientScript->registerCss('_report', '
     <table style="width: 100%; margin: 0 auto; border-spacing: 0pt">
         <thead style="position: sticky; top: 0">
             <tr>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Tanggal</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Transaksi #</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Tanggal</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Transaksi #</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keterangan</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Debit</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Credit</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Saldo</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Debit</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Credit</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Saldo</th>
             </tr>
         </thead>
         

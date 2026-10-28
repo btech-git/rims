@@ -17,7 +17,7 @@
                             'model' => $paymentIn->header,
                             'attribute' => "payment_date",
                             'options'=>array(
-//                                'minDate' => '-4W',
+                                'minDate' => '-4W',
                                 'maxDate' => '+6M',
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,

@@ -60,7 +60,7 @@
                             <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_date']))); ?>
                         </td>
                         <td>
-                            <?php $outstandingDays = date_diff(date_create($dataItem['invoice_date']), date_create(date('Y-m-d'))); ?>
+                            <?php $outstandingDays = date_diff(date_create($dataItem['due_date']), date_create(date('Y-m-d'))); ?>
                             <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
                         </td>
                         <td style="text-align: center"><?php echo CHtml::encode($dataItem['transaction_tax_number']); ?></td>

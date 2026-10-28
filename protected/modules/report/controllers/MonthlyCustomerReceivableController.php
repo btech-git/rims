@@ -167,7 +167,7 @@ class MonthlyCustomerReceivableController extends Controller {
         $counter = 7;
         foreach ($monthlyCustomerReceivableSummary->dataProvider->data as $customer) {
             foreach ($monthlyCustomerReceivableReportData[$customer->id] as $i => $dataItem) {
-                $outstandingDays = date_diff(date_create($dataItem['invoice_date']), date_create(date('Y-m-d')));
+                $outstandingDays = date_diff(date_create($dataItem['due_date']), date_create(date('Y-m-d')));
                 
                 $worksheet->setCellValue("A{$counter}", $i + 1);
                 $worksheet->setCellValue("B{$counter}", CHtml::value($customer, 'name'));

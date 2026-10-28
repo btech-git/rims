@@ -170,7 +170,7 @@ class MonthlyInsuranceReceivableController extends Controller {
         $ordinal = 1;
         foreach ($monthlyInsuranceReceivableSummary->dataProvider->data as $insurance) {
             foreach ($monthlyInsuranceReceivableReportData[$insurance->id] as $i => $dataItem) {
-                $outstandingDays = date_diff(date_create($dataItem['invoice_date']), date_create(date('Y-m-d')));
+                $outstandingDays = date_diff(date_create($dataItem['due_date']), date_create(date('Y-m-d')));
                 
                 $worksheet->setCellValue("A{$counter}", $ordinal);
                 $worksheet->setCellValue("B{$counter}", CHtml::value($insurance, 'name'));

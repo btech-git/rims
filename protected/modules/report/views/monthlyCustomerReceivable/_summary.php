@@ -1,19 +1,10 @@
-<?php
-Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 5% }
-    .width1-2 { width: 5% }
-    .width1-3 { width: 5% }
-    .width1-4 { width: 5% }
-    .width1-5 { width: 5% }
-    .width1-6 { width: 5% }
-    .width1-7 { width: 5% }
-    .width1-8 { width: 5% }
-    .width1-9 { width: 5% }
-    .width1-10 { width: 5% }
-    .width1-11 { width: 5% }
-    .width1-12 { width: 5% }
-');
-?>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
@@ -27,25 +18,26 @@ Yii::app()->clientScript->registerCss('_report', '
     <table class="responsive">
         <thead>
             <tr id="header1">
-                <th class="width1-1">RG #</th>
-                <th class="width1-2">RG Date</th>
-                <th class="width1-4">Movement Out</th>
-                <th class="width1-5">Parts (Rp)</th>
-                <th class="width1-6">Jasa (Rp)</th>
-                <th class="width1-7">PPn</th>
-                <th class="width1-8">Total</th>
-                <th class="width1-9">Invoice</th>
-                <th class="width1-9">Tanggal Invoice</th>
+                <th>RG #</th>
+                <th>RG Date</th>
+                <th>Movement Out</th>
+                <th>Parts (Rp)</th>
+                <th>Jasa (Rp)</th>
+                <th>PPn</th>
+                <th>Total</th>
+                <th>Invoice</th>
+                <th>Tanggal Invoice</th>
+                <th>Jatuh Tempo</th>
                 <th>Umur (hari)</th>
-                <th class="width1-10">Outstanding</th>
-                <th class="width1-11">Pelunasan</th>
-                <th class="width1-12">Payment #</th>
+                <th>Outstanding</th>
+                <th>Pelunasan</th>
+                <th>Payment #</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($monthlyCustomerReceivableSummary->dataProvider->data as $i => $customer): ?>
                 <tr class="items1">
-                    <td colspan="16" style="font-weight: bold; text-align: center">
+                    <td colspan="13" style="font-weight: bold; text-align: center">
                         <?php echo CHtml::encode($i + 1); ?> - <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
                     </td>
                 </tr>
@@ -66,7 +58,10 @@ Yii::app()->clientScript->registerCss('_report', '
                             <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_date']))); ?>
                         </td>
                         <td>
-                            <?php $outstandingDays = date_diff(date_create($dataItem['invoice_date']), date_create(date('Y-m-d'))); ?>
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['due_date']))); ?>
+                        </td>
+                        <td>
+                            <?php $outstandingDays = date_diff(date_create($dataItem['due_date']), date_create(date('Y-m-d'))); ?>
                             <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
                         </td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['payment_left'])); ?></td>

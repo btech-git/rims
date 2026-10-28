@@ -25,7 +25,7 @@
                                 'model' => $invoice->header,
                                 'attribute' => "invoice_date",
                                 'options' => array(
-//                                    'minDate' => '-7W',
+                                    'minDate' => '-7W',
                                     'maxDate' => '+6M',
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
@@ -175,11 +175,6 @@
             </div>
         </div>
         
-        <div class="row">
-            <div class="small-12 medium-12 columns">
-            </div>
-        </div>
-
         <div class="row">
             <div class="large-12 columns">
                 <fieldset>

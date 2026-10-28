@@ -132,53 +132,26 @@ class TireSizeRecommendation extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
-        $valid = $this->validateDetailsCount() && $valid;
         $valid = $this->validateDetailsUnique() && $valid;
 
-        if (count($this->carModelDetails) > 0) {
-            foreach ($this->carModelDetails as $detail) {
-                $fields = array('vehicle_car_model_id');
-                $valid = $detail->validate($fields) && $valid;
-            }
-        } else {
-            $valid = false;
+        foreach ($this->carModelDetails as $detail) {
+            $fields = array('vehicle_car_model_id');
+            $valid = $detail->validate($fields) && $valid;
         }
 
-        if (count($this->premiumOptionDetails) > 0) {
-            foreach ($this->premiumOptionDetails as $detail) {
-                $fields = array('sub_brand_series_id');
-                $valid = $detail->validate($fields) && $valid;
-            }
-        } else {
-            $valid = false;
+        foreach ($this->premiumOptionDetails as $detail) {
+            $fields = array('sub_brand_series_id');
+            $valid = $detail->validate($fields) && $valid;
         }
 
-        if (count($this->standardOptionDetails) > 0) {
-            foreach ($this->standardOptionDetails as $detail) {
-                $fields = array('sub_brand_series_id');
-                $valid = $detail->validate($fields) && $valid;
-            }
-        } else {
-            $valid = false;
+        foreach ($this->standardOptionDetails as $detail) {
+            $fields = array('sub_brand_series_id');
+            $valid = $detail->validate($fields) && $valid;
         }
 
-        if (count($this->economicOptionDetails) > 0) {
-            foreach ($this->economicOptionDetails as $detail) {
-                $fields = array('sub_brand_series_id');
-                $valid = $detail->validate($fields) && $valid;
-            }
-        } else {
-            $valid = false;
-        }
-
-        return $valid;
-    }
-
-    public function validateDetailsCount() {
-        $valid = true;
-        if (count($this->carModelDetails) === 0) {
-            $valid = false;
-            $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
+        foreach ($this->economicOptionDetails as $detail) {
+            $fields = array('sub_brand_series_id');
+            $valid = $detail->validate($fields) && $valid;
         }
 
         return $valid;
