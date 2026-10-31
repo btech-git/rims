@@ -18,7 +18,7 @@
     <tbody>
         <?php foreach ($saleReceipt->details as $i => $detail): ?>
             <tr>
-                <td><?php echo CHtml::encode(++$i); ?></td>
+                <td><?php echo CHtml::encode($i + 1); ?></td>
                 <td>
                     <?php echo CHtml::activeHiddenField($detail, "[$i]invoice_header_id"); ?>
                     <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.invoice_number")); ?>
@@ -61,18 +61,14 @@
         <tr>
             <td colspan="7" style="text-align: right; font-weight: bold">Sub Total</td>
             <td style="text-align: right; font-weight: bold">
-                <span id="total_invoice">
                     <?php echo CHtml::activeHiddenField($saleReceipt->header, "total_downpayment_amount"); ?>
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt, 'totalServiceAmount'))); ?>
-                </span>
             </td>
             <td style="text-align: right; font-weight: bold">
-                <span id="total_invoice">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt, 'totalPartsAmount'))); ?>
-                </span>
             </td>
             <td style="text-align: right">
-                <span id="total_invoice; font-weight: bold">
+                <span style="font-weight: bold">
                     <?php echo CHtml::activeHiddenField($saleReceipt->header, "total_invoice_amount"); ?>
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt->header, 'total_invoice_amount'))); ?>
                 </span>

@@ -153,11 +153,11 @@ class SaleReceiptController extends Controller {
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($saleReceipt);
-//            $saleReceipt->header->setCodeNumberByRevision('transaction_number');
-//            
-//            if ($saleReceipt->save(Yii::app()->db)) {
-//                $this->redirect(array('view', 'id' => $saleReceipt->header->id));
-//            }
+            $saleReceipt->header->setCodeNumberByRevision('transaction_number');
+            
+            if ($saleReceipt->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $saleReceipt->header->id));
+            }
         }
 
         $this->render('update', array(
@@ -294,7 +294,6 @@ class SaleReceiptController extends Controller {
     }
 
     public function instantiate($id, $actionType) {
-        
         if (empty($id)) {
             $saleReceipt = new SaleReceipt($actionType, new SaleReceiptHeader(), array());
         } else {
@@ -305,11 +304,11 @@ class SaleReceiptController extends Controller {
         return $saleReceipt;
     }
 
-    protected function loadState(&$saleReceipt) {
+    public function loadState($saleReceipt) {
         if (isset($_POST['SaleReceiptHeader'])) {
             $saleReceipt->header->attributes = $_POST['SaleReceiptHeader'];
         }
-        
+
         if (isset($_POST['SaleReceiptDetail'])) {
             foreach ($_POST['SaleReceiptDetail'] as $i => $item) {
                 if (isset($saleReceipt->details[$i])) {
