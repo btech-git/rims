@@ -48,16 +48,20 @@ class SaleReceipt extends CComponent {
         if (!$exist) {
             $detail = new SaleReceiptDetail();
             $detail->invoice_header_id = $invoiceId;
-            $detail->invoice_amount = $invoiceHeader->total_price;
+            $detail->invoice_amount = $invoiceHeader->subTotal;
             $detail->insurance_own_risk_amount = $invoiceHeader->insurance_own_risk_amount;
             $detail->downpayment_amount = $invoiceHeader->downpayment_amount;
-            $detail->receivable_amount = $invoiceHeader->invoice_amount;
+            $detail->receivable_amount = $invoiceHeader->subTotal;
             $this->details[] = $detail;
             
             $this->header->total_invoice_amount = $this->getTotalInvoiceAmount();
             $this->header->total_downpayment_amount = $this->getTotalDownpaymentAmount();
             $this->header->total_own_risk_amount = $this->getTotalOwnRiskAmount();
+            $this->header->tax_item_amount = $this->getTaxItemAmount();
+            $this->header->tax_service_amount = $this->getTaxServiceAmount();
             $this->header->total_receivable_amount = $this->getTotalReceivableAmount();
+            $this->header->tax_item_percentage = 11;
+            $this->header->tax_service_percentage = 2;
         }
     }
 
@@ -136,15 +140,20 @@ class SaleReceipt extends CComponent {
     }
 
     public function flush() {
-        $this->header->due_date = empty($this->header->customer_id) ? $this->header->transaction_date : date('Y-m-d',strtotime('+' . $this->header->customer->tenor . ' days', strtotime($this->header->transaction_date)));
         $valid = $this->header->save(false);
 
         foreach ($this->details as $i => $detail) {
-            if ($detail->isNewRecord) {
+            if ($this->header->isNewRecord) {
                 $detail->sale_receipt_header_id = $this->header->id;
             }
                 
             $valid = $detail->save(false) && $valid;
+            
+            if (!$this->header->isNewRecord && $this->header->delivery_receipt_number !== '') {
+                $detail->invoiceHeader->is_sent_to_customer = 1;
+                $detail->invoiceHeader->delivery_receipt_number = $this->header->delivery_receipt_number;
+                $detail->invoiceHeader->update(array('is_sent_to_customer', 'delivery_receipt_number'));
+            }            
         }
         
         $this->saveTransactionLog();
@@ -207,13 +216,37 @@ class SaleReceipt extends CComponent {
         return $total;
     }
     
-    public function getTotalReceivableAmount() {
+    public function getTotalPartsAmount() {
         $total = '0.00';
         
         foreach ($this->details as $detail) {
-            $total += $detail->receivable_amount;
+            $total += $detail->invoiceHeader->product_price;
         }
         
         return $total;
+    }
+    
+    public function getTotalServiceAmount() {
+        $total = '0.00';
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->invoiceHeader->service_price;
+        }
+        
+        return $total;
+    }
+    
+    public function getTaxItemAmount() {
+        
+        return $this->header->total_invoice_amount * $this->header->tax_item_percentage / 100;
+    }
+    
+    public function getTaxServiceAmount() {
+        
+        return $this->header->total_invoice_amount * $this->header->tax_service_percentage / 100;
+    }
+    
+    public function getTotalReceivableAmount() {
+        return $this->header->total_invoice_amount + $this->header->tax_item_amount - $this->header->tax_service_amount;
     }
 }

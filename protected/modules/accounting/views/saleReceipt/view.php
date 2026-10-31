@@ -27,7 +27,8 @@ $this->breadcrumbs = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Print', Yii::app()->baseUrl.'/accounting/saleReceipt/pdf?id=' . $model->id, array(
                 'class'=>'button success right',
                 'style'=>'margin-right:10px',
-            ), array('target' => '_blank')); ?>
+                'target' => '_blank',
+            )); ?>
         <?php endif; ?>
         
         <?php if (Yii::app()->user->checkAccess("paymentHead") && $model->status === 'Approved'): ?>
@@ -119,7 +120,34 @@ $this->breadcrumbs = array(
                                 </div>
                             </div>
                         <?php endif; ?>
+                        <?php if (Yii::app()->user->checkAccess("director")): ?>
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">User Created</span>
+                                    </div>
 
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(CHtml::value($model, 'userIdCreated.username')); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Date Created</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy hh:M:s", strtotime(CHtml::value($model, 'created_datetime')))); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>       
+                    </div>
+
+                    <div class="large-6 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -135,6 +163,18 @@ $this->breadcrumbs = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
+                                    <span class="prefix">Resi Kirim #</span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" value="<?php echo $model->delivery_receipt_number; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
                                     <span class="prefix">Note</span>
                                 </div>
                                 
@@ -143,46 +183,8 @@ $this->breadcrumbs = array(
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="large-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Branch</span>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->branch->name; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">User Created</span>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::encode(CHtml::value($model, 'userIdCreated.username')); ?>
-                                </div>
-                            </div>
-                        </div>
                         
                         <?php if (Yii::app()->user->checkAccess("director")): ?>
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Date Created</span>
-                                    </div>
-
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($model, 'created_datetime')); ?>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -202,7 +204,7 @@ $this->breadcrumbs = array(
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($model, 'updated_datetime')); ?>
+                                        <?php echo $model->updated_datetime === null ? '' : CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy hh:M:s", strtotime(CHtml::value($model, 'updated_datetime')))); ?>
                                     </div>
                                 </div>
                             </div>
@@ -226,7 +228,7 @@ $this->breadcrumbs = array(
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($model, 'cancelled_datetime')); ?>
+                                        <?php echo $model->cancelled_datetime === null ? '' : CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy hh:M:s", strtotime(CHtml::value($model, 'cancelled_datetime')))); ?>
                                     </div>
                                 </div>
                             </div>
@@ -242,11 +244,13 @@ $this->breadcrumbs = array(
                         <thead>
                             <tr>
                                 <th>Invoice #</th>
+                                <th>Tanggal</th>
+                                <th>Jatuh Tempo</th>
                                 <th>Plate #</th>
-                                <th>Memo</th>
-                                <th>Invoice Amount</th>
-                                <th>DP</th>
-                                <th>OR</th>
+                                <th>Kendaraan</th>
+                                <th>SPK #</th>
+                                <th>Jasa</th>
+                                <th>Parts</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -259,28 +263,65 @@ $this->breadcrumbs = array(
                                             "id" => $detail->invoice_header_id
                                         ), array('target' => 'blank')); ?>
                                     </td>
+                                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($detail, 'invoiceHeader.invoice_date')))); ?></td>
+                                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($detail, 'invoiceHeader.due_date')))); ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                                    <td>
+                                        <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.carMake.name")); ?> -
+                                        <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.carModel.name")); ?> -
+                                        <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.carSubModel.name")); ?>
+                                    </td>
+                                    <td>
+                                        <?php echo CHtml::link($detail->invoiceHeader->registrationTransaction->work_order_number, array(
+                                            "/frontDesk/registrationTransaction/view", 
+                                            "id" => $detail->invoiceHeader->registration_transaction_id
+                                        ), array('target' => 'blank')); ?>
+                                    </td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoiceHeader.service_price'))); ?>
+                                    </td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoiceHeader.product_price'))); ?>
+                                    </td>
                                     <td style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoice_amount'))); ?>
-                                    </td>
-                                    <td style="text-align: right">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'downpayment_amount'))); ?>
-                                    </td>
-                                    <td style="text-align: right">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'insurance_own_risk_amount'))); ?>
-                                    </td>
-                                    <td style="text-align: right">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'receivable_amount'))); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td style="text-align: right; font-weight: bold" colspan="6">Total</td>
+                                <td style="text-align: right; font-weight: bold" colspan="6">Sub Total</td>
                                 <td style="text-align: right; font-weight: bold">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'total_receivable_amount'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalServiceAmount'))); ?>
+                                </td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalPartsAmount'))); ?>
+                                </td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'total_invoice_amount'))); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8" style="text-align: right; font-weight: bold">
+                                    PPn <?php echo CHtml::encode(CHtml::value($model, "tax_item_percentage")); ?>%
+                                </td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'tax_item_amount'))); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8" style="text-align: right; font-weight: bold">
+                                    PPh 23 <?php echo CHtml::encode(CHtml::value($model, "tax_service_percentage")); ?>%
+                                </td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'tax_service_amount'))); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="8" style="text-align: right; font-weight: bold">Grand Total</td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, "total_receivable_amount"))); ?>
                                 </td>
                             </tr>
                         </tfoot>

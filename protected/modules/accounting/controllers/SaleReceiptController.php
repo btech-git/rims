@@ -77,10 +77,15 @@ class SaleReceiptController extends Controller {
         $saleReceipt = $this->instantiate(null, 'create');
         
         $saleReceipt->header->transaction_date = date('Y-m-d');
+        $saleReceipt->header->due_date = empty($saleReceipt->header->customer_id) ? $saleReceipt->header->transaction_date : date('Y-m-d',strtotime('+' . $saleReceipt->header->customer->tenor . ' days', strtotime($saleReceipt->header->transaction_date)));
         $saleReceipt->header->created_datetime = date('Y-m-d H:i:s');
         $saleReceipt->header->branch_id = Yii::app()->user->branch_id;
         $saleReceipt->header->status = 'Approved';
         $saleReceipt->header->user_id_created = Yii::app()->user->id;
+        $saleReceipt->header->company_bank_id = 13;
+        $saleReceipt->header->tax_item_percentage = 11;
+        $saleReceipt->header->tax_service_percentage = 2;
+        $saleReceipt->header->delivery_receipt_number = null;
 
         $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
         $invoiceHeaderDataProvider = $invoiceHeader->searchForSaleReceipt();
@@ -126,19 +131,21 @@ class SaleReceiptController extends Controller {
      */
     public function actionUpdate($id) {
         $saleReceipt = $this->instantiate($id, 'update');
-        $customer = Customer::model()->findByPk($saleReceipt->header->customer_id);
+        $saleReceipt->header->updated_datetime = date('Y-m-d H:i:s');
+        $saleReceipt->header->user_id_updated = Yii::app()->user->id;
+        
+        $this->performAjaxValidation($saleReceipt->header);
 
         $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
         $invoiceHeaderDataProvider = $invoiceHeader->searchForSaleReceipt();
 
-        if (!empty($saleReceipt->header->customer_id)) {
+        if (!empty($saleReceipt->header->insurance_company_id)) {
+            $invoiceHeaderDataProvider->criteria->addCondition("t.insurance_company_id = :insurance_company_id");
+            $invoiceHeaderDataProvider->criteria->params[':insurance_company_id'] = $saleReceipt->header->insurance_company_id;
+        } else {
             $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id");
             $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $saleReceipt->header->customer_id;
         }
-        
-        $saleReceipt->header->status = 'Draft';
-        $saleReceipt->header->edited_datetime = date('Y-m-d H:i:s');
-        $saleReceipt->header->user_id_edited = Yii::app()->user->id;
         
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
@@ -146,16 +153,15 @@ class SaleReceiptController extends Controller {
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($saleReceipt);
-            $saleReceipt->header->setCodeNumberByRevision('transaction_number');
-            
-            if ($saleReceipt->save(Yii::app()->db)) {
-                $this->redirect(array('view', 'id' => $saleReceipt->header->id));
-            }
+//            $saleReceipt->header->setCodeNumberByRevision('transaction_number');
+//            
+//            if ($saleReceipt->save(Yii::app()->db)) {
+//                $this->redirect(array('view', 'id' => $saleReceipt->header->id));
+//            }
         }
 
         $this->render('update', array(
             'saleReceipt' => $saleReceipt,
-            'customer' => $customer,
             'invoiceHeader' => $invoiceHeader,
             'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
         ));
@@ -263,6 +269,20 @@ class SaleReceiptController extends Controller {
         }
     }
     
+    public function actionAjaxJsonGrandTotal($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $saleReceipt = $this->instantiate($id, '');
+            $this->loadState($saleReceipt);
+
+            $object = array(
+                'totalReceivableAmount' => $saleReceipt->totalReceivableAmount,
+                'totalReceivable' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt, 'totalReceivableAmount'))),
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
     public function loadModel($id) {
         $model = SaleReceiptHeader::model()->findByPk($id);
         
@@ -285,7 +305,7 @@ class SaleReceiptController extends Controller {
         return $saleReceipt;
     }
 
-    public function loadState($saleReceipt) {
+    protected function loadState(&$saleReceipt) {
         if (isset($_POST['SaleReceiptHeader'])) {
             $saleReceipt->header->attributes = $_POST['SaleReceiptHeader'];
         }

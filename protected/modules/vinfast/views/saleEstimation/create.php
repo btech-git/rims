@@ -1,0 +1,51 @@
+<?php
+/* @var $this RegistrationTransactionController */
+/* @var $model RegistrationTransaction */
+
+$this->breadcrumbs=array(
+	'Estimasi Penjualan'=>array('admin'),
+	'Create',
+);
+?>
+<div class="row d-print-none">
+    <div class="col d-flex justify-content-start">
+        <h4>Create Estimasi Penjualan</h4>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <div class="d-gap">
+            <?php echo CHtml::link('Manage', array("admin"), array(
+                'class'=> 'button cbutton right', 
+                'style' => 'margin-right:10px',
+            )); ?>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div id="maincontent">
+    <?php /*echo $this->renderPartial('_list', array(
+        'saleEstimation' => $saleEstimation,
+        'product' => $product, 
+        'productDataProvider' => $productDataProvider, 
+        'service' => $service,
+        'serviceDataProvider' => $serviceDataProvider,
+        'branches' => $branches,
+        'endDate' => $endDate,
+        'isSubmitted' => $isSubmitted,
+    ));*/ ?>
+    
+    <?php echo $this->renderPartial('_form', array(
+        'saleEstimation' => $saleEstimation,
+        'customerName' => $customerName,
+        'branches' => $branches,
+        'branch' => $branch,
+        'isSubmitted' => $isSubmitted,
+        'vehicleData' => $vehicleData,
+        'vehicleDataProvider' => $vehicleDataProvider,
+        'product' => $product, 
+        'productDataProvider' => $productDataProvider, 
+        'service' => $service,
+        'serviceDataProvider' => $serviceDataProvider,
+    )); ?>
+</div>

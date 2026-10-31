@@ -60,14 +60,9 @@ function tanggal($date) {
                 <td><?php echo empty($saleReceiptHeader->customer_id) ? 'ASURANSI' : 'CUSTOMER'; ?></td>
                 <td>:</td>
                 <td><?php echo empty($saleReceiptHeader->customer_id) ? $saleReceiptHeader->insuranceCompany->name : $customer->name; ?></td>
-                <td>JATUH TEMPO</td>
-                <td>:</td>
-                <td><?php echo tanggal($saleReceiptHeader->due_date); ?></td>
-            </tr>
-            <tr>
                 <td>CATATAN</td>
                 <td>:</td>
-                <td colspan="4"><?php echo $saleReceiptHeader->note; ?></td>
+                <td><?php echo nl2br($saleReceiptHeader->note); ?></td>
             </tr>
         </table>
     </div>
@@ -76,48 +71,111 @@ function tanggal($date) {
         <table>
             <thead>
                 <tr>
-                    <th style="width: 2%">No</th>
+                    <th style="font-size: 10px; width: 2%">No</th>
                     <th style="font-size: 10px">Invoice #</th>
                     <th style="font-size: 10px">Tanggal</th>
+                    <th style="font-size: 10px">Jatuh Tempo</th>
                     <th style="font-size: 10px">Plat #</th>
-                    <th style="font-size: 10px">Memo</th>
-                    <th style="font-size: 10px">DMS Ref #</th>
-                    <th style="font-size: 10px">V-TAG</th>
-                    <th style="font-size: 10px">Resi Kirim</th>
-                    <th style="font-size: 10px">Warranty Report</th>
-                    <th style="font-size: 10px">Amount</th>
-                    <th style="font-size: 10px">DP</th>
-                    <th style="font-size: 10px">OR</th>
+                    <th style="font-size: 10px">Kendaraan</th>
+                    <th style="font-size: 10px">SPK #</th>
+                    <th style="font-size: 10px">Jasa</th>
+                    <th style="font-size: 10px">Parts</th>
                     <th style="font-size: 10px">Total</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($saleReceiptHeader->saleReceiptDetails as $i => $detail): ?>
                     <tr class="isi">
-                        <td class="noo"><?php echo $i+1; ?></td>
+                        <td class="noo"><?php echo ++$i; ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_number')); ?></td>
-                        <td><?php echo tanggal(CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_date'))); ?></td>
+                        <td>
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($detail, 'invoiceHeader.invoice_date')))); ?>
+                        </td>
+                        <td>
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($detail, 'invoiceHeader.due_date')))); ?>
+                        </td>
                         <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.registrationTransaction.customer_document_order_number')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.technical_code_number')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.delivery_receipt_number')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.warranty_report')); ?></td>
-                        <td style="text-align: right;">Rp. <?php echo number_format($detail->invoice_amount, 2, ',', '.'); ?></td>
-                        <td style="text-align: right;">Rp. <?php echo number_format($detail->downpayment_amount, 2, ',', '.'); ?></td>
-                        <td style="text-align: right;">Rp. <?php echo number_format($detail->insurance_own_risk_amount, 2, ',', '.'); ?></td>
-                        <td style="text-align: right;">Rp. <?php echo number_format($detail->receivable_amount, 2, ',', '.'); ?></td>
+                        <td>
+                            <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.carMake.name")); ?> -
+                            <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.carModel.name")); ?> -
+                            <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.carSubModel.name")); ?>
+                        </td>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.registrationTransaction.work_order_number')); ?></td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoiceHeader.service_price'))); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoiceHeader.product_price'))); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoice_amount'))); ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="12" style="text-align: right; font-weight: bold">Total</td>
+                    <td style="text-align: right; font-weight: bold" colspan="7">Sub Total</td>
                     <td style="text-align: right; font-weight: bold">
-                        Rp. <?php echo number_format($saleReceiptHeader->total_receivable_amount, 2, ',', '.'); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceiptHeader, 'totalServiceAmount'))); ?>
+                    </td>
+                    <td style="text-align: right; font-weight: bold">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceiptHeader, 'totalPartsAmount'))); ?>
+                    </td>
+                    <td style="text-align: right; font-weight: bold">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceiptHeader, 'total_invoice_amount'))); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9" style="text-align: right; font-weight: bold">
+                        PPn <?php echo CHtml::encode(CHtml::value($saleReceiptHeader, "tax_item_percentage")); ?>%
+                    </td>
+                    <td style="text-align: right; font-weight: bold">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceiptHeader, 'tax_item_amount'))); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9" style="text-align: right; font-weight: bold">
+                        PPh 23 <?php echo CHtml::encode(CHtml::value($saleReceiptHeader, "tax_service_percentage")); ?>%
+                    </td>
+                    <td style="text-align: right; font-weight: bold">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceiptHeader, 'tax_service_amount'))); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="font-weight: bold">
+                        Terbilang:
+                        <?php echo CHtml::encode(NumberWord::numberName(floor(CHtml::value($saleReceiptHeader, 'total_receivable_amount')))); ?>
+                        Rupiah
+                    </td>
+                    <td style="text-align: right; font-weight: bold">Grand Total</td>
+                    <td style="text-align: right; font-weight: bold">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceiptHeader, "total_receivable_amount"))); ?>
                     </td>
                 </tr>
             </tfoot>
+        </table>
+    </div>
+
+    <div class="detail-notes">
+        <table width="100%">
+            <tr>
+                <td class="tengah" style="width: 30%">Dibuat oleh</td>
+                <td rowspan="3" style="vertical-align: top">
+                    <p>Pembayaran menggunakan cek / giro harap mencantumkan:</p>
+                    <p>nama <span style="font-weight:bold">PT. Ratu Perdana Indah Jaya</span> atau transfer ke rekening berikut:</p>
+                    <p style="font-weight:bold">Bank : <?php echo CHtml::encode(CHtml::value($saleReceiptHeader, 'companyBank.bank.name')); ?></p>
+                    <p style="font-weight:bold">Atas Nama : <?php echo CHtml::encode(CHtml::value($saleReceiptHeader, 'companyBank.account_name')); ?></p>
+                    <p style="font-weight:bold">No. Rekening : <?php echo CHtml::encode(CHtml::value($saleReceiptHeader, 'companyBank.account_no')); ?></p>
+                    <p style="font-weight:bold">Info pembayaran harap email ke gracia.angelin4@gmail.com</p>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="tengah h250"><?php echo CHtml::encode(CHtml::value($saleReceiptHeader, 'userIdCreated.username')); ?></td>
+            </tr>
         </table>
     </div>
 </div>

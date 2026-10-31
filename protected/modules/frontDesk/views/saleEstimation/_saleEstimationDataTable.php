@@ -21,7 +21,7 @@
         </thead>
         <tbody>
             <?php foreach ($dataProvider->data as $data): ?>
-                <?php $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('sale_estimation_header_id' => $data->id)); ?>
+                <?php //$registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('sale_estimation_header_id' => $data->id)); ?>
                 <tr id="sale_estimation_data_container">
                     <td><?php echo CHtml::link($data->transaction_number, array("view", "id" => $data->id), array("target" => "_blank")); ?></td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($data, 'transaction_date'))); ?></td>
@@ -33,7 +33,7 @@
                         <?php echo CHtml::encode(CHtml::value($data, 'vehicle.carSubModel.name')); ?>
                     </td>
                     <td style="text-align: right"><?php echo number_format(CHtml::encode(CHtml::value($data, 'vehicle_mileage')), 0); ?></td>
-                    <td><?php echo CHtml::link(CHtml::value($registrationTransaction, 'transaction_number'), array("/frontDesk/registrationTransaction/view", "id" => $data->id), array("target" => "_blank")); ?></td>
+                    <td><?php //echo CHtml::link(CHtml::value($registrationTransaction, 'transaction_number'), array("/frontDesk/registrationTransaction/view", "id" => $data->id), array("target" => "_blank")); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'employeeIdSalePerson.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'status')); ?></td>
                     <td>

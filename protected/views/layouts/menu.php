@@ -90,6 +90,42 @@
         </li>
     <?php endif; ?>
     
+        <li class="mdropdown"><a href="#">VINFAST</a>
+            <?php $this->widget('zii.widgets.CMenu', array(
+                'items' => array(
+                    array(
+                        'label' => 'Estimasi Customer', 
+                        'url' => array('/vinfast/saleEstimation/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('saleEstimationCreate') || Yii::app()->user->checkAccess('saleEstimationEdit') || 
+                            Yii::app()->user->checkAccess('saleEstimationView') || Yii::app()->user->checkAccess('saleEstimationSupervisor'),
+                    ),
+                    array(
+                        'label' => 'Registration Transaction', 
+                        'url' => array('/vinfast/saleRegistration/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('bodyRepairCreate'),
+                    ),
+                    array(
+                        'label' => 'Cashier', 
+                        'url' => array('/vinfast/saleInvoice/cashier'), 
+                        'visible' => Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('generalRepairEdit') || 
+                            Yii::app()->user->checkAccess('generalRepairView') || Yii::app()->user->checkAccess('generalRepairSupervisor'),
+                    ),
+                    array(
+                        'label' => 'Payment In', 
+                        'url' => array('/vinfast/salePayment/admin'), 
+                        'visible' => Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit') || 
+                            Yii::app()->user->checkAccess('bodyRepairView') || Yii::app()->user->checkAccess('bodyRepairSupervisor'),
+                    ),
+                    array(
+                        'label' => 'Technical Report', 
+                        'url' => array('/vinfast/technicalReport/admin'),
+                        'visible' => Yii::app()->user->checkAccess('pricingRequestCreate') || Yii::app()->user->checkAccess('pricingRequestEdit') || 
+                            Yii::app()->user->checkAccess('pricingRequestView') || Yii::app()->user->checkAccess('pricingRequestApproval'),
+                    ),
+                ),
+            )); ?>
+        </li>
+        
     <?php if (
         Yii::app()->user->checkAccess('saleEstimationCreate') || 
         Yii::app()->user->checkAccess('saleEstimationEdit') || 

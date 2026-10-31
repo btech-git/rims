@@ -340,7 +340,6 @@ class Vehicle extends CActiveRecord {
             'carMake',
             'carModel',
             'carSubModel',
-            'carSubModelDetail',
             'color',
         );
 
@@ -353,7 +352,7 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('t.car_sub_model_detail_id', $this->car_sub_model_detail_id);
         $criteria->compare('t.color_id', $this->color_id);
         $criteria->compare('year', $this->year, true);
-        $criteria->compare('customer_pic_id', $this->customer_pic_id);
+        $criteria->compare('customer_id', $this->customer_id);
         $criteria->compare('chasis_code', $this->chasis_code, true);
         $criteria->compare('transmission', $this->transmission, true);
         $criteria->compare('fuel_type', $this->fuel_type, true);
@@ -361,11 +360,7 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('drivetrain', $this->drivetrain, true);
         $criteria->compare('notes', $this->notes, true);
         $criteria->compare('customer.customer_type', $this->customer_type);
-
-        $vehiclePlateNumberOperator = empty($this->plate_number) ? '=' : 'LIKE';
-        $vehiclePlateNumberValue = empty($this->plate_number) ? '' : "%{$this->plate_number}%";
-        $criteria->addCondition("t.plate_number {$vehiclePlateNumberOperator} :plate_number");
-        $criteria->params[':plate_number'] = $vehiclePlateNumberValue;
+        $criteria->compare('plate_number', $this->plate_number, true);
 
         $criteria->order = 't.plate_number ASC';
 
@@ -430,6 +425,9 @@ class Vehicle extends CActiveRecord {
         return $this->carMake->name . ' ' . $this->carModel->name . ' ' . $this->carSubModel->name;
     }
     
+    public function getTechnicalVehicleName() {
+        return $this->carMake->name . ' - ' . $this->carModel->name . ' - ' . $this->carSubModel->name . ' - ' . $this->frame_number;
+    }
     public function searchByEntryStatusLocation($customerName) {
         $criteria = new CDbCriteria;
 

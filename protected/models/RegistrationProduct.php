@@ -189,7 +189,7 @@ class RegistrationProduct extends CActiveRecord {
         $total = 0; 
         
         foreach ($this->movementOutDetails as $detail) {
-            if ($detail->movementOutHeader->status !== 'CANCELLED!!!') {
+            if ($detail->movementOutHeader->user_id_cancelled !== null) {
                 $total += $detail->quantity; 
             }
         }

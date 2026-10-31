@@ -14,7 +14,7 @@ $this->breadcrumbs = array(
     </div>
     <div class="col d-flex justify-content-end">
         <div class="d-gap">
-            <?php $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('sale_estimation_header_id' => $model->id)); ?>
+            <?php //$registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('sale_estimation_header_id' => $model->id)); ?>
             <?php //if (empty($registrationTransaction)): ?>
                 <?php echo CHtml::link('Add Registration', array("/frontDesk/registrationTransaction/create", "estimationId" => $model->id), array(
                     'class' => 'button success right', 

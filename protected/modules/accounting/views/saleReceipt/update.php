@@ -10,7 +10,6 @@ $this->breadcrumbs=array(
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
         'saleReceipt' => $saleReceipt,
-        'customer' => $customer,
         'invoiceHeader' => $invoiceHeader,
         'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
     )); ?>

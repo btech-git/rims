@@ -14,7 +14,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Tanggal TT', false); ?>
+                        <?php echo CHtml::label('Tanggal', false); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
@@ -36,19 +36,6 @@
                 </div>
             </div>
            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Note', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::activeTextArea($saleReceipt->header, 'note'); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="small-12 medium-6 columns"> 
             <div class="field">
                 <div class="row collapse">
                     <?php if (empty($saleReceipt->header->customer_id)): ?>
@@ -74,17 +61,6 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Status', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($saleReceipt->header, 'status')); ?>
-                    </div>
-                </div>
-            </div>		
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
                         <?php echo CHtml::label('Branch', false); ?>
                     </div>
                     <div class="small-8 columns">
@@ -100,6 +76,45 @@
                     </div>
                     <div class="small-8 columns">
                         <?php echo CHtml::encode(CHtml::value($saleReceipt->header, 'userIdCreated.username')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Bank', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeDropDownList($saleReceipt->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'account_name'), array(
+                            'empty' => '-- Select Bank --',
+                        )); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="small-12 medium-6 columns"> 
+            <?php if (!$saleReceipt->header->isNewRecord): ?>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo CHtml::label('Resi Kirim #', ''); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeTextField($saleReceipt->header, 'delivery_receipt_number'); ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Note', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeTextArea($saleReceipt->header, 'note', array('rows' => 5)); ?>
                     </div>
                 </div>
             </div>
@@ -125,9 +140,12 @@
         )); ?>
     </div>
 	
-    <div class="row buttons">
+    <div class="field buttons text-center">
+        <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
         <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?')); ?>
     </div>
+    </div>
+
     <?php echo IdempotentManager::generate(); ?>
 
     <?php $this->endWidget(); ?>

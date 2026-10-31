@@ -1,0 +1,130 @@
+<?php
+$this->breadcrumbs = array(
+    'General Repair Transactions' => array('admin'),
+    'Manage',
+);
+
+$this->menu = array(
+    array('label' => 'List RegistrationTransaction', 'url' => array('admin')),
+    array('label' => 'Create RegistrationTransaction', 'url' => array('index')),
+);
+
+Yii::app()->clientScript->registerScript('search', "
+    $('.search-button').click(function(){
+        $('.search-form').toggle();
+        return false;
+    });
+
+    $('.search-form form').submit(function(){
+        $('#registration-transaction-grid').yiiGridView('update', {
+            data: $(this).serialize()
+        });
+        return false;
+    });
+");
+?>
+
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
+<div id="maincontent">
+    <div class="clearfix page-action">
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New', array("vehicleList"), array(
+            'class' => 'button success right', 
+            'visible' => Yii::app()->user->checkAccess("generalRepairCreate")
+        )); ?>
+        <h1>Manage Registration</h1>
+        
+        <div class="search-bar">
+            <div class="clearfix button-bar">
+                <a href="#" class="search-button right button cbutton secondary" id="menushow">Advanced Search</a>
+            </div>
+        </div>
+        
+        <div class="clearfix"></div>
+        
+        <div class="search-form" style="display:none">
+            <?php $this->renderPartial('_search', array(
+                'model' => $model,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'plateNumber' => $plateNumber,
+                'carMake' => $carMake,
+                'carModel' => $carModel,
+                'tabIndex' => $tabIndex,
+            )); ?>
+        </div><!-- search-form -->
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<br />
+
+<div style="width: 200px; height: 25px; background-color: salmon; text-align: center; display: inline-block; font-weight: bold;">No Invoice</div>
+<div style="width: 200px; height: 25px; background-color: yellow; text-align: center; display: inline-block; font-weight: bold;">Invoice no payment</div>
+<div style="width: 200px; height: 25px; background-color: greenyellow; text-align: center; display: inline-block; font-weight: bold;">Finished</div>
+
+<div class="relative">
+    <div class="table_wrapper">
+        <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+            'tabs' => $detailTabs,
+            // additional javascript options for the tabs plugin
+            'options' => array(
+                'collapsible' => true,
+                'active' => $tabIndex,
+            ),
+            // set id for this widgets
+            'id' => 'view_tab',
+        )); ?>
+    </div>
+</div>
+
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'cancel-message-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Cancel Message',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => false,
+    ),
+));?>
+<div>
+    <?php $hasFlash = Yii::app()->user->hasFlash('message'); ?>
+    <?php if ($hasFlash): ?>
+        <div class="flash-error">
+            <?php echo Yii::app()->user->getFlash('message'); ?>
+        </div>
+    <?php endif; ?>
+</div>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<script>
+    $(document).ready(function() {
+        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
+        if (hasFlash) {
+            $("#cancel-message-dialog").dialog({modal: 'false'});
+        }
+        $('.page-link').click(function(e) {
+            e.preventDefault();
+            
+            var isMobileSize = window.innerWidth <= 768;
+            
+            if (isMobileSize) {
+                window.location.href = 'viewMobile?id=' + $(this).attr('data-record-id');
+            } else {
+                window.location.href = 'view?id=' + $(this).attr('data-record-id');
+            }
+        });
+    });
+
+    $('.yiiPager').click(function(e) {
+        e.preventDefault();
+        window.location.href = e.target.href + '&TabIndex=' + $(this).next().text();
+    });
+</script>

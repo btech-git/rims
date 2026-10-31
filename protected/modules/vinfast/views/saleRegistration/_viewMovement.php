@@ -1,0 +1,44 @@
+<?php $movementOutHeaders = MovementOutHeader::model()->findAllByAttributes(array('registration_transaction_id'=>$model->id), array(
+    'order' => 't.id ASC', 
+    'limit' => 50
+)); ?>
+<div class="detail">
+    <?php if (count($movementOutHeaders) > 0): ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>Movement Number</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Qty Left</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                    <?php foreach ($movementOutHeaders as $i => $movementOutHeader): ?>
+                        <?php foreach ($movementOutHeader->movementOutDetails as $i => $movementOutDetail): ?>
+                            <tr>
+                                <td>
+                                    <?php echo CHtml::link($movementOutHeader->movement_out_no, array(
+                                        "/transaction/movementOutHeader/show", 
+                                        "id"=>$movementOutHeader->id
+                                    ), array('target' => 'blank')); ?>
+                                </td>
+                                <td><?php echo $movementOutHeader->date_posting; ?></td>
+                                <td><?php echo $movementOutHeader->status; ?></td>
+                                <td><?php echo $movementOutDetail->product->name; ?></td>
+                                <td style="text-align: center"><?php echo number_format($movementOutDetail->quantity,0); ?></td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($movementOutDetail, 'registrationProduct.quantity_movement_left'))); ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <?php echo "NO Movement Out"; ?>
+    <?php endif; ?>
+</div>

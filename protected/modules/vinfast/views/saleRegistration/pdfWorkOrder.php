@@ -1,0 +1,194 @@
+<?php
+date_default_timezone_set('Asia/Jakarta');
+
+function tanggal($date) {
+    $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'July', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+    $tahun = substr($date, 0, 4);
+    $bulan2 = substr($date, 5, 2);
+    $tanggal = substr($date, 8, 2);
+
+    return $tanggal . ' ' . $bulan[(int) $bulan2 - 1] . ' ' . $tahun;
+}
+?>
+<div class="container">
+    <div class="header">
+        <div style="float: left; width: 20%; text-align: center">
+            <img src="<?php echo Yii::app()->baseUrl . '/images/rap-logo.png' ?>" style="width: 75px; height: 64px" />
+        </div>
+        <div style="float: right; width: 40%">
+            <div>
+                Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
+                Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
+                Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008
+            </div>
+        </div>
+        <div style="float: right; width: 40%">
+            <div>
+                Jl. Raya Radin Inten II No. 9 - 8629545/46 Fax. 8627313<br />
+                Jl. Celebration Boulevard Blok AA 9/35 - 82615945<br />
+                Email info@raperind.com
+            </div>
+        </div>
+    </div>
+    
+    <div style="text-align: center">
+        <h4>WORK ORDER</h4>
+    </div>
+
+    <div class="body-memo">
+        <table>
+            <tr>
+                <td>WO #</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'work_order_number')); ?></td>
+                <td>RG #</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_number')); ?></td>
+            </tr>
+            <tr>
+                <td>TANGGAL MASUK</td>
+                <td>:</td>
+                <td><?php echo tanggal($registrationTransaction->work_order_date) . ' ' . $registrationTransaction->work_order_time; ?></td>
+                <td>TANGGAL SELESAI</td>
+                <td>:</td>
+                <td><?php echo tanggal($registrationTransaction->estimate_discharge_date); ?></td>
+            </tr>
+            <tr>
+                <td>NAMA CUSTOMER</td>
+                <td>:</td>
+                <td><?php echo $registrationTransaction->customer->name; ?></td>
+                <td>TIPE KENDARAAN</td>
+                <td>:</td>
+                <td>
+                    <?php echo $registrationTransaction->vehicle->carMake->name; ?> -
+                    <?php echo $registrationTransaction->vehicle->carModel->name; ?> -
+                    <?php echo $registrationTransaction->vehicle->carSubModel->name; ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>ALAMAT</td>
+                <td>:</td>
+                <td><?php echo $registrationTransaction->customer->address; ?></td>
+                <td>NO. POLISI</td>
+                <td>:</td>
+                <td><?php echo $registrationTransaction->vehicle->plate_number; ?></td>
+            </tr>
+            <tr>
+                <td>TELP / HP</td>
+                <td>:</td>
+                <td><?php echo $registrationTransaction->customer->mobile_phone; ?></td>
+                <td>KILOMETER</td>
+                <td>:</td>
+                <td><?php echo $registrationTransaction->vehicle_mileage; ?></td>
+            </tr>
+            <tr>
+                <td rowspan="2" style="vertical-align: top">PROBLEM</td>
+                <td rowspan="2" style="vertical-align: top">:</td>
+                <td rowspan="2" style="vertical-align: top"><?php echo nl2br($registrationTransaction->problem); ?></td>
+                <td>ASURANSI</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'insuranceCompany.name')); ?></td>
+            </tr>
+            <tr>
+                <td>SPK Customer #</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'customer_work_order_number')); ?></td>
+                <td>V-TAG #</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration, 'technical_code_number')); ?></td>
+            </tr>
+        </table>
+    </div>
+    
+    <?php if (count($registrationTransaction->registrationProducts) > 0): ?>
+        <div class="purchase-order">
+            <table>
+                <tr style="background-color: skyblue">
+                    <th colspan="6">SUKU CADANG - SPAREPARTS</th>
+                </tr>
+                <tr>
+                    <th style="width: 1%">No</th>
+                    <th style="width: 15%">Code</th>
+                    <th>Item Name</th>
+                    <th style="width: 20%">Brand Name</th>
+                    <th style="width: 5%">Qty</th>
+                    <th style="width: 5%">Unit</th>
+                </tr>
+                <?php
+                $no = 1;
+                foreach ($registrationTransaction->registrationProducts as $product) {
+                ?>
+                    <tr class="isi">
+                        <td class="noo"><?php echo $no; ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.manufacturer_code')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.name')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.brand.name')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'quantity')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.unit.name')); ?></td>
+                    </tr>
+                    <?php $no++;
+                } ?>
+            </table>
+        </div>
+    <?php endif; ?>
+                
+    <?php if (count($registrationTransaction->registrationQuickServices) > 0 || count($registrationTransaction->registrationServices) > 0): ?>
+        <div class="purchase-order">
+            <table>
+                <tr style="background-color: skyblue">
+                    <th colspan="3">JASA PERBAIKAN - SERVICE</th>
+                </tr>
+                <tr>
+                    <th style="width: 1%">No</th>
+                    <th>Service</th>
+                    <th>Note</th>
+                </tr>
+                <?php $no = 1;?>
+                <?php foreach ($registrationTransaction->registrationQuickServices as $quickService): ?>
+                    <tr class="isi">
+                        <td class="noo"><?php echo $no; ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($quickService, 'quickService.name')); ?></td>
+                    </tr>
+                    <?php $no++; ?>
+                <?php endforeach; ?>
+                <?php foreach ($registrationTransaction->registrationServices as $service): ?>
+                    <tr class="isi">
+                        <td class="noo"><?php echo $no; ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'note')); ?></td>
+                    </tr>
+                    <?php $no++; ?>
+                <?php endforeach; ?>
+            </table>
+        </div>
+    <?php endif; ?>
+            
+    <br />
+
+    <div style="width: 100%">
+        <table style="border: 1px solid; font-size: 10px; width: 100%; float: center">
+            <tr>
+                <td colspan="3" style="border-bottom: 1px solid; text-align: center">Tanda Tangan</td>
+            </tr>
+            <tr>
+                <td style="height: 70px; border-right: 1px solid; width: 30%">&nbsp;</td>
+                <td style="width: 30%; border-right: 1px solid">&nbsp;</td>
+                <td style="width: 30%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td style="text-align: center; border-right: 1px solid;">Pemilik</td>
+                <td style="text-align: center; border-right: 1px solid;">Receptionist</td>
+                <td style="text-align: center">Mekanik</td>
+            </tr>
+        </table>
+    </div>
+
+    <br />
+
+    <div style="font-size: 10px; text-align: left">
+        1. Raperind Motor tidak bertanggung jawab atas kendaraan yang tidak diambil dalam waktu 30 hari setelah kendaraan selesai
+    </div>
+    <div style="font-size: 10px; text-align: left">
+        2. Raperind Motor bertanggung jawab atas keamanan kendaraan yang ditinggal di workshop dengan penggantian sebesar 10x Jasa, kecuali atas kejadian Force Majeure (Pencurian Kendaraan, Kebakaran, dll)
+    </div>
+</div>
