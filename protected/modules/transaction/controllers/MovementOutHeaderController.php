@@ -928,7 +928,10 @@ class MovementOutHeaderController extends Controller {
                             $quantity += $mvmntDetail->quantity;
                         }
 
-                        $deliveryDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $movementDetail->delivery_order_detail_id, 'delivery_order_id' => $movementOut->header->delivery_order_id));
+                        $deliveryDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array(
+                            'id' => $movementDetail->delivery_order_detail_id, 
+                            'delivery_order_id' => $movementOut->header->delivery_order_id
+                        ));
                         $deliveryDetail->quantity_movement_left = $deliveryDetail->quantity_delivery - $quantity;
                         $deliveryDetail->quantity_movement = $quantity;
                         $deliveryDetail->quantity_receive = 0;
@@ -946,7 +949,10 @@ class MovementOutHeaderController extends Controller {
                             $quantity += $mvmntDetail->quantity;
                         }
 
-                        $deliveryDetail = TransactionReturnOrderDetail::model()->findByAttributes(array('id' => $movementDetail->return_order_detail_id, 'return_order_id' => $movementOut->header->return_order_id));
+                        $deliveryDetail = TransactionReturnOrderDetail::model()->findByAttributes(array(
+                            'id' => $movementDetail->return_order_detail_id, 
+                            'return_order_id' => $movementOut->header->return_order_id
+                        ));
                         $deliveryDetail->quantity_movement_left = $movementDetail->quantity_transaction - ($movementDetail->quantity + $quantity);
                         $deliveryDetail->quantity_movement = $quantity + $movementDetail->quantity;
                         $deliveryDetail->save(false);
@@ -962,7 +968,10 @@ class MovementOutHeaderController extends Controller {
                             $quantity += $mvmntDetail->quantity;
                         }
 
-                        $registrationProduct = RegistrationProduct::model()->findByAttributes(array('id' => $movementDetail->registration_product_id, 'registration_transaction_id' => $movementOut->header->registration_transaction_id));
+                        $registrationProduct = RegistrationProduct::model()->findByAttributes(array(
+                            'id' => $movementDetail->registration_product_id, 
+                            'registration_transaction_id' => $movementOut->header->registration_transaction_id
+                        ));
                         $registrationProduct->quantity_movement = $registrationProduct->getTotalMovementOutQuantity();
                         $registrationProduct->quantity_movement_left = $registrationProduct->quantity - $registrationProduct->quantity_movement;
                         $registrationProduct->save(false);

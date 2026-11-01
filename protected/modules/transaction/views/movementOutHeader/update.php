@@ -9,8 +9,6 @@ $this->breadcrumbs=array(
 );
 ?>
 
-<h1>Update Movement Out <?php echo $movementOut->header->id; ?></h1>
-
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
         'movementOut'=>$movementOut,

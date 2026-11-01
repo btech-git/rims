@@ -4,7 +4,7 @@
 /* @var $form CActiveForm */
 ?>
 <div class="clearfix page-action">
-    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/movementOutHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.admin"))) ?>
+    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', array('admin'), array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.admin"))) ?>
     <h1><?php if ($movementOut->header->id == "") {
         echo "New Movement Out Header ";
     } else {
@@ -12,7 +12,6 @@
     } ?></h1>
 
     <div class="form">
-
         <?php $form = $this->beginWidget('CActiveForm', array(
             'id' => 'movement-out-header-form',
             // Please note: When you enable ajax validation, make sure the corresponding
@@ -23,7 +22,6 @@
         )); ?>
 
         <p class="note">Fields with <span class="required">*</span> are required.</p>
-
         <?php echo $form->errorSummary($movementOut->header); ?>
 
         <div class="row">
