@@ -2970,7 +2970,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $sql = "
             SELECT r.id, r.customer_id, r.invoice_number, r.invoice_date, d.product_id, p.name AS product, d.service_id, s.name AS service, d.quantity, 
                 d.unit_price, d.total_price, v.plate_number AS plate_number, p.hpp, c.name AS customer_name, i.work_order_number, r.registration_transaction_id,
-                m.name AS car_make, o.name AS car_model, sm.name AS car_sub_model, ic.name AS insurance, i.vehicle_mileage
+                m.name AS car_make, o.name AS car_model, sm.name AS car_sub_model, ic.name AS insurance, i.vehicle_mileage, d.discount
             FROM " . InvoiceHeader::model()->tableName() . " r
             INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON r.id = d.invoice_id
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " i ON i.id = r.registration_transaction_id

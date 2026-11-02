@@ -50,6 +50,7 @@ class SiteController extends Controller {
         $tireSize = Search::bind(new TireSize('search'), isset($_GET['TireSize']) ? $_GET['TireSize'] : '');
         $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
+        $tabIndex = (isset($_GET['TabIndex'])) ? $_GET['TabIndex'] : 0;
 
         $endDate = date('Y-m-d');
         $vehicleDataProvider = $vehicle->searchByDashboard();
@@ -127,6 +128,7 @@ class SiteController extends Controller {
             'endDate' => $endDate,
             'tireSize' => $tireSize,
             'tireSizeDataProvider' => $tireSizeDataProvider,
+            'tabIndex' => $tabIndex,
         ));
     }
         

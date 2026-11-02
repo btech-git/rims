@@ -39,7 +39,7 @@
         <tbody>
             <?php foreach ($saleProjectReport as $i => $dataItem): ?>
                 <?php $quantity = $dataItem['quantity']; ?>
-                <?php $unitPrice = $dataItem['unit_price']; ?>
+                <?php $unitPrice = $dataItem['unit_price'] - $dataItem['discount']; ?>
                 <tr>
                     <td>
                         <?php echo CHtml::link($dataItem['invoice_number'], Yii::app()->createUrl("transaction/invoiceHeader/view", array("id" => $dataItem['id'])), array('target' => '_blank')); ?>

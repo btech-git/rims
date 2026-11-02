@@ -19,12 +19,14 @@
                         'content' => $this->renderPartial('_viewVehicle', array(
                             'vehicleDataProvider' => $vehicleDataProvider, 
                             'vehicle' => $vehicle, 
+                            'tabIndex' => 1,
                         ), true),
                     ),
                     'Customer' => array(
                         'content' => $this->renderPartial('_viewCustomer', array(
                             'customer' => $customer,
                             'customerDataProvider' => $customerDataProvider,
+                            'tabIndex' => 2,
                         ), true),
                     ),
                     'Parts' => array(
@@ -33,6 +35,7 @@
                             'product' => $product, 
                             'branches' => $branches,
                             'endDate' => $endDate,
+                            'tabIndex' => 3,
                         ), true),
                     ),
 //                    'Ban' => array(
@@ -63,6 +66,7 @@
                         'content' => $this->renderPartial('_viewService', array(
                             'service' => $service, 
                             'serviceDataProvider' => $serviceDataProvider, 
+                            'tabIndex' => 4,
                         ), true),
                     ),
                     'Follow Up' => array(
@@ -70,18 +74,21 @@
                             'plateNumber' => $plateNumber,
                             'customerName' => $customerName,
                             'followUpDataProvider' => $followUpDataProvider, 
+                            'tabIndex' => 5,
                         ), true),
                     ),
                     'Katalog Opsi Ban' => array(
                         'content' => $this->renderPartial('_viewTireOption', array(
-                        'tireSize' => $tireSize,
-                        'tireSizeDataProvider' => $tireSizeDataProvider,
+                            'tireSize' => $tireSize,
+                            'tireSizeDataProvider' => $tireSizeDataProvider,
+                            'tabIndex' => 6,
                         ), true),
                     ),
                 ),
                 // additional javascript options for the tabs plugin
                 'options' => array(
                     'collapsible' => true,
+                    'active' => $tabIndex,
                 ),
                 // set id for this widgets
                 'id' => 'view_tab',
@@ -89,3 +96,10 @@
 	</div>
     <?php echo CHtml::endForm(); ?>
 </div>
+
+<script>
+    $('.yiiPager').click(function(e) {
+        e.preventDefault();
+        window.location.href = e.target.href + '&TabIndex=' + $(this).next().text();
+    });
+</script>

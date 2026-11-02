@@ -146,4 +146,10 @@
             ),
         ),
     )); ?>
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'pages' => $vehicleDataProvider->pagination,
+        )); ?>
+        <span style="display: none"><?php echo $tabIndex; ?></span>
+    </div>
 </div>
