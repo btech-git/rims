@@ -183,38 +183,95 @@ class TireSizeRecommendation extends CComponent {
     public function flush() {
         $valid = $this->header->save(false);
 
+        $standardOptionDetails = TireSizeStandardOption::model()->findAllByAttributes(array('tire_size_id' => $this->header->id));
+        $standard_option_detail_id = array();
+        foreach ($standardOptionDetails as $standardOptionDetail) {
+            $standard_option_detail_id[] = $standardOptionDetail->id;
+        }
+        $new_standard_option_detail = array();
+
+        $economicOptionDetails = TireSizeEconomicOption::model()->findAllByAttributes(array('tire_size_id' => $this->header->id));
+        $economic_option_detail_id = array();
+        foreach ($economicOptionDetails as $economicOptionDetail) {
+            $economic_option_detail_id[] = $economicOptionDetail->id;
+        }
+        $new_economic_option_detail = array();
+
+        $premiumOptionDetails = TireSizePremiumOption::model()->findAllByAttributes(array('tire_size_id' => $this->header->id));
+        $premium_option_detail_id = array();
+        foreach ($premiumOptionDetails as $premiumOptionDetail) {
+            $premium_option_detail_id[] = $premiumOptionDetail->id;
+        }
+        $new_premium_option_detail = array();
+
+        $carModelRecommendationDetails = TireSizeCarModelRecommendation::model()->findAllByAttributes(array('tire_size_id' => $this->header->id));
+        $car_model_recommendation_detail_id = array();
+        foreach ($carModelRecommendationDetails as $carModelRecommendationDetail) {
+            $car_model_recommendation_detail_id[] = $carModelRecommendationDetail->id;
+        }
+        $new_car_model_recommendation_detail = array();
+
         foreach ($this->carModelDetails as $i => $detail) {
             if ($detail->isNewRecord) {
                 $detail->tire_size_id = $this->header->id;
             }
-                
             $valid = $detail->save(false) && $valid;
+            $new_car_model_recommendation_detail[] = $detail->id;
         }
         
         foreach ($this->premiumOptionDetails as $i => $detail) {
             if ($detail->isNewRecord) {
                 $detail->tire_size_id = $this->header->id;
             }
-                
             $valid = $detail->save(false) && $valid;
+            $new_premium_option_detail[] = $detail->id;
         }
         
         foreach ($this->standardOptionDetails as $i => $detail) {
             if ($detail->isNewRecord) {
                 $detail->tire_size_id = $this->header->id;
             }
-                
             $valid = $detail->save(false) && $valid;
+            $new_standard_option_detail[] = $detail->id;
         }
         
         foreach ($this->economicOptionDetails as $i => $detail) {
             if ($detail->isNewRecord) {
                 $detail->tire_size_id = $this->header->id;
             }
-                
             $valid = $detail->save(false) && $valid;
+            $new_economic_option_detail[] = $detail->id;
         }
         
+        //delete details
+        $delete_array_standard_option = array_diff($standard_option_detail_id, $new_standard_option_detail);
+        if ($delete_array_standard_option != NULL) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $delete_array_standard_option);
+            TireSizeStandardOption::model()->deleteAll($criteria);
+        }
+
+        $delete_array_economic_option = array_diff($economic_option_detail_id, $new_economic_option_detail);
+        if ($delete_array_economic_option != NULL) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $delete_array_economic_option);
+            TireSizeEconomicOption::model()->deleteAll($criteria);
+        }
+
+        $delete_array_premium_option = array_diff($premium_option_detail_id, $new_premium_option_detail);
+        if ($delete_array_premium_option != NULL) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $delete_array_premium_option);
+            TireSizePremiumOption::model()->deleteAll($criteria);
+        }
+
+        $delete_array_car_model_recommendation = array_diff($car_model_recommendation_detail_id, $new_car_model_recommendation_detail);
+        if ($delete_array_car_model_recommendation != NULL) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $delete_array_car_model_recommendation);
+            TireSizeCarModelRecommendation::model()->deleteAll($criteria);
+        }
+
         $this->saveMasterLog();
         return $valid;
     }

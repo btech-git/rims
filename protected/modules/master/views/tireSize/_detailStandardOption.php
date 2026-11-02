@@ -21,8 +21,8 @@
                     <?php echo CHtml::button('X', array(
                         'onclick' => CHtml::ajax(array(
                             'type' => 'POST',
-                            'url' => CController::createUrl('ajaxHtmlRemovePremiumOptionDetail', array('id' => $tireSize->header->id, 'index' => $i)),
-                            'update' => '#premium_option_div',
+                            'url' => CController::createUrl('ajaxHtmlRemoveStandardOptionDetail', array('id' => $tireSize->header->id, 'index' => $i)),
+                            'update' => '#standard_option_div',
                         )),
                     )); ?>
                 </td>
