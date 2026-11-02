@@ -142,7 +142,7 @@ class SaleInvoiceProjectNonCogsController extends Controller {
             $serviceAmount = $dataItem['service'];
             $productAmount = $dataItem['product'];
             $quantity = $dataItem['quantity'];
-            $unitPriceParts = ($dataItem['unit_price'] - $dataItem['discount']) * $quantity;
+            $unitPriceParts = $quantity * $dataItem['unit_price'] - $dataItem['discount'];
             $unitPriceService = $dataItem['unit_price'] - $dataItem['discount'];
             $grandTotal = $dataItem['total_price'];
             $worksheet->getStyle("J{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
