@@ -143,9 +143,9 @@ class SaleReceipt extends CComponent {
         $valid = $this->header->save(false);
 
         foreach ($this->details as $i => $detail) {
-            if ($this->header->isNewRecord) {
+//            if ($this->header->isNewRecord) {
                 $detail->sale_receipt_header_id = $this->header->id;
-            }
+//            }
                 
             $valid = $detail->save(false) && $valid;
             
