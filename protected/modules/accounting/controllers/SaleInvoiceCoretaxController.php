@@ -125,7 +125,7 @@ class SaleInvoiceCoretaxController extends Controller {
         $valid = true;
         foreach ($data as $i => $item) {
             if ($i > 0) {
-                echo substr($item[15], 0, -2);
+                echo $item[4];
 //                $invoiceNumber = substr($item[15], 0, -2);
 //                $invoiceHeader = InvoiceHeader::model()->find(array(
 //                    'condition' => 'invoice_number LIKE :invoice_number', 
