@@ -1,0 +1,195 @@
+<?php
+/* @var $this VehicleController */
+/* @var $model Vehicle */
+
+$this->breadcrumbs = array(
+    'Vehicle' => array('admin'),
+    'Vehicles' => array('admin'),
+    'View Vehicle ' . $model->plate_number,
+);
+
+$this->menu = array(
+    array('label' => 'List Vehicle', 'url' => array('index')),
+    array('label' => 'Create Vehicle', 'url' => array('create')),
+    array('label' => 'Update Vehicle', 'url' => array('update', 'id' => $model->id)),
+    array('label' => 'Delete Vehicle', 'url' => '#', 'linkOptions' => array('submit' => array('delete', 'id' => $model->id), 'confirm' => 'Are you sure you want to delete this item?')),
+    array('label' => 'Manage Vehicle', 'url' => array('admin')),
+);
+?>
+
+<div id="maincontent">
+    <div class="clearfix page-action">
+        <?php $ccontroller = Yii::app()->controller->id; ?>
+        <?php $ccaction = Yii::app()->controller->action->id; ?>
+        <?php echo CHtml::link('+ Registration', array("saleRegistration/create", "vehicleId"=>$model->id), array('target' => '_blank', 'class' => ' button success right')); ?>
+        <?php if (Yii::app()->user->checkAccess("masterVehicleEdit")) { ?>
+            <a class="button warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>		
+        <?php } ?>
+            
+        <h1>View Vehicle <?php echo $model->plate_number; ?></h1>
+
+        <div class="row">
+            <div class="small-12 columns">
+                <?php $this->widget('zii.widgets.CDetailView', array(
+                    'data' => $model,
+                    'attributes' => array(
+                        'plate_number',
+                        'machine_number',
+                        'frame_number',
+                        array(
+                            'name' => 'car_make', 
+                            'value' => $model->carMake->name
+                        ),
+                        array(
+                            'name' => 'car_model', 
+                            'value' => $model->carModel->name
+                        ),
+                        array(
+                            'name' => 'car_sub_model', 
+                            'value' => $model->carSubModel->name
+                        ),
+                        array(
+                            'label' => 'Color', 
+                            'value' => empty($model->color_id) ? '' : $model->color->name,
+                        ),
+                        'year',
+                        'chasis.name: Chassis',
+                        'status_location',
+                        'notes',
+                    ),
+                )); ?>
+            </div>
+            
+            <div class="small-12 columns">
+                <h5>Customer</h5>
+                <table class="detail">
+                    <tr>
+                        <td>ID</td>
+                        <td>Name</td>
+                        <td>Address</td>
+                        <td>Province</td>
+                        <td>City</td>
+                        <td>Email</td>
+                        <td>Note</td>
+                    </tr>
+
+                    <tr>
+                        <td><?php echo CHtml::link($model->customer->id, array("view", "id"=>$model->customer->id), array('target' => '_blank')) ?></td>
+                        <td><?php echo CHtml::link($model->customer->name, array("view", "id"=>$model->customer->id), array('target' => '_blank')) ?></td>
+                        <td><?php echo $model->customer->address; ?></td>
+                        <td><?php echo $model->customer->province_id != "" ? $model->customer->province->name : '-'; ?></td>
+                        <td><?php echo $model->customer->city_id != "" ? $model->customer->city->name : '-'; ?></td>
+                        <td><?php echo $model->customer->email; ?></td>
+                        <td><?php echo $model->customer->note; ?></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+                
+<div class="row">
+    <div class="large-12 columns">
+        <fieldset>
+            <legend>Transaction History</legend>
+            <div class="grid-view">
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'registration-transaction-grid',
+                    'dataProvider' => $registrationTransactionDataProvider,
+                    'filter' => $registrationTransaction,
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array(
+                            'name' => 'transaction_number',
+                            'value' => 'CHtml::link($data->transaction_number, array("/frontDesk/generalRepairRegistration/show", "id"=>$data->id))',
+                            'type' => 'raw'
+                        ),
+                        'transaction_date',
+                        'repair_type',
+                        'status',
+                        'work_order_number',
+                        array(
+                            'header' => 'Invoice #',
+                            'value' => 'empty($data->invoiceHeaders) ? "" : $data->invoiceHeaders[0]->invoice_number',
+                            'type' => 'raw'
+                        ),
+                        array(
+                            'name' => 'grand_total', 
+                            'value' => 'AppHelper::formatMoney($data->grand_total)',
+                            'htmlOptions' => array('style' => 'text-align: right'),
+                        ),
+                    ),
+                )); ?>
+            </div>
+        </fieldset>
+        
+        <br />
+        
+        <fieldset>
+            <legend>Service History</legend>
+            <div class="grid-view">
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'registration-service-grid',
+                    'dataProvider' => $registrationServiceDataProvider,
+                    'filter' => $registrationService,
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array(
+                            'header' => 'RG #',
+                            'value' => '$data->registrationTransaction->transaction_number',
+                        ),
+                        array(
+                            'header' => 'Tanggal',
+                            'value' => '$data->registrationTransaction->transaction_date',
+                        ),
+                        array(
+                            'header' => 'Repair',
+                            'value' => '$data->registrationTransaction->repair_type',
+                        ),
+                        array(
+                            'header' => 'KM',
+                            'value' => '$data->registrationTransaction->vehicle_mileage',
+                        ),
+                        array(
+                            'header' => 'Problem',
+                            'value' => '$data->registrationTransaction->problem',
+                        ),
+                        array(
+                            'header' => 'Service',
+                            'value' => '$data->service->name',
+                        ),
+                        array(
+                            'header' => 'Type',
+                            'value' => '$data->serviceType->name',
+                        ),
+                        array(
+                            'header' => 'Price', 
+                            'value' => 'AppHelper::formatMoney($data->total_price)',
+                            'htmlOptions' => array('style' => 'text-align: right'),
+                        ),
+                    ),
+                )); ?>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+<div>
+    <?php if (Yii::app()->user->checkAccess("director")): ?>
+        <div style="float: left; margin-left: 20px;">
+            <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/log', array('vehicleId' => $model->id)); ?>">
+                <span class="fa fa-info"></span>Data Log
+            </a>
+        </div>
+    <?php endif; ?>
+</div>

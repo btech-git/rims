@@ -314,11 +314,14 @@
             ),
             array(
                 'header' => 'Nomor Rangka',
+                'name' => 'frame_number',
                 'value' => 'CHtml::encode(CHtml::value($data, "frame_number"))',
             ),
             array(
                 'header' => 'Customer',
-                'filter' => CHtml::textField('CustomerName', $customerName),
+                'filter' => CHtml::activeDropdownList($vehicleData, 'customer_id', CHtml::listData(Customer::model()->findAll(array(
+                    "condition" => "t.id IN (60849, 60926, 63482)",
+                )), "id", "name"), array("empty" => "-- All --")),
                 'value' => 'empty($data->customer_id) ? "" : $data->customer->name',
             ),
         )

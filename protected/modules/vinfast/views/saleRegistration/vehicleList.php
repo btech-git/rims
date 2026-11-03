@@ -37,12 +37,13 @@ $('.search-form form').submit(function(){
 	<div class="clearfix page-action">
         <table style="border: 0px solid">
             <tr>
-                <td style="border: 0px solid" colspan="4"><h1>List Customer + Vehicle</h1></td>
-                <td style="border: 0px solid" colspan="2"><?php echo CHtml::link('Manage', array('admin'), array('class'=>'button success right')); ?></td>
+                <td style="border: 0px solid" colspan="2"><h1>List Customer + Vehicle</h1></td>
+                <td style="border: 0px solid" colspan="2"><?php echo CHtml::link('+ Vehicle', array('customerVehicle/create'), array('class'=>'button success left')); ?></td>
+                <td style="border: 0px solid" colspan="2"><?php echo CHtml::link('Manage', array('admin'), array('class'=>'button cbutton right')); ?></td>
             </tr>
             <tr>
                 <td>Customer</td>
-                <td colspan="3">
+                <td>
                     <?php echo CHtml::activeDropDownList($vehicle, 'customer_id', CHtml::listData(Customer::model()->findAll(array(
                         'condition' => 't.status = "Active" AND t.id IN (60849, 60926, 63482)',
                         'order' => 't.name ASC',

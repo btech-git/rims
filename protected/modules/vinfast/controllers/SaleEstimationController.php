@@ -59,6 +59,7 @@ class SaleEstimationController extends Controller {
         $vehicleDataProvider->criteria->with = array(
             'customer',
         );
+        $vehicleDataProvider->criteria->addCondition('t.customer_id IN (60849, 60926, 63482)');
         
         $productPageNumber = isset($_GET['product_page']) ? $_GET['product_page'] : 1;
         $servicePageNumber = isset($_GET['service_page']) ? $_GET['service_page'] : 1;
