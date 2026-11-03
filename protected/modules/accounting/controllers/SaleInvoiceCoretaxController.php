@@ -107,11 +107,11 @@ class SaleInvoiceCoretaxController extends Controller {
                 $this->addError('error', $e->getMessage());
             }
             
-            if (!$valid) {
-                $errorMessage = 'Data CSV gagal diimport.';
-            } else {
-                $this->redirect(array('admin'));
-            }
+//            if (!$valid) {
+//                $errorMessage = 'Data CSV gagal diimport.';
+//            } else {
+//                $this->redirect(array('admin'));
+//            }
         }
         
         $this->render('importCoretax', array(
@@ -125,23 +125,24 @@ class SaleInvoiceCoretaxController extends Controller {
         $valid = true;
         foreach ($data as $i => $item) {
             if ($i > 0) {
-                $invoiceNumber = substr($item[15], 0, -2);
-                $invoiceHeader = InvoiceHeader::model()->find(array(
-                    'condition' => 'invoice_number LIKE :invoice_number', 
-                    'params' => array(':invoice_number' => $invoiceNumber . '%')
-                ));
-                
-                $coretaxNumber = $item[4];
-                $coretaxDate = $item[5];
-                $coretaxTaxAmount = $item[12];
-                
-                if ($invoiceHeader !== null) {
-                    $invoiceHeader->transaction_tax_number = $coretaxNumber;
-                    $invoiceHeader->transaction_tax_date = $coretaxDate;
-                    $invoiceHeader->grand_total_coretax = $invoiceHeader->subTotal;
-                    $invoiceHeader->tax_amount_coretax = $coretaxTaxAmount;
-                    $valid = $valid && $invoiceHeader->save();
-                }
+                echo substr($item[15], 0, -2);
+//                $invoiceNumber = substr($item[15], 0, -2);
+//                $invoiceHeader = InvoiceHeader::model()->find(array(
+//                    'condition' => 'invoice_number LIKE :invoice_number', 
+//                    'params' => array(':invoice_number' => $invoiceNumber . '%')
+//                ));
+//                
+//                $coretaxNumber = $item[4];
+//                $coretaxDate = $item[5];
+//                $coretaxTaxAmount = $item[12];
+//                
+//                if ($invoiceHeader !== null) {
+//                    $invoiceHeader->transaction_tax_number = $coretaxNumber;
+//                    $invoiceHeader->transaction_tax_date = $coretaxDate;
+//                    $invoiceHeader->grand_total_coretax = $invoiceHeader->subTotal;
+//                    $invoiceHeader->tax_amount_coretax = $coretaxTaxAmount;
+//                    $valid = $valid && $invoiceHeader->save();
+//                }
             }
             if (!$valid) {
                 break;
