@@ -40,7 +40,7 @@ Yii::app()->clientScript->registerCss('_report', '
         
         <?php foreach ($customerSaleReport as $i => $dataItem): ?>
             <?php $grandTotal = CHtml::encode($dataItem['grand_total']); ?>
-            <?php $totalPayment = CHtml::encode($dataItem['total_payment']); ?>
+            <?php $totalPayment = CHtml::encode($dataItem['payment_amount']); ?>
             <?php $paymentLeft = CHtml::encode($dataItem['payment_left']); ?>
         
             <tr class="items1">
