@@ -73,8 +73,8 @@
                 </tr>
                 <?php $totalPurchase += $purchasePrice; ?>
                 <?php $totalWorkOrderExpense += $workOrderExpensePrice; ?>
-                <?php $purchasePayment += $purchasePayment; ?>
-                <?php $remainingPayable += $remainingPayable; ?>
+                <?php $totalPayment += $purchasePayment; ?>
+                <?php $totalOutstanding += $remainingPayable; ?>
             <?php //endif; ?>
         <?php endforeach; ?>
     </tbody>
@@ -89,10 +89,10 @@
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalWorkOrderExpense)); ?>
             </td>
             <td class="width1-4" style="text-align: right; font-weight: bold"> 
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchasePayment)); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
             </td>
             <td class="width1-4" style="text-align: right; font-weight: bold"> 
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $remainingPayable)); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalOutstanding)); ?>
             </td>
         </tr>  
     </tfoot>
