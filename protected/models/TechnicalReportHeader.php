@@ -12,8 +12,7 @@
  * @property string $dealer_code
  * @property integer $province_id
  * @property string $warranty_claim_number
- * @property integer $vehicle_id
- * @property integer $vehicle_mileage
+ * @property integer $registration_transaction_id
  * @property string $warranty_start_date
  * @property string $repair_date
  * @property string $main_part_name
@@ -32,7 +31,7 @@
  * @property TechnicalReportFailedPartSerialNumberPhoto[] $technicalReportFailedPartSerialNumberPhotos
  * @property Users $userIdCreated
  * @property Province $province
- * @property Vehicle $vehicle
+ * @property RegistrationTransaction $registrationTransaction
  * @property Users $userIdUpdated
  * @property TechnicalReportNewPartPhoto[] $technicalReportNewPartPhotos
  * @property TechnicalReportOdometerPhoto[] $technicalReportOdometerPhotos
@@ -58,8 +57,8 @@ class TechnicalReportHeader extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('document_number, report_version, date_effective, dealer_name, dealer_code, province_id, warranty_claim_number, vehicle_id, warranty_start_date, repair_date, main_part_name, user_id_created, created_datetime', 'required'),
-            array('province_id, vehicle_id, vehicle_mileage, user_id_created, user_id_updated', 'numerical', 'integerOnly' => true),
+            array('document_number, report_version, date_effective, dealer_name, dealer_code, province_id, warranty_claim_number, registration_transaction_id, warranty_start_date, repair_date, main_part_name, user_id_created, created_datetime', 'required'),
+            array('province_id, registration_transaction_id, user_id_created, user_id_updated', 'numerical', 'integerOnly' => true),
             array('document_number, warranty_claim_number', 'length', 'max' => 60),
             array('report_version, dealer_code, main_part_number', 'length', 'max' => 20),
             array('dealer_name, main_part_name, failure_symptom_video, after_repair_video', 'length', 'max' => 100),
@@ -67,7 +66,7 @@ class TechnicalReportHeader extends CActiveRecord {
             array('report_issue, failure_phenomenon, updated_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, document_number, report_version, date_effective, dealer_name, dealer_code, province_id, warranty_claim_number, vehicle_id, vehicle_mileage, warranty_start_date, repair_date, main_part_name, main_part_number, report_issue, failure_phenomenon, failure_symptom_video, after_repair_video, user_id_created, created_datetime, user_id_updated, updated_datetime, failedPartImages, failedPartSerialNumberImages, newPartImages, odometerImages', 'safe', 'on' => 'search'),
+            array('id, document_number, report_version, date_effective, dealer_name, dealer_code, province_id, warranty_claim_number, registration_transaction_id, warranty_start_date, repair_date, main_part_name, main_part_number, report_issue, failure_phenomenon, failure_symptom_video, after_repair_video, user_id_created, created_datetime, user_id_updated, updated_datetime, failedPartImages, failedPartSerialNumberImages, newPartImages, odometerImages', 'safe', 'on' => 'search'),
         );
     }
 
@@ -82,7 +81,7 @@ class TechnicalReportHeader extends CActiveRecord {
             'technicalReportFailedPartSerialNumberPhotos' => array(self::HAS_MANY, 'TechnicalReportFailedPartSerialNumberPhoto', 'technical_report_header_id'),
             'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
             'province' => array(self::BELONGS_TO, 'Province', 'province_id'),
-            'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
+            'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'technicalReportNewPartPhotos' => array(self::HAS_MANY, 'TechnicalReportNewPartPhoto', 'technical_report_header_id'),
             'technicalReportOdometerPhotos' => array(self::HAS_MANY, 'TechnicalReportOdometerPhoto', 'technical_report_header_id'),
@@ -102,8 +101,7 @@ class TechnicalReportHeader extends CActiveRecord {
             'dealer_code' => 'Dealer Code',
             'province_id' => 'Province',
             'warranty_claim_number' => 'Warranty Claim Number',
-            'vehicle_id' => 'Vehicle',
-            'vehicle_mileage' => 'Vehicle Mileage',
+            'registration_transaction_id' => 'Registration #',
             'warranty_start_date' => 'Warranty Start Date',
             'repair_date' => 'Repair Date',
             'main_part_name' => 'Main Part Name',
@@ -119,18 +117,6 @@ class TechnicalReportHeader extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -144,8 +130,7 @@ class TechnicalReportHeader extends CActiveRecord {
         $criteria->compare('dealer_code', $this->dealer_code, true);
         $criteria->compare('province_id', $this->province_id);
         $criteria->compare('warranty_claim_number', $this->warranty_claim_number, true);
-        $criteria->compare('vehicle_id', $this->vehicle_id);
-        $criteria->compare('vehicle_mileage', $this->vehicle_mileage);
+        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
         $criteria->compare('warranty_start_date', $this->warranty_start_date, true);
         $criteria->compare('repair_date', $this->repair_date, true);
         $criteria->compare('main_part_name', $this->main_part_name, true);
@@ -164,12 +149,6 @@ class TechnicalReportHeader extends CActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return TechnicalReportHeader the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }

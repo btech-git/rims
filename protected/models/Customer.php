@@ -646,7 +646,7 @@ class Customer extends CActiveRecord {
         $sql = "SELECT i.customer_id, c.name AS customer_name, c.customer_type AS customer_type, i.grand_total
                 FROM " . Customer::model()->tableName() . " c
                 INNER JOIN (
-                    SELECT customer_id, SUM(total_price) AS grand_total
+                    SELECT customer_id, SUM(total_price) AS grand_total, SUM(payment_amount) AS payment_amount, SUM(payment_left) AS payment_left
                     FROM " . InvoiceHeader::model()->tableName() . " 
                     WHERE invoice_date BETWEEN :start_date AND :end_date AND status NOT LIKE '%CANCEL%'" . $branchConditionSql . $taxValueConditionSql . "
                     GROUP BY customer_id
