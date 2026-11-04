@@ -40,7 +40,7 @@ Yii::app()->clientScript->registerCss('_report', '
         
         <?php foreach ($customerSaleReport as $i => $dataItem): ?>
             <?php $grandTotal = CHtml::encode($dataItem['grand_total']); ?>
-            <?php $totalPayment = CHtml::encode($dataItem['payment_amount']); ?>
+            <?php $paymentAmount = CHtml::encode($dataItem['payment_amount']); ?>
             <?php $paymentLeft = CHtml::encode($dataItem['payment_left']); ?>
         
             <tr class="items1">
@@ -59,7 +59,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?>
                 </td>
                 <td class="width1-4" style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?>
                 </td>
                 <td class="width1-4" style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?>
@@ -67,7 +67,7 @@ Yii::app()->clientScript->registerCss('_report', '
             </tr>
             
             <?php $totalSale += $grandTotal; ?>
-            <?php $totalPayment += $totalPayment; ?>
+            <?php $totalPayment += $paymentAmount; ?>
             <?php $totalReceivable += $paymentLeft; ?>
         <?php endforeach; ?>
     </tbody>
