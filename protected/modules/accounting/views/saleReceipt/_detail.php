@@ -31,7 +31,7 @@
                     <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.carModel.name")); ?> -
                     <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.carSubModel.name")); ?>
                 </td>
-                <td><?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.registrationTransaction.customer_document_order_number")); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.registrationTransaction.customer_work_order_number")); ?></td>
                 <td style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, "invoiceHeader.service_price"))); ?>
                 </td>

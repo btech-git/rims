@@ -263,8 +263,12 @@ $this->breadcrumbs = array(
                                             "id" => $detail->invoice_header_id
                                         ), array('target' => 'blank')); ?>
                                     </td>
-                                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($detail, 'invoiceHeader.invoice_date')))); ?></td>
-                                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($detail, 'invoiceHeader.due_date')))); ?></td>
+                                    <td>
+                                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($detail, 'invoiceHeader.invoice_date')))); ?>
+                                    </td>
+                                    <td>
+                                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($detail, 'invoiceHeader.due_date')))); ?>
+                                    </td>
                                     <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
                                     <td>
                                         <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.carMake.name")); ?> -
@@ -272,7 +276,7 @@ $this->breadcrumbs = array(
                                         <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.carSubModel.name")); ?>
                                     </td>
                                     <td>
-                                        <?php echo CHtml::link($detail->invoiceHeader->registrationTransaction->customer_document_order_number, array(
+                                        <?php echo CHtml::link($detail->invoiceHeader->registrationTransaction->customer_work_order_number, array(
                                             "/frontDesk/registrationTransaction/view", 
                                             "id" => $detail->invoiceHeader->registration_transaction_id
                                         ), array('target' => 'blank')); ?>
