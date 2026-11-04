@@ -24,7 +24,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-3">Type</th>
             <th class="width1-4">Total Sales</th>
             <th class="width1-4">Total Payment</th>
-            <th class="width1-4">Total Receivable</th>
+            <th class="width1-4">Total Outstanding</th>
         </tr>
     </thead>
     
@@ -67,8 +67,8 @@ Yii::app()->clientScript->registerCss('_report', '
             </tr>
             
             <?php $totalSale += $grandTotal; ?>
-            <?php $totalPayment += $grandTotal; ?>
-            <?php $totalReceivable += $grandTotal; ?>
+            <?php $totalPayment += $totalPayment; ?>
+            <?php $totalReceivable += $paymentLeft; ?>
         <?php endforeach; ?>
     </tbody>
     
