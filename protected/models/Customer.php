@@ -643,7 +643,7 @@ class Customer extends CActiveRecord {
             $params[':customer_type'] = $customerType;
         }
         
-        $sql = "SELECT i.customer_id, c.name AS customer_name, c.customer_type AS customer_type, i.grand_total
+        $sql = "SELECT i.customer_id, c.name AS customer_name, c.customer_type AS customer_type, i.grand_total, i.payment_amount, i.payment_left
                 FROM " . Customer::model()->tableName() . " c
                 INNER JOIN (
                     SELECT customer_id, SUM(total_price) AS grand_total, SUM(payment_amount) AS payment_amount, SUM(payment_left) AS payment_left
