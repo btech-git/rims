@@ -32,11 +32,15 @@
     <tbody>
         <?php $totalPurchase = '0.00'; ?>
         <?php $totalWorkOrderExpense = '0.00'; ?>
+        <?php $totalPayment = '0.00'; ?>
+        <?php $totalOutstanding = '0.00'; ?>
+        
         <?php foreach ($purchasePerSupplierSummary->dataProvider->data as $header): ?>
             <?php $purchasePrice = $header->getPurchasePriceReport($startDate, $endDate, $branchId); ?>
             <?php $workOrderExpensePrice = $header->getWorkOrderExpensePriceReport($startDate, $endDate, $branchId); ?>
             <?php $purchasePayment = $header->getPurchasePaymentReport($startDate, $endDate, $branchId); ?>
             <?php $remainingPayable = $purchasePrice + $workOrderExpensePrice - $purchasePayment; ?>
+        
             <?php //if ($purchasePrice > 0): ?>
                 <tr class="items1">
                     <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
@@ -69,6 +73,8 @@
                 </tr>
                 <?php $totalPurchase += $purchasePrice; ?>
                 <?php $totalWorkOrderExpense += $workOrderExpensePrice; ?>
+                <?php $purchasePayment += $purchasePayment; ?>
+                <?php $remainingPayable += $remainingPayable; ?>
             <?php //endif; ?>
         <?php endforeach; ?>
     </tbody>
@@ -81,6 +87,12 @@
             </td>
             <td class="width1-4" style="text-align: right; font-weight: bold"> 
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalWorkOrderExpense)); ?>
+            </td>
+            <td class="width1-4" style="text-align: right; font-weight: bold"> 
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchasePayment)); ?>
+            </td>
+            <td class="width1-4" style="text-align: right; font-weight: bold"> 
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $remainingPayable)); ?>
             </td>
         </tr>  
     </tfoot>
