@@ -2,8 +2,8 @@
 Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 10% }
     .width1-2 { width: 25% }
-    .width1-3 { width: 20% }
-    .width1-4 { width: 25% }
+    .width1-3 { width: 15% }
+    .width1-4 { width: 15% }
 ');
 ?>
 
@@ -31,7 +31,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <tbody>
         <tr>
             <?php $totalIndividual = Customer::getTotalSaleIndividual($startDate, $endDate, $branchId, $taxValue); ?>
-            <td colspan="3" style="text-align: center">Individual</td>
+            <td colspan="5" style="text-align: center">Individual</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalIndividual)); ?></td>
         </tr>
         <?php $totalSale = '0.00'; ?>
