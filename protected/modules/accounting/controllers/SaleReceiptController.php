@@ -83,8 +83,6 @@ class SaleReceiptController extends Controller {
         $saleReceipt->header->status = 'Approved';
         $saleReceipt->header->user_id_created = Yii::app()->user->id;
         $saleReceipt->header->company_bank_id = 13;
-        $saleReceipt->header->tax_item_percentage = 11;
-        $saleReceipt->header->tax_service_percentage = 2;
         $saleReceipt->header->delivery_receipt_number = null;
 
         $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
@@ -275,7 +273,9 @@ class SaleReceiptController extends Controller {
             $this->loadState($saleReceipt);
 
             $object = array(
+                'taxItemAmount' => $saleReceipt->taxItemAmount,
                 'totalReceivableAmount' => $saleReceipt->totalReceivableAmount,
+                'taxItem' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt, 'taxItemAmount'))),
                 'totalReceivable' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt, 'totalReceivableAmount'))),
             );
 
