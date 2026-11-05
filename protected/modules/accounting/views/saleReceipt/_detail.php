@@ -96,7 +96,7 @@
                 )); ?>
             </td>
             <td style="text-align: right; font-weight: bold">
-                <?php echo CHtml::activeTextField($saleReceipt->header, "tax_item_amount"); ?>
+                <?php echo CHtml::activeHiddenField($saleReceipt->header, "tax_item_amount"); ?>
                 <span id="tax_item_amount">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt->header, "tax_item_amount"))); ?>
                 </span>
@@ -108,7 +108,19 @@
                 PPh 23
             </td>
             <td style="text-align: right; font-weight: bold">
-                <?php echo CHtml::activeDropdownList($saleReceipt->header, "tax_item_percentage", array(2 => '2%', 0 => '0%')); ?>%
+                <?php echo CHtml::activeDropdownList($saleReceipt->header, "tax_service_percentage", array(2 => '2%', 0 => '0%'), array(
+                    'onchange' => '$.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $saleReceipt->header->id)) . '",
+                        data: $("form").serialize(),
+                        success: function(data) {
+                            $("#' . CHtml::activeId($saleReceipt->header, "tax_service_amount") . '").val(data.taxServiceAmount);
+                            $("#' . CHtml::activeId($saleReceipt->header, "total_receivable_amount") . '").val(data.totalReceivableAmount);
+                            $("#grand_total_receivable").html(data.totalReceivable);
+                        },
+                    });',                        
+                )); ?>
             </td>
             <td>
                 <?php echo CHtml::activeTextField($saleReceipt->header, "tax_service_amount", array(

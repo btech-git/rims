@@ -274,6 +274,7 @@ class SaleReceiptController extends Controller {
 
             $object = array(
                 'taxItemAmount' => $saleReceipt->taxItemAmount,
+                'taxServiceAmount' => $saleReceipt->taxServiceAmount,
                 'totalReceivableAmount' => $saleReceipt->totalReceivableAmount,
                 'taxItem' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt, 'taxItemAmount'))),
                 'totalReceivable' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt, 'totalReceivableAmount'))),

@@ -60,7 +60,7 @@ class SaleReceipt extends CComponent {
             $this->header->tax_item_amount = $this->getTaxItemAmount();
             $this->header->tax_service_amount = $this->getTaxServiceAmount();
             $this->header->total_receivable_amount = $this->getTotalReceivableAmount();
-            $this->header->tax_item_percentage = 11;
+            $this->header->tax_item_percentage = $invoiceHeader->tax_percentage;
             $this->header->tax_service_percentage = 2;
         }
     }
@@ -247,6 +247,6 @@ class SaleReceipt extends CComponent {
     }
     
     public function getTotalReceivableAmount() {
-        return $this->header->total_invoice_amount + $this->header->tax_item_amount - $this->header->tax_service_amount;
+        return $this->header->total_invoice_amount + $this->taxItemAmount - $this->taxServiceAmount;
     }
 }
