@@ -163,9 +163,11 @@ class CustomerVehicleController extends Controller {
             $model->car_sub_model_detail_id = $subModelDetail;
             $model->plate_number = $model->getPlateNumberCombination();
 
-            if ($model->save()) {
+            if ($model->frame_number !== '' && $model->save()) {
                 $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $model->id));
+            } else {
+                $this->header->addError('error', 'VIN # tidak boleh kosong.');
             }
         }
 

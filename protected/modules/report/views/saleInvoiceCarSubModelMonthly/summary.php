@@ -70,7 +70,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Merk</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('CarMake', $carMake, CHtml::listData(VehicleCarMake::model()->findAll(), 'id', 'name'), array(
+                                        <?php echo CHtml::dropDownList('CarMake', $carMake, CHtml::listData(VehicleCarMake::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                                             'empty' => '-- All --',
                                             'onchange' => CHtml::ajax(array(
                                                 'type' => 'GET',

@@ -490,7 +490,7 @@ class Customer extends CActiveRecord {
         }
 
         $sql = "
-            SELECT COALESCE(SUM(r.total_price), 0) AS total 
+            SELECT COALESCE(SUM(r.total_price), 0) AS total
             FROM " . InvoiceHeader::model()->tableName() . " r 
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
             WHERE c.customer_type = 'Individual' AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCELLED%'" . 

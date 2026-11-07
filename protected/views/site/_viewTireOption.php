@@ -88,6 +88,7 @@
         <div id="tire_option_table">
             <?php $this->renderPartial('_tireOptionTable', array(
                 'tireSizeDataProvider' => $tireSizeDataProvider,
+                'tabIndex' => $tabIndex,
             )); ?>
         </div>
     </div>

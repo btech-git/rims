@@ -102,16 +102,12 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="medium-4 columns">
-                            <?php echo $form->labelEx($technicalReport->header, 'vehicle_id', array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($technicalReport->header, 'Kendaraan', array('class' => 'prefix')); ?>
                         </div>
                         <div class="medium-8 columns">
-                            <?php echo CHtml::activeDropDownlist($technicalReport->header, 'vehicle_id', CHtml::listData(Vehicle::model()->findAll(array(
-                                "condition" => "car_make_id = 72",
-                                "order" => "car_model_id ASC, frame_number ASC",
-                            )), "id", "technicalVehicleName"), array(
-                                "empty" => "-- All --",
-                            )); ?>
-                            <?php echo $form->error($technicalReport->header, 'vehicle_id'); ?>
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carMake.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carModel.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carSubModel.name')); ?>
                         </div>
                     </div>
                 </div>
@@ -119,11 +115,32 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="medium-4 columns">
-                            <?php echo $form->labelEx($technicalReport->header, 'vehicle_mileage', array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($technicalReport->header, 'Plat #', array('class' => 'prefix')); ?>
                         </div>
                         <div class="medium-8 columns">
-                            <?php echo $form->textField($technicalReport->header, 'vehicle_mileage'); ?>
-                            <?php echo $form->error($technicalReport->header, 'vehicle_mileage'); ?>
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.plate_number')); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="medium-4 columns">
+                            <?php echo $form->labelEx($technicalReport->header, 'VIN', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="medium-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.frame_number')); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="medium-4 columns">
+                            <?php echo $form->labelEx($technicalReport->header, 'Mileage / KM', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="medium-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')); ?>
                         </div>
                     </div>
                 </div>

@@ -128,6 +128,13 @@ $this->breadcrumbs = array(
                                     'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                                 )); ?>
                             <?php endif; ?>
+                            <?php if ($model->warranty_report !== null || $model->warranty_report !== ''): ?>
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span> Technical Report', array("/vinfast/technicalReport/create", "registrationId" => $model->id), array(
+                                    'class' => 'button success left', 
+                                    'style' => 'margin-right:10px',
+//                                    'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+                                )); ?>
+                            <?php endif; ?>
                         <?php endif; ?>
 
                         <?php if (Yii::app()->user->checkAccess("generalRepairApproval")): ?>
@@ -164,7 +171,7 @@ $this->breadcrumbs = array(
 
             <fieldset>
                 <legend>Information</legend>
-                <?php if ($model->user_id_cancelled == null): ?>
+                <?php /*if ($model->user_id_cancelled == null): ?>
                     <div class="row">
                         <?php if (!empty($invoices)): ?>
                             <?php echo CHtml::link('WO Rework', array("reworkTransaction", "id" => $model->id), array(
@@ -175,9 +182,7 @@ $this->breadcrumbs = array(
                         <?php endif; ?>
 
                     </div>
-                <?php endif; ?>
-                
-                <br />
+                <?php endif;*/ ?>
                 
                 <div class="row" style="height: 900px">
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(

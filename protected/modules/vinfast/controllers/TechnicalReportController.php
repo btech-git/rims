@@ -65,12 +65,15 @@ class TechnicalReportController extends Controller {
         ));
     }
 
-    public function actionCreate() {
+    public function actionCreate($registrationId) {
         $technicalReport = $this->instantiate(null, 'create');
 
         $technicalReport->header->created_datetime = date('Y-m-d H:i:s');
         $technicalReport->header->user_id_created = Yii::app()->user->id;
         $technicalReport->header->province_id = 12;
+        $technicalReport->header->registration_transaction_id = $registrationId;
+        
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
 
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
@@ -86,6 +89,7 @@ class TechnicalReportController extends Controller {
 
         $this->render('create', array(
             'technicalReport' => $technicalReport,
+            'registrationTransaction' => $registrationTransaction,
         ));
     }
 

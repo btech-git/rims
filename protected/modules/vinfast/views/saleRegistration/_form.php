@@ -105,20 +105,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <?php if (!empty($registrationTransaction->header->customer_id) && $customer->customer_type === 'Company'): ?>
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction->header, 'customer_work_order_number'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($registrationTransaction->header, 'customer_work_order_number'); ?>
-                                                <?php echo $form->error($registrationTransaction->header,'customer_work_order_number'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
                             </div> 
                             <!-- END COLUMN 6-->
                             <div class="medium-6 columns">
@@ -128,7 +114,10 @@
                                             <label class="prefix"><?php echo $form->labelEx($registrationTransaction->header,'branch_id'); ?></label>
                                         </div>
                                         <div class="small-8 columns">
-                                            <?php echo $form->textField($registrationTransaction->header,'branch_name',array('value'=>$registrationTransaction->header->branch->name,'readonly'=>true)); ?>
+                                            <?php echo $form->textField($registrationTransaction->header,'branch_name',array(
+                                                'value'=> $registrationTransaction->header->branch->name,
+                                                'readonly' => true
+                                            )); ?>
                                             <?php echo $form->error($registrationTransaction->header,'branch_id'); ?>
                                         </div>
                                     </div>
@@ -190,6 +179,67 @@
                         </div>
                     </div>
                 </div>
+            </fieldset>
+
+            <fieldset class="border border-secondary rounded mb-3 p-3">
+                <legend>Vinfast Data</legend>
+                <div class="row">
+                    <div class="medium-12 columns">
+                        <div class="row">
+                            <div class="medium-6 columns">
+                                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
+                                            <label class="prefix">SPK Customer #</label>
+                                        </div>
+                                        <div class="small-8 columns">
+                                            <?php echo $form->textField($registrationTransaction->header, 'customer_work_order_number'); ?>
+                                            <?php echo $form->error($registrationTransaction->header,'customer_work_order_number'); ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
+                                            <label class="prefix">DMS Reference Number</label>
+                                        </div>
+                                        <div class="small-8 columns">
+                                            <?php echo $form->textField($registrationTransaction->header, 'customer_document_order_number'); ?>
+                                            <?php echo $form->error($registrationTransaction->header,'customer_document_order_number'); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
+                                            <label class="prefix">V-TAG #</label>
+                                        </div>
+                                        <div class="small-8 columns">
+                                            <?php echo $form->textField($registrationTransaction->header, 'technical_code_number'); ?>
+                                            <?php echo $form->error($registrationTransaction->header,'technical_code_number'); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <!-- END COLUMN 6-->
+                            <div class="medium-6 columns">
+                                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
+                                            <label class="prefix">Warranty Report</label>
+                                        </div>
+                                        <div class="small-8 columns">
+                                            <?php echo $form->textArea($registrationTransaction->header, 'warranty_report', array('rows' => 5)); ?>
+                                            <?php echo $form->error($registrationTransaction->header,'warranty_report'); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end row -->
             </fieldset>
 
             <hr />
