@@ -247,6 +247,6 @@ class SaleReceipt extends CComponent {
     }
     
     public function getTotalReceivableAmount() {
-        return $this->header->total_invoice_amount + $this->taxItemAmount - $this->taxServiceAmount;
+        return $this->header->total_invoice_amount + $this->taxItemAmount - $this->header->tax_service_amount;
     }
 }
