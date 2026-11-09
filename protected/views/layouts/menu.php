@@ -104,18 +104,18 @@
                         'url' => array('/vinfast/saleRegistration/admin'), 
                         'visible' => Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('bodyRepairCreate'),
                     ),
-                    array(
-                        'label' => 'Cashier', 
-                        'url' => array('/vinfast/saleInvoice/cashier'), 
-                        'visible' => Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('generalRepairEdit') || 
-                            Yii::app()->user->checkAccess('generalRepairView') || Yii::app()->user->checkAccess('generalRepairSupervisor'),
-                    ),
-                    array(
-                        'label' => 'Payment In', 
-                        'url' => array('/vinfast/salePayment/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit') || 
-                            Yii::app()->user->checkAccess('bodyRepairView') || Yii::app()->user->checkAccess('bodyRepairSupervisor'),
-                    ),
+//                    array(
+//                        'label' => 'Cashier', 
+//                        'url' => array('/vinfast/saleInvoice/cashier'), 
+//                        'visible' => Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('generalRepairEdit') || 
+//                            Yii::app()->user->checkAccess('generalRepairView') || Yii::app()->user->checkAccess('generalRepairSupervisor'),
+//                    ),
+//                    array(
+//                        'label' => 'Payment In', 
+//                        'url' => array('/vinfast/salePayment/admin'), 
+//                        'visible' => Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit') || 
+//                            Yii::app()->user->checkAccess('bodyRepairView') || Yii::app()->user->checkAccess('bodyRepairSupervisor'),
+//                    ),
                     array(
                         'label' => 'Technical Report', 
                         'url' => array('/vinfast/technicalReport/admin'),

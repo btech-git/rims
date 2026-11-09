@@ -6,6 +6,9 @@
             <td>Color</td>
             <td>Machine #</td>
             <td>Frame #</td>
+            <td>KM Sebelum</td>
+            <td>KM Sekarang</td>
+            <td>KM Selanjutnya</td>
         </tr>
     </thead>
     <tbody>
@@ -26,6 +29,9 @@
             </td>
             <td><?php echo CHtml::encode(CHtml::value($vehicle, 'machine_number')); ?></td>
             <td><?php echo CHtml::encode(CHtml::value($vehicle, 'frame_number')); ?></td>
+            <td><?php echo number_format(CHtml::value($registrationTransaction->header, 'previous_mileage'), 0); ?></td>
+            <td><?php echo number_format(CHtml::value($registrationTransaction->header, 'vehicle_mileage'), 0); ?></td>
+            <td><?php echo number_format(CHtml::value($registrationTransaction->header, 'next_mileage'), 0); ?></td>
         </tr>
     </tbody>
 </table>

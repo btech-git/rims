@@ -109,7 +109,7 @@ $this->breadcrumbs=array(
                                                 <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'transaction_date'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_date')); ?>
+                                                <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime(CHtml::value($registrationTransaction, 'transaction_date')))); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -125,6 +125,20 @@ $this->breadcrumbs=array(
                                         </div>
                                     </div>
 
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix">Permintaan Awal / Keluhan Customer</label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo $form->textArea($registrationTransaction,'customer_request_note',array('rows'=>5, 'cols'=>50)); ?>
+                                                <?php echo $form->error($registrationTransaction,'customer_request_note'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <!-- END COLUMN 6-->
+                                <div class="medium-6 columns">
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
@@ -146,9 +160,7 @@ $this->breadcrumbs=array(
                                             </div>
                                         </div>
                                     </div>
-                                </div> 
-                                <!-- END COLUMN 6-->
-                                <div class="medium-6 columns">
+                                    
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">

@@ -9,7 +9,7 @@ $this->breadcrumbs=array(
 ?>
 <div id="maincontent">
     <div class="clearfix page-action">
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/vinfast/saleRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
         <h1><?php echo "Update KM Kendaraan"; ?></h1>
         <div class="form">
             <?php $form=$this->beginWidget('CActiveForm', array(
@@ -105,18 +105,7 @@ $this->breadcrumbs=array(
                                                 <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'transaction_date'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_date')); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction,'branch_id'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'branch.name')); ?>
+                                                <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime(CHtml::value($registrationTransaction, 'transaction_date')))); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -196,6 +185,17 @@ $this->breadcrumbs=array(
                                             </div>
                                             <div class="small-8 columns">
                                                 <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'problem')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix">Permintaan Awal / Keluhan Customer</label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'customer_request_note')); ?>
                                             </div>
                                         </div>
                                     </div>

@@ -67,14 +67,21 @@ $this->breadcrumbs = array(
             </tr>
             
             <tr>
+                <td>RG #</td>
+                <td><?php echo CHtml::link(CHtml::value($model, 'registrationTransaction.transaction_number'), array('/frontDesk/registrationTransaction/view', 'id' => $model->registration_transaction_id), array('target' => '_blank')); ?></td>
+                <td>Plat #</td>
+                <td><?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.vehicle.plate_number')); ?></td>
+            </tr>
+            
+            <tr>
                 <td>Model</td>
                 <td>
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?> -
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carModel.name')); ?> -
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?>
+                    <?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.vehicle.carMake.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.vehicle.carModel.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.vehicle.carSubModel.name')); ?>
                 </td>
                 <td>VIN</td>
-                <td><?php echo CHtml::encode(CHtml::value($model, 'vehicle.plate_number')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.vehicle.frame_number')); ?></td>
             </tr>
             
             <tr>

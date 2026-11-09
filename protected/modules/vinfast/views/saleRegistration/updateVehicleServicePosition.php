@@ -1,0 +1,245 @@
+<?php
+/* @var $this VehicleController */
+/* @var $vehicle Vehicle */
+
+$this->breadcrumbs=array(
+	'Vehicle'=>array('admin'),
+	'Vehicles'=>array('admin'),
+	//$vehicle->id=>array('view','id'=>$vehicle->id),
+	'Update',
+);
+
+$this->menu=array(
+	array('label'=>'List Vehicle', 'url'=>array('index')),
+	array('label'=>'Create Vehicle', 'url'=>array('create')),
+	array('label'=>'View Vehicle', 'url'=>array('view', 'id'=>$vehicle->id)),
+	array('label'=>'Manage Vehicle', 'url'=>array('admin')),
+);
+?>
+
+<div id="maincontent">
+    <div class="clearfix page-action">
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/vinfast/saleRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
+        <h1>Update Location Vehicle <?php echo $vehicle->plate_number; ?></h1>
+
+        <div class="form">
+            <?php $form=$this->beginWidget('CActiveForm', array(
+                'id'=>'registration-transaction-form',
+                'htmlOptions' => array('enctype' => 'multipart/form-data'),
+                'enableAjaxValidation'=>false,
+            )); ?>
+
+            <p class="note">Fields with <span class="required">*</span> are required.</p>
+
+            <?php echo $form->errorSummary($registrationTransaction); ?>
+
+            <div class="row">
+                <div class="medium-12 columns">
+                    <div class="row">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Plate #</td>
+                                    <td>Machine #</td>
+                                    <td>Kendaraan</td>
+                                    <td>Color</td>
+                                    <td>KM Sebelum</td>
+                                    <td>KM Sekarang</td>
+                                    <td>KM Selanjutnya</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><?php echo CHtml::encode(CHtml::value($vehicle, 'plate_number')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($vehicle, 'machine_number')); ?></td>
+                                    <td>
+                                        <?php echo CHtml::encode(CHtml::value($vehicle, 'carMake.name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($vehicle, 'carModel.name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($vehicle, 'carSubModel.name')); ?>
+                                    </td>
+                                    <td>
+                                        <?php $color = Colors::model()->findByPk($vehicle->color_id); ?>
+                                        <?php echo CHtml::encode(CHtml::value($color, 'name')); ?>
+                                    </td>
+                                    <td><?php echo number_format(CHtml::encode(CHtml::value($registrationTransaction, 'previous_mileage')), 0); ?></td>
+                                    <td><?php echo number_format(CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')), 0); ?></td>
+                                    <td><?php echo number_format(CHtml::encode(CHtml::value($registrationTransaction, 'next_mileage')), 0); ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <hr />
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Customer</td>
+                                    <td>Type</td>
+                                    <td>Address</td>
+                                    <td>Phone</td>
+                                    <td>Email</td>
+                                    <td>Birth Date</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($customer, 'customer_type')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($customer, 'address')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($customer, 'mobile_phone')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($customer, 'email')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($customer, 'birthdate')); ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- END ROW -->
+                    <br />
+
+                    <div class="row">
+                        <div class="medium-12 columns">
+                            <h2>Transaction</h2>
+                            <hr />
+
+                            <div class="row">
+                                <div class="medium-6 columns">
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'Registration #'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_number')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'transaction_date'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime(CHtml::value($registrationTransaction, 'transaction_date')))); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction,'branch_id'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'branch.name')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix">Permintaan Awal / Keluhan Customer</label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'customer_request_note')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix">Posisi Mobil</label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo $form->dropDownList($registrationTransaction, 'vehicle_status', array(
+                                                    'Masuk Bengkel' => 'Masuk Bengkel',
+                                                    'Keluar Bengkel' => 'Keluar Bengkel',
+                                                )); ?>
+                                                <?php echo $form->error($registrationTransaction,' '); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <!-- END COLUMN 6-->
+                                <div class="medium-6 columns">
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction,'repair_type'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'repair_type')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction,'employee_id_sales_person'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'employeeIdSalesPerson.name')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction,'employee_id_assign_mechanic'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'employeeIdAssignMechanic.name')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'problem'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'problem')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix">Status Service</label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo $form->dropDownList($registrationTransaction, 'service_status', array(
+                                                    'Pending' => 'Pending',
+                                                    'On-Progress' => 'On-Progress',
+                                                    'Completed' => 'Completed',
+                                                )); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end row -->
+
+                    <hr />
+
+                    <div class="row">
+                        <div class="medium-12 columns">
+                            <div class="field buttons text-center">
+                                <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?', 'class'=>'button alert')); ?>
+                                <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button success')); ?> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php $this->endWidget(); ?>
+        </div><!-- form -->
+    </div>
+</div>

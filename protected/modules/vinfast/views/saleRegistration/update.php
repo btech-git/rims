@@ -18,15 +18,10 @@ $this->menu=array(
             <span class="fa fa-th-list"></span>Manage
         </a>
         
-        <h1>Update Registration Transaction</h1>
+        <h1>Update Data Transaction</h1>
         
-        <?php echo $this->renderPartial('_form', array(
+        <?php echo $this->renderPartial('_formUpdateTransaction', array(
             'registrationTransaction' => $registrationTransaction,
-            'service' => $service,
-            'serviceDataProvider' => $serviceDataProvider,
-            'product' => $product,
-            'productDataProvider' => $productDataProvider,
-            'branches' => $branches,
             'vehicle' => $vehicle,
             'customer' => $customer,
         )); ?>

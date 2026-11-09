@@ -36,8 +36,10 @@
                     <?php $backgroundColor = 'yellow'; ?>
                 <?php elseif ($activeRegistrationItem->status == 'Finished'): ?>
                     <?php $backgroundColor = 'greenyellow'; ?>
-                <?php else: ?>
+                <?php elseif (empty($invoiceHeader) && $activeRegistrationItem->user_id_cancelled == null): ?>
                     <?php $backgroundColor = 'salmon'; ?>
+                <?php else: ?>
+                    <?php $backgroundColor = 'white'; ?>
                 <?php endif; ?>
                 <tr style="background-color: <?php echo $backgroundColor; ?>">
                     <td><?php echo CHtml::encode($runningNumber); ?></td>

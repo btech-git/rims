@@ -67,7 +67,7 @@ $this->breadcrumbs=array(
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>spk
+                                <tr>
                                     <td><?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($customer, 'customer_type')); ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($customer, 'address')); ?></td>
@@ -118,7 +118,7 @@ $this->breadcrumbs=array(
                                             <div class="small-8 columns">
                                                 <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'repair_type')); ?>
                                             </div>
-                                     spk   </div>
+                                        </div>
                                     </div>
 
                                     <div class="field">

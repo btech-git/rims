@@ -1,4 +1,4 @@
-<?php if (count($generalRepairRegistration->packageDetails) > 0): ?>
+<?php if (count($registrationTransaction->packageDetails) > 0): ?>
     <table>
         <thead>
             <tr>
@@ -12,7 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($generalRepairRegistration->packageDetails as $i => $packageDetail): ?>
+            <?php foreach ($registrationTransaction->packageDetails as $i => $packageDetail): ?>
                 <?php echo CHtml::errorSummary($packageDetail); ?>
                 <tr>
                     <td>
@@ -26,7 +26,7 @@
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'POST',
                                 'dataType' => 'JSON',
-                                'url' => CController::createUrl('ajaxJsonTotalPackage', array('id' => $generalRepairRegistration->header->id, 'index' => $i)),
+                                'url' => CController::createUrl('ajaxJsonTotalPackage', array('id' => $registrationTransaction->header->id, 'index' => $i)),
                                 'success' => 'function(data) {
                                     $("#total_price_' . $i . '").html(data.totalPrice);
                                     $("#quantity_sum").html(data.quantitySum);
@@ -53,7 +53,7 @@
                         <?php echo CHtml::button('X', array(
                             'onclick' => CHtml::ajax(array(
                                 'type' => 'POST',
-                                'url' => CController::createUrl('ajaxHtmlRemovePackageDetail', array('id' => $generalRepairRegistration->header->id, 'index' => $i)),
+                                'url' => CController::createUrl('ajaxHtmlRemovePackageDetail', array('id' => $registrationTransaction->header->id, 'index' => $i)),
                                 'update' => '#package',
                             )),
                         )); ?>

@@ -33,11 +33,6 @@ $('#invoiceSearch').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <?php echo CHtml::link('Add', array("create"), array(
-                    'class' => 'button success right', 
-                    'style' => 'margin-right:10px',
-                    'target' =>'_blank',
-                )); ?>
                 <h2>Manage Technical Report</h2>
             </div>
 
@@ -111,8 +106,16 @@ $('#invoiceSearch').submit(function(){
                         'dealer_code',
                         'warranty_claim_number',
                         array(
-                            'name' => 'vehicle_id', 
-                            'value' => '$data->vehicle_id != null ? $data->vehicle->technicalVehicleName : ""'
+                            'name' => 'registration_transaction_id', 
+                            'value' => '$data->registration_transaction_id != null ? $data->registrationTransaction->transaction_number : ""'
+                        ),
+                        array(
+                            'header' => 'Plat #', 
+                            'value' => 'CHtml::encode(CHtml::value($data, "registrationTransaction.vehicle.plate_number"))'
+                        ),
+                        array(
+                            'header' => 'Kendaraan', 
+                            'value' => 'CHtml::encode(CHtml::value($data, "registrationTransaction.vehicle.carMakeModelSubCombination"))'
                         ),
                         'vehicle_mileage',
                     ),

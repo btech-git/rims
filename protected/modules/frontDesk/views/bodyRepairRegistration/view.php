@@ -205,26 +205,26 @@ $this->breadcrumbs = array(
                 <legend>Information</legend>
                 <?php if ($model->user_id_cancelled == null): ?>
                     <div class="row">
-                        <?php echo CHtml::link('<span class="fa fa-plus"></span> KM Kendaraan', array("/frontDesk/bodyRepairRegistration/updateMileage", "id" => $model->id), array(
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span> KM Kendaraan', array("updateMileage", "id" => $model->id), array(
                             'class' => 'button success left', 
                             'style' => 'margin-right:10px',
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
 
-                        <?php echo CHtml::link('<span class="fa fa-plus"></span> Problem', array("/frontDesk/bodyRepairRegistration/updateProblem", "id" => $model->id), array(
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span> Problem', array("updateProblem", "id" => $model->id), array(
                             'class' => 'button success left', 
                             'style' => 'margin-right:10px',
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
 
-                        <?php echo CHtml::link('<span class="fa fa-plus"></span> SPK Customer', array("/frontDesk/bodyRepairRegistration/updateCustomerWorkOrder", "id" => $model->id), array(
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span> SPK Customer', array("updateCustomerWorkOrder", "id" => $model->id), array(
                             'class' => 'button success left', 
                             'style' => 'margin-right:10px',
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                         
                         <?php if (!empty($invoices)): ?>
-                            <?php echo CHtml::link('WO Rework', array("/frontDesk/bodyRepairRegistration/reworkTransaction", "id" => $model->id), array(
+                            <?php echo CHtml::link('WO Rework', array("reworkTransaction", "id" => $model->id), array(
                                 'class' => 'button warning right', 
                                 'style' => 'margin-right:10px',
                                 'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")

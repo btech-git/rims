@@ -26,8 +26,6 @@ class SaleRegistrationController extends Controller {
         if (
             $filterChain->action->id === 'addDownpayment' ||
             $filterChain->action->id === 'addProductService' ||
-//            $filterChain->action->id === 'generateSalesOrder' ||
-//            $filterChain->action->id === 'generateWorkOrder' ||
             $filterChain->action->id === 'updateCustomerWorkOrder' ||
             $filterChain->action->id === 'updateDischargeDate' ||
             $filterChain->action->id === 'updateLocation' ||
@@ -138,24 +136,6 @@ class SaleRegistrationController extends Controller {
         $registrationTransaction->header->edited_datetime = date('Y-m-d H:i:s');
         $registrationTransaction->header->user_id_edited = Yii::app()->user->id;
 
-        $branches = Branch::model()->findAll();
-
-        $service = new Service('search');
-        $service->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service'])) {
-            $service->attributes = $_GET['Service'];
-        }
-        $serviceDataProvider = $service->search();
-        $serviceDataProvider->criteria->compare('t.status', 'Active');
-
-        $product = new Product('search');
-        $product->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product'])) {
-            $product->attributes = $_GET['Product'];
-        }
-        $productDataProvider = $product->search();
-        $productDataProvider->criteria->compare('t.status', 'Active');
-        
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($registrationTransaction);
             
@@ -166,11 +146,6 @@ class SaleRegistrationController extends Controller {
 
         $this->render('update', array(
             'registrationTransaction' => $registrationTransaction,
-            'service' => $service,
-            'serviceDataProvider' => $serviceDataProvider,
-            'product' => $product,
-            'productDataProvider' => $productDataProvider,
-            'branches' => $branches,
             'vehicle' => $vehicle,
             'customer' => $customer,
         ));
@@ -299,6 +274,68 @@ class SaleRegistrationController extends Controller {
         ));
     }
 
+    public function actionUpdateProductService($registrationId) {
+        $registrationTransaction = $this->instantiate($registrationId, 'create');
+        $customer = Customer::model()->findByPk($registrationTransaction->header->customer_id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->header->vehicle_id);
+        $branches = Branch::model()->findAll();
+        $registrationTransaction->header->pph = 1;
+        $registrationTransaction->header->pph_price = 0.00;
+
+        $service = new Service('search');
+        $service->unsetAttributes();  // clear any default values
+        if (isset($_GET['Service'])) {
+            $service->attributes = $_GET['Service'];
+        }
+        $serviceDataProvider = $service->search();
+        $serviceDataProvider->criteria->compare('t.status', 'Active');
+
+        $product = new Product('search');
+        $product->unsetAttributes();  // clear any default values
+        if (isset($_GET['Product'])) {
+            $product->attributes = $_GET['Product'];
+        }
+        $productDataProvider = $product->search();
+        $productDataProvider->criteria->compare('t.status', 'Active');
+        
+        $salePackage = new SalePackageHeader('search');
+        $salePackage->unsetAttributes();  // clear any default values
+
+        if (isset($_GET['SalePackageHeader'])) {
+            $salePackage->attributes = $_GET['SalePackageHeader'];
+        }
+        
+        $currentDate = date('Y-m-d');
+
+        $salePackageDataProvider = $salePackage->search();
+        $salePackageDataProvider->criteria->addCondition("'{$currentDate}' BETWEEN t.start_date AND t.end_date");
+
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('view', 'id' => $registrationTransaction->header->id));
+        }
+
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($registrationTransaction);
+
+            if ($registrationTransaction->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $registrationTransaction->header->id));
+            }
+        }
+
+        $this->render('updateProductService', array(
+            'registrationTransaction' => $registrationTransaction,
+            'vehicle' => $vehicle,
+            'customer' => $customer,
+            'service' => $service,
+            'serviceDataProvider' => $serviceDataProvider,
+            'product' => $product,
+            'productDataProvider' => $productDataProvider,
+            'salePackage' => $salePackage,
+            'salePackageDataProvider' => $salePackageDataProvider,
+            'branches' => $branches,
+        ));
+    }
+
     public function actionUpdateMileage($id) {
         $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
         $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
@@ -359,6 +396,44 @@ class SaleRegistrationController extends Controller {
             'registrationTransaction' => $registrationTransaction,
             'customer' => $customer,
             'vehicle' => $vehicle,
+        ));
+    }
+
+    public function actionUpdateVehicleServicePosition($id) {
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+        $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
+
+        if (isset($_POST['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_POST['RegistrationTransaction'];
+            $vehicle->status_location = $registrationTransaction->vehicle_status;
+            
+            if ($registrationTransaction->vehicle_status == 'Masuk Bengkel') {
+                $vehicle->entry_datetime = date('Y-m-d H:i:s');
+                $registrationTransaction->vehicle_entry_datetime = date('Y-m-d H:i:s');
+            } elseif ($registrationTransaction->vehicle_status == 'Keluar Bengkel') {
+                $vehicle->exit_datetime = date('Y-m-d H:i:s');
+                $registrationTransaction->vehicle_exit_datetime = date('Y-m-d H:i:s');
+            } else {
+                $vehicle->entry_datetime = null;
+                $vehicle->start_service_datetime = null;
+                $vehicle->finish_service_datetime = null;
+                $vehicle->exit_datetime = null;
+                $registrationTransaction->vehicle_entry_datetime = null;
+                $registrationTransaction->vehicle_start_service_datetime = null;
+                $registrationTransaction->vehicle_finish_service_datetime = null;
+                $registrationTransaction->vehicle_exit_datetime = null;
+            }
+            
+            if ($vehicle->save() && $registrationTransaction->save()) {
+                $this->redirect(array('view', 'id' => $id));
+            }
+        }
+
+        $this->render('updateVehicleServicePosition', array(
+            'registrationTransaction' => $registrationTransaction,
+            'vehicle' => $vehicle,
+            'customer' => $customer,
         ));
     }
 
