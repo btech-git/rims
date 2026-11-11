@@ -112,14 +112,6 @@ $this->breadcrumbs = array(
                                     'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                                 )); ?>
                             <?php endif; ?>
-                        
-                            <?php if ($model->warranty_report !== null || $model->warranty_report !== ''): ?>
-                                <?php echo CHtml::link('<span class="fa fa-plus"></span> Technical Report', array("/vinfast/technicalReport/create", "registrationId" => $model->id), array(
-                                    'class' => 'button success left', 
-                                    'style' => 'margin-right:10px',
-//                                    'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
-                                )); ?>
-                            <?php endif; ?>
                         <?php endif; ?>
 
                         <?php if (Yii::app()->user->checkAccess("generalRepairApproval")): ?>

@@ -428,6 +428,7 @@ class Vehicle extends CActiveRecord {
     public function getTechnicalVehicleName() {
         return $this->carMake->name . ' - ' . $this->carModel->name . ' - ' . $this->carSubModel->name . ' - ' . $this->frame_number;
     }
+    
     public function searchByEntryStatusLocation($customerName) {
         $criteria = new CDbCriteria;
 

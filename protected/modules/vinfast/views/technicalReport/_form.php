@@ -101,46 +101,24 @@
 
                 <div class="field">
                     <div class="row collapse">
-                        <div class="medium-4 columns">
-                            <?php echo $form->labelEx($technicalReport->header, 'Kendaraan', array('class' => 'prefix')); ?>
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($technicalReport->header, 'main_part_name', array('class' => 'prefix')); ?>
                         </div>
-                        <div class="medium-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carMake.name')); ?> - 
-                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carModel.name')); ?> -
-                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carSubModel.name')); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="medium-4 columns">
-                            <?php echo $form->labelEx($technicalReport->header, 'Plat #', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="medium-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.plate_number')); ?>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($technicalReport->header, 'main_part_name'); ?>
+                            <?php echo $form->error($technicalReport->header, 'main_part_name'); ?>
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="field">
                     <div class="row collapse">
-                        <div class="medium-4 columns">
-                            <?php echo $form->labelEx($technicalReport->header, 'VIN', array('class' => 'prefix')); ?>
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($technicalReport->header, 'main_part_number', array('class' => 'prefix')); ?>
                         </div>
-                        <div class="medium-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.frame_number')); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="medium-4 columns">
-                            <?php echo $form->labelEx($technicalReport->header, 'Mileage / KM', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="medium-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')); ?>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($technicalReport->header, 'main_part_number'); ?>
+                            <?php echo $form->error($technicalReport->header, 'main_part_number'); ?>
                         </div>
                     </div>
                 </div>
@@ -194,29 +172,63 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($technicalReport->header, 'failure_symptom_video', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($technicalReport->header, 'failure_symptom_video'); ?>
+                            <?php echo $form->error($technicalReport->header, 'failure_symptom_video'); ?>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="small-12 medium-6 columns">
                 <div class="field">
                     <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo $form->labelEx($technicalReport->header, 'main_part_name', array('class' => 'prefix')); ?>
+                        <div class="medium-4 columns">
+                            <?php echo $form->labelEx($technicalReport->header, 'Kendaraan', array('class' => 'prefix')); ?>
                         </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->textField($technicalReport->header, 'main_part_name'); ?>
-                            <?php echo $form->error($technicalReport->header, 'main_part_name'); ?>
+                        <div class="medium-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carMake.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carModel.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.carSubModel.name')); ?>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="field">
                     <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo $form->labelEx($technicalReport->header, 'main_part_number', array('class' => 'prefix')); ?>
+                        <div class="medium-4 columns">
+                            <?php echo $form->labelEx($technicalReport->header, 'Plat #', array('class' => 'prefix')); ?>
                         </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->textField($technicalReport->header, 'main_part_number'); ?>
-                            <?php echo $form->error($technicalReport->header, 'main_part_number'); ?>
+                        <div class="medium-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.plate_number')); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="medium-4 columns">
+                            <?php echo $form->labelEx($technicalReport->header, 'VIN', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="medium-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle.frame_number')); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="medium-4 columns">
+                            <?php echo $form->labelEx($technicalReport->header, 'Mileage / KM', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="medium-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')); ?>
                         </div>
                     </div>
                 </div>
@@ -256,36 +268,19 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo $form->labelEx($technicalReport->header, 'failure_symptom_video', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->textField($technicalReport->header, 'failure_symptom_video'); ?>
-                            <?php echo $form->error($technicalReport->header, 'failure_symptom_video'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field buttons text-center">
-                    <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-                    <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button cbutton')); ?> 
-                </div>
-                <?php echo IdempotentManager::generate(); ?>
-
             </div>
         </div>
+        
+        <hr /> 
         
         <div class="row">
             <div class="small-12 medium-6 columns">
                 <div class="field">
                     <div class="row collapse">
-                        Attach Files (Upload size max 10MB) : 
+                        VIN/Odometer Photos (Upload size max 10MB) : 
                         <?php $this->widget('CMultiFileUpload', array(
                             'model' => $technicalReport->header,
-                            'attribute' => 'failedPartImages',
+                            'attribute' => 'odometerImages',
                             'accept' => 'jpg|jpeg|png|pdf',
                             'denied' => 'Only jpg, jpeg, png and pdf are allowed',
                             'max' => 10,
@@ -305,12 +300,13 @@
                         
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
-                        Attach Files (Upload size max 10MB) : 
+                        Original Failed Parts Photos (Upload size max 10MB) : 
                         <?php $this->widget('CMultiFileUpload', array(
                             'model' => $technicalReport->header,
-                            'attribute' => 'newPartImages',
+                            'attribute' => 'failedPartImages',
                             'accept' => 'jpg|jpeg|png|pdf',
                             'denied' => 'Only jpg, jpeg, png and pdf are allowed',
                             'max' => 10,
@@ -335,7 +331,32 @@
             <div class="small-12 medium-6 columns">
                 <div class="field">
                     <div class="row collapse">
-                        Attach Files (Upload size max 10MB) : 
+                        New Parts Photo (Showing Serial Number) (Upload size max 10MB) : 
+                        <?php $this->widget('CMultiFileUpload', array(
+                            'model' => $technicalReport->header,
+                            'attribute' => 'newPartImages',
+                            'accept' => 'jpg|jpeg|png|pdf',
+                            'denied' => 'Only jpg, jpeg, png and pdf are allowed',
+                            'max' => 10,
+                            'remove' => '[x]',
+                            'duplicate' => 'Already Selected',
+                            'options' => array(
+                                'afterFileSelect' => 'function(e ,v ,m){
+                                    var fileSize = e.files[0].size;
+                                    if (fileSize > 11*1024*1024) {
+                                        alert("Exceeds file upload limit 10MB");
+                                        $(".MultiFile-remove").click();
+                                    }                      
+                                    return true;
+                                }',
+                            ),
+                        )); ?>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        Original Failed Parts Serial Number Photos (Upload size max 10MB) : 
                         <?php $this->widget('CMultiFileUpload', array(
                             'model' => $technicalReport->header,
                             'attribute' => 'failedPartSerialNumberImages',
@@ -358,32 +379,17 @@
                         
                     </div>
                 </div>
-                <div class="field">
-                    <div class="row collapse">
-                        Attach Files (Upload size max 10MB) : 
-                        <?php $this->widget('CMultiFileUpload', array(
-                            'model' => $technicalReport->header,
-                            'attribute' => 'odometerImages',
-                            'accept' => 'jpg|jpeg|png|pdf',
-                            'denied' => 'Only jpg, jpeg, png and pdf are allowed',
-                            'max' => 10,
-                            'remove' => '[x]',
-                            'duplicate' => 'Already Selected',
-                            'options' => array(
-                                'afterFileSelect' => 'function(e ,v ,m){
-                                    var fileSize = e.files[0].size;
-                                    if (fileSize > 11*1024*1024) {
-                                        alert("Exceeds file upload limit 10MB");
-                                        $(".MultiFile-remove").click();
-                                    }                      
-                                    return true;
-                                }',
-                            ),
-                        )); ?>
-                        
-                    </div>
-                </div>
             </div>
+        </div>
+        
+        <hr /> 
+        
+        <div class="row">
+            <div class="field buttons text-center">
+                <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
+                <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button cbutton')); ?> 
+            </div>
+            <?php echo IdempotentManager::generate(); ?>
         </div>
 
         <?php $this->endWidget(); ?>

@@ -105,18 +105,18 @@ $('#invoiceSearch').submit(function(){
                         'dealer_name',
                         'dealer_code',
                         'warranty_claim_number',
-                        array(
-                            'name' => 'registration_transaction_id', 
-                            'value' => '$data->registration_transaction_id != null ? $data->registrationTransaction->transaction_number : ""'
-                        ),
-                        array(
-                            'header' => 'Plat #', 
-                            'value' => 'CHtml::encode(CHtml::value($data, "registrationTransaction.vehicle.plate_number"))'
-                        ),
-                        array(
-                            'header' => 'Kendaraan', 
-                            'value' => 'CHtml::encode(CHtml::value($data, "registrationTransaction.vehicle.carMakeModelSubCombination"))'
-                        ),
+//                        array(
+//                            'name' => 'registration_transaction_id', 
+//                            'value' => '$data->registration_transaction_id != null ? $data->registrationTransaction->transaction_number : ""'
+//                        ),
+//                        array(
+//                            'header' => 'Plat #', 
+//                            'value' => 'CHtml::encode(CHtml::value($data, "registrationTransaction.vehicle.plate_number"))'
+//                        ),
+//                        array(
+//                            'header' => 'Kendaraan', 
+//                            'value' => 'CHtml::encode(CHtml::value($data, "registrationTransaction.vehicle.carMakeModelSubCombination"))'
+//                        ),
                         'vehicle_mileage',
                     ),
                 )); ?>

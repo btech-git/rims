@@ -65,16 +65,21 @@ class TechnicalReportController extends Controller {
         ));
     }
 
-    public function actionCreate($registrationId) {
+    public function actionCreate($registrationProductId) {
         $technicalReport = $this->instantiate(null, 'create');
+
+        $registrationProduct = RegistrationProduct::model()->findByPk($registrationProductId);
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationProduct->registration_transaction_id);
 
         $technicalReport->header->created_datetime = date('Y-m-d H:i:s');
         $technicalReport->header->user_id_created = Yii::app()->user->id;
         $technicalReport->header->province_id = 12;
-        $technicalReport->header->registration_transaction_id = $registrationId;
+        $technicalReport->header->dealer_name = 'Raperind Pondok Kelapa';
+        $technicalReport->header->warranty_claim_number = $registrationTransaction->warranty_report;
+        $technicalReport->header->main_part_name = $registrationProduct->product->name;
+        $technicalReport->header->main_part_number = $registrationProduct->product->manufacturer_code;
+        $technicalReport->header->registration_product_id = $registrationProductId;
         
-        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
-
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
         }
@@ -89,6 +94,7 @@ class TechnicalReportController extends Controller {
 
         $this->render('create', array(
             'technicalReport' => $technicalReport,
+            'registrationProduct' => $registrationProduct,
             'registrationTransaction' => $registrationTransaction,
         ));
     }
@@ -99,6 +105,9 @@ class TechnicalReportController extends Controller {
         $technicalReport->header->updated_datetime = date('Y-m-d H:i:s');
         $technicalReport->header->user_id_updated = Yii::app()->user->id;
         
+        $registrationProduct = RegistrationProduct::model()->findByPk($technicalReport->header->registration_product_id);
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationProduct->registration_transaction_id);
+
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
         }
@@ -113,6 +122,8 @@ class TechnicalReportController extends Controller {
 
         $this->render('update', array(
             'technicalReport' => $technicalReport,
+            'registrationProduct' => $registrationProduct,
+            'registrationTransaction' => $registrationTransaction,
         ));
     }
 

@@ -281,7 +281,6 @@ class SaleRegistration extends CComponent {
         $this->header->ppn_price = $this->taxItemAmount;
 
         $valid = $this->header->save();
-        $bongkar = $sparepart = $ketok_las = $dempul = $epoxy = $cat = $pasang = $poles = $cuci = $finishing = 0;
 
         //save Service
         $criteria = new CDbCriteria;

@@ -403,7 +403,7 @@ class BodyRepairRegistration extends CComponent {
             $this->header->is_new_customer = $registrationTransaction === null ? 1 : 0;
             $this->header->status = 'Registration';
             $this->header->vehicle_status = 'Masuk Lokasi';
-            $this->header->service_status = 'Bongkar - Pending';
+            $this->header->service_status = 'Pending';
             $this->header->product_status = 'Draft';
             $this->header->total_quickservice = 0;
             $this->header->total_quickservice_price = 0;

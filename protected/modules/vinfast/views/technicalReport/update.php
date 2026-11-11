@@ -20,6 +20,7 @@ $this->breadcrumbs=array(
 <div id="maincontent">
     <?php echo $this->renderPartial('_form', array(
         'technicalReport' => $technicalReport,
+        'registrationProduct' => $registrationProduct,
         'registrationTransaction' => $registrationTransaction,
     )); ?>
 </div>

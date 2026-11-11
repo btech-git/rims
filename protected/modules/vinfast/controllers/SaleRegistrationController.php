@@ -616,6 +616,7 @@ class SaleRegistrationController extends Controller {
         $registrationTransaction->header->work_order_date = date('Y-m-d');
         $registrationTransaction->header->work_order_time = date('H:i:s');
         $registrationTransaction->header->status = 'Waitlist';
+        $registrationTransaction->header->service_status = 'On-Progress';
 
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('view', 'id' => $id));

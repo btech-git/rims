@@ -3,7 +3,7 @@
         <tr>
             <th>ID</th>
             <th>Code</th>
-            <th>Product name</th>
+            <th>Product Name</th>
             <th>Quantity</th>
             <th>Satuan</th>
             <?php if (Yii::app()->user->checkAccess('director')): ?>
@@ -11,11 +11,12 @@
             <?php endif; ?>
             <th>Retail Price</th>
             <th>Sale Price</th>
-            <th>Discount Type</th>
-            <th>Discount</th>
+            <th>Disc Type</th>
+            <th>Disc</th>
             <th>Total Price</th>
-            <th>Quantity Movement</th>
-            <th>Quantity Movement left</th>
+            <th>Qty Movement</th>
+            <th>Qty Movement left</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -37,6 +38,21 @@
                     <td><?php echo number_format($product->total_price,2); ?></td>
                     <td><?php echo $product->quantity_movement; ?></td>
                     <td><?php echo $product->quantity_movement_left; ?></td>
+                    <td>
+                        <?php $technicalReport = TechnicalReportHeader::model()->findByAttributes(array(
+                            'registration_product_id' => $product->id,
+                        )); ?>
+                        <?php if (!empty($model->warranty_report) && empty($technicalReport)): ?>
+                            <?php echo CHtml::link('Tech Report', array('technicalReport/create', 'registrationProductId' => $product->id), array(
+                                'class' => 'button info left', 
+                                'style' => 'margin-right:10px', 
+                            )); ?>
+                        <?php elseif (!empty($model->warranty_report && $technicalReport)): ?>
+                            <?php echo CHtml::link('Tech Report', array('technicalReport/view', 'id' => $technicalReport->id)); ?>
+                        <?php else: ?>
+                            <?php echo ''; ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         <?php endif ?>
