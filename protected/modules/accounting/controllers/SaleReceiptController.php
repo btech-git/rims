@@ -77,7 +77,7 @@ class SaleReceiptController extends Controller {
         $saleReceipt = $this->instantiate(null, 'create');
         
         $saleReceipt->header->transaction_date = date('Y-m-d');
-        $saleReceipt->header->due_date = empty($saleReceipt->header->customer_id) ? $saleReceipt->header->transaction_date : date('Y-m-d',strtotime('+' . $saleReceipt->header->customer->tenor . ' days', strtotime($saleReceipt->header->transaction_date)));
+        $saleReceipt->header->due_date = date('Y-m-d');
         $saleReceipt->header->created_datetime = date('Y-m-d H:i:s');
         $saleReceipt->header->branch_id = Yii::app()->user->branch_id;
         $saleReceipt->header->status = 'Approved';

@@ -74,7 +74,7 @@ $this->breadcrumbs = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Jatuh Tempo</span>
+                                    <span class="prefix">Estimasi Tanggal Bayar</span>
                                 </div>
                                 
                                 <div class="small-8 columns">

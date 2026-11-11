@@ -49,7 +49,7 @@ function tanggal($date) {
     <div class="body-memo">
         <table>
             <tr>
-                <td>TT #</td>
+                <td>TRANSAKSI #</td>
                 <td>:</td>
                 <td><?php echo $saleReceiptHeader->transaction_number; ?></td>
                 <td>TANGGAL</td>
@@ -60,9 +60,9 @@ function tanggal($date) {
                 <td><?php echo empty($saleReceiptHeader->customer_id) ? 'ASURANSI' : 'CUSTOMER'; ?></td>
                 <td>:</td>
                 <td><?php echo empty($saleReceiptHeader->customer_id) ? $saleReceiptHeader->insuranceCompany->name : $customer->name; ?></td>
-                <td>CATATAN</td>
+                <td>ESTIMASI TANGGAL BAYAR</td>
                 <td>:</td>
-                <td><?php echo nl2br($saleReceiptHeader->note); ?></td>
+                <td><?php echo tanggal($saleReceiptHeader->due_date); ?></td>
             </tr>
         </table>
     </div>
@@ -158,6 +158,10 @@ function tanggal($date) {
     </div>
 
     <div class="detail-notes">
+        <p>Catatan: <?php echo CHtml::encode(CHtml::value($saleReceiptHeader, "note")); ?></p>
+    </div>
+    
+    <div class="detail-notes">
         <table width="100%">
             <tr>
                 <td class="tengah" style="width: 30%">Dibuat oleh</td>
@@ -169,9 +173,6 @@ function tanggal($date) {
                     <p style="font-weight:bold">No. Rekening : <?php echo CHtml::encode(CHtml::value($saleReceiptHeader, 'companyBank.account_no')); ?></p>
                     <p style="font-weight:bold">Info pembayaran harap email ke gracia.angelin4@gmail.com</p>
                 </td>
-            </tr>
-            <tr>
-                <td></td>
             </tr>
             <tr>
                 <td class="tengah h250"><?php echo CHtml::encode(CHtml::value($saleReceiptHeader, 'userIdCreated.username')); ?></td>

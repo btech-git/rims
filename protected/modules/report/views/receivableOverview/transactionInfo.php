@@ -1,0 +1,121 @@
+<?php
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
+?>
+
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
+<div class="tab reportTab">
+    <div class="tabHead">
+        <div style="font-size: larger; font-weight: bold; text-align: center">Transaksi Detail Piutang Customer</div>
+        <div style="font-size: larger; font-weight: bold; text-align: center"><?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></div>
+        <div style="font-size: larger; font-weight: bold; text-align: center">
+            <?php echo 'Tahun: ' . CHtml::encode($year); ?>
+        </div>
+    </div>
+    
+    <div class="clear"></div>
+    
+    <?php echo CHtml::beginForm('', 'get'); ?>
+        <div class="row buttons">
+            <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
+        </div>
+    <?php echo CHtml::endForm(); ?>
+
+    <br /> 
+    
+    <div class="tabBody">
+        <div id="detail_div">
+            <div class="table_wrapper">
+                <table class="responsive">
+                    <thead style="position: sticky; top: 0">
+                        <tr id="header1">
+                            <th class="width1-1">Invoice #</th>
+                            <th class="width1-2">Tanggal</th>
+                            <th class="width1-3">Jatuh Tempo</th>
+                            <th class="width1-3">TOP (hari)</th>
+                            <th class="width1-2">Umur (hari)</th>
+                            <th class="width1-5">Plat #</th>
+                            <th class="width1-6">Kendaraan</th>
+                            <th class="width1-6">Terkirim?</th>
+                            <th class="width1-7">Status Piutang</th>
+                            <th class="width1-7">invoice</th>
+                            <th class="width1-8">Payment</th>
+                            <th class="width1-9">Remaining</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $revenueSum = '0.00'; ?>
+                        <?php $paymentAmountSum = '0.00'; ?>
+                        <?php $paymentLeftSum = '0.00'; ?>
+                        
+                        <?php foreach ($invoiceHeaders as $invoiceHeader): ?>
+                            <?php $revenue = CHtml::value($invoiceHeader, 'total_price'); ?>
+                            <?php $paymentAmount = CHtml::value($invoiceHeader, 'payment_amount'); ?>
+                            <?php $paymentLeft = $revenue - $paymentAmount; ?>
+                            <?php $isReceivableOverdue = date('Y-m-d') > $invoiceHeader->due_date; ?>
+
+                            <tr class="items1">
+                                <td>
+                                    <?php echo CHtml::link(CHtml::value($invoiceHeader, 'invoice_number'), array(
+                                        '/transaction/invoiceHeader/show', 
+                                        'id' => $invoiceHeader->id, 
+                                    ), array('target' => '_blank')); ?>
+                                </td>
+                                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceHeader->invoice_date))); ?></td>
+                                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceHeader->due_date))); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.tenor')); ?></td>
+                                <td>
+                                    <?php $outstandingDays = date_diff(date_create($invoiceHeader->due_date), date_create(date('Y-m-d'))); ?>
+                                    <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
+                                </td>
+                                <td><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.plate_number')); ?></td>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carMake.name')); ?> -
+                                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carModel.name')); ?> -
+                                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carSubModel.name')); ?>
+                                </td>
+                                <td><?php echo $invoiceHeader->is_sent_to_customer === 1 ? 'Terkirim' : 'Belum'; ?></td>
+                                <td style="text-align: right; color: <?php echo $isReceivableOverdue && $paymentLeft > 0 ? 'red' : 'black'; ?>">
+                                    <?php echo $paymentLeft > '0.00' ? $isReceivableOverdue ? 'Overdue' : 'Outstanding' : 'Lunas'; ?>
+                                </td>
+                                <td style="text-align: right; color: <?php echo $isReceivableOverdue && $paymentLeft > 0 ? 'red' : 'black'; ?>">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $revenue)); ?>
+                                </td>
+                                <td style="text-align: right; color: <?php echo $isReceivableOverdue && $paymentLeft > 0 ? 'red' : 'black'; ?>">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentAmount)); ?>
+                                </td>
+                                <td style="text-align: right; color: <?php echo $isReceivableOverdue && $paymentLeft > 0 ? 'red' : 'black'; ?>">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentLeft)); ?>
+                                </td>
+                            </tr>
+                            <?php $revenueSum += $revenue; ?>
+                            <?php $paymentAmountSum += $paymentAmount; ?>
+                            <?php $paymentLeftSum += $paymentLeft; ?>
+
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="9">TOTAL</td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $revenueSum)); ?>
+                            </td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentAmountSum)); ?>
+                            </td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentLeftSum)); ?>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,6 +8,14 @@ $this->breadcrumbs = array(
 );
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div class="tab reportTab">
     <div class="tabHead"><h4>Kendaraan Keluar / Masuk Bengkel</h4></div>
     

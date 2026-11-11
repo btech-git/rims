@@ -6,9 +6,9 @@
     <?php echo ReportHelper::summaryText($vehicleProcessDataprovider); ?>
 </div>
 
-<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">
-    <?php echo CHtml::beginForm(); ?>
-    <table class="table table-bordered table-striped">
+<?php echo CHtml::beginForm(); ?>
+<div class="table_wrapper">
+    <table class="responsive">
         <thead>
             <tr class="table-primary">
                 <th class="text-center" style="min-width: 50px">#</th>
@@ -64,8 +64,8 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <?php echo CHtml::endForm(); ?>
 </div>
+<?php echo CHtml::endForm(); ?>
 
 <div class="text-end">
     <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(

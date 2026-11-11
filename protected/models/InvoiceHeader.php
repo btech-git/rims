@@ -3028,6 +3028,37 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
+    public static function getReceivableOverviewReport($year, $branchId, $customerIds) {
+        $customerIdsSql = empty($customerIds) ? 'NULL' : implode(',', $customerIds);
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        $sql = "SELECT i.id, i.customer_id, i.invoice_number, i.invoice_date, i.due_date, v.plate_number, i.invoice_amount, i.product_price, i.service_price,
+                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, i.ppn_total, i.pph_total, i.product_price + i.service_price + i.package_price AS subtotal,
+                    i.product_price * (1 + i.tax_percentage / 100) AS product_price_after_tax, i.service_price * (1 + i.tax_percentage / 100) AS service_price_after_tax,
+                    i.downpayment_amount, i.insurance_own_risk_amount, i.payment_amount, i.payment_left
+                FROM " . InvoiceHeader::model()->tableName() . " i
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
+                LEFT OUTER JOIN " . VehicleCarMake::model()->tableName() . " k ON k.id = v.car_make_id
+                LEFT OUTER JOIN " . VehicleCarModel::model()->tableName() . " d ON d.id = v.car_model_id
+                LEFT OUTER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
+                WHERE i.customer_id IN ({$customerIdsSql}) AND i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL AND
+                    YEAR(i.invoice_date) = :year " . $branchConditionSql . "
+                ORDER BY i.customer_id ASC, i.invoice_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
     public static function getSaleInvoiceVehicleReport($startDate, $endDate, $branchId, $carSubModelIds) {
         $carSubModelIdsSql = empty($carSubModelIds) ? 'NULL' : implode(',', $carSubModelIds);
         $branchConditionSql = '';

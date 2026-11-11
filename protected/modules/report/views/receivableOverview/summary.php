@@ -1,0 +1,93 @@
+<?php
+Yii::app()->clientScript->registerScript('report', '
+    $(".breadcrumbs").addClass("hide");
+');
+Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
+?>
+
+<div class="clear"></div>
+
+<div class="tab reportTab">
+    <div class="tabHead"></div>
+    
+    <div class="tabBody">
+        <div id="detail_div">
+            <div>
+                <div class="myForm">
+                    <?php echo CHtml::beginForm(array(''), 'get'); ?>
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
+                                            'empty'=>'-- All Branch --',
+                                            'disabled' => Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : 'disabled',
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Per Tanggal</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clear"></div>
+                    
+                    <div class="row buttons">
+                        <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
+                        <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
+                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                    </div>
+
+                    <?php echo CHtml::endForm(); ?>
+                    <div class="clear"></div>
+                </div>
+
+                <hr />
+
+                <div class="right"><?php echo ReportHelper::summaryText($receivableOverviewSummary->dataProvider); ?></div>
+                
+                <br />
+                
+                <div class="right"><?php //echo ReportHelper::sortText($receivableOverviewSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
+                
+                <div class="clear"></div>
+
+                <div class="relative">
+                    <?php $this->renderPartial('_summary', array(
+                        'receivableOverviewSummary' => $receivableOverviewSummary,
+                        'receivableReportData' => $receivableReportData,
+                        'year' => $year,
+                        'branchId' => $branchId,
+                    )); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hide">
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'itemCount' => $receivableOverviewSummary->dataProvider->pagination->itemCount,
+            'pageSize' => $receivableOverviewSummary->dataProvider->pagination->pageSize,
+            'currentPage' => $receivableOverviewSummary->dataProvider->pagination->getCurrentPage(false),
+        )); ?>
+    </div>
+    <div class="clear"></div>
+</div>

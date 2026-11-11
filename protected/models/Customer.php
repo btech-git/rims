@@ -577,6 +577,80 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public static function getTotalReceivableOverviewIndividual($year, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(i.total_price), 0) AS total_receivable
+            FROM " . InvoiceHeader::model()->tableName() . " i
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL AND YEAR(i.invoice_date) = :year" . $branchConditionSql . "
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public static function getTotalPaymentOverviewIndividual($year, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(i.payment_amount), 0) AS total_payment
+            FROM " . InvoiceHeader::model()->tableName() . " i
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL AND
+                YEAR(i.invoice_date) = :year" . $branchConditionSql . "
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public static function getTotalRemainingOverviewIndividual($year, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(i.payment_left), 0) AS total_remaining
+            FROM " . InvoiceHeader::model()->tableName() . " i
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL AND
+                YEAR(i.invoice_date) = :year" . $branchConditionSql . "
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
 //    public function getReceivableCustomerReport($endDate, $branchId) {
 //        $branchConditionSql = '';
 //        

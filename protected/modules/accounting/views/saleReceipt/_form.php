@@ -38,6 +38,30 @@
            
             <div class="field">
                 <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Estimasi Tanggal Bayar', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                            'model' => $saleReceipt->header,
+                            'attribute' => "due_date",
+                            'options'=>array(
+                                'minDate' => '-8W',
+                                'maxDate' => '+6M',
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth'=>true,
+                                'changeYear'=>true,
+                            ),
+                            'htmlOptions'=>array(
+                                'readonly' => true,
+                            ),
+                        )); ?>
+                        <?php echo CHtml::error($saleReceipt->header, 'due_date'); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="row collapse">
                     <?php if (empty($saleReceipt->header->customer_id)): ?>
                         <div class="small-4 columns">
                             <?php echo CHtml::label('Asuransi', ''); ?>

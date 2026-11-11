@@ -81,6 +81,11 @@ $('.search-form form').submit(function(){
                         ),
                         'transaction_date',
                         array(
+                            'name' => 'due_date',
+                            'header' => 'Estimasi Tanggal Bayar',
+                            'value' => 'CHtml::encode(CHtml::value($data, "due_date"))',
+                        ),
+                        array(
                             'name' => 'customer_name', 
                             'value' => 'empty($data->customer_id) ? "N/A" : $data->customer->name'
                         ),
@@ -89,8 +94,8 @@ $('.search-form form').submit(function(){
                             'value' => 'AppHelper::formatMoney($data->total_invoice_amount)',
                             'htmlOptions' => array('style' => 'text-align: right'),
                         ),
-                        'status',
                         'note',
+                        'status',
                     ),
                 )); ?>
             </div>

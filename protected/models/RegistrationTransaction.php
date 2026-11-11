@@ -1941,6 +1941,141 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
+    public static function getOutstandingWorkOrderVinfastData($branchId, $limit, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $customerId) {
+        $plateNumberConditionSql = '';
+        $carMakeConditionSql = '';
+        $carModelConditionSql = '';
+        $workOrderConditionSql = '';
+        $transactionStatusConditionSql = '';
+        $customerIdConditionSql = '';
+        
+        $params = array(
+            ':branch_id' => $branchId,
+        );
+        
+        if (!empty($plateNumber)) {
+            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
+            $params[':plate_number'] = "%{$plateNumber}%";
+        }
+
+        if (!empty($carMakeId)) {
+            $carMakeConditionSql = ' AND v.car_make_id = :car_make_id';
+            $params[':car_make_id'] = $carMakeId;
+        }
+
+        if (!empty($carModelId)) {
+            $carModelConditionSql = ' AND v.car_model_id = :car_model_id';
+            $params[':car_model_id'] = $carModelId;
+        }
+
+        if (!empty($workOrderNumber)) {
+            $workOrderConditionSql = ' AND r.work_order_number LIKE :work_order_number';
+            $params[':plate_number'] = "%{$workOrderNumber}%";
+        }
+
+        if (!empty($transactionStatus)) {
+            $transactionStatusConditionSql = ' AND r.status = :transaction_status';
+            $params[':transaction_status'] = $transactionStatus;
+        }
+
+        if (!empty($customerId)) {
+            $customerIdConditionSql = ' AND r.customer_id = :customer_id';
+            $params[':customer_id'] = $customerId;
+        }
+
+        $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
+                    r.work_order_number, r.work_order_date, r.work_order_time, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number, 
+                    r.sales_order_number, r.customer_work_order_number, cu.name AS customer_name, r.estimate_discharge_date
+                FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Customer::model()->tableName() . " cu on cu.id = r.customer_id
+                INNER JOIN " . Branch::model()->tableName() . " b on b.id = r.branch_id
+                INNER JOIN " . Vehicle::model()->tableName() . " v on v.id = r.vehicle_id
+                INNER JOIN " . VehicleCarMake::model()->tableName() . " c on c.id = v.car_make_id
+                INNER JOIN " . VehicleCarModel::model()->tableName() . " m on m.id = v.car_model_id
+                INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s on s.id = v.car_sub_model_id
+                INNER JOIN " . Colors::model()->tableName() . " o on o.id = v.color_id
+                INNER JOIN " . Users::model()->tableName() . " u on u.id = r.user_id
+                WHERE r.customer_id IN (60849, 60926, 63482) AND NOT EXISTS (
+                    SELECT i.registration_transaction_id
+                    FROM " . InvoiceHeader::model()->tableName() . " i
+                    WHERE r.id = i.registration_transaction_id
+                ) AND r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL AND r.branch_id = :branch_id AND r.status NOT IN ('Finished')" . $plateNumberConditionSql . $customerIdConditionSql .
+                    $carMakeConditionSql . $carModelConditionSql . $workOrderConditionSql . $transactionStatusConditionSql . "
+                ORDER BY r.transaction_date DESC, r.id DESC
+                LIMIT {$limit}";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getOutstandingAllBranchWorkOrderVinfastData($limit, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $customerId) {
+        $plateNumberConditionSql = '';
+        $carMakeConditionSql = '';
+        $carModelConditionSql = '';
+        $workOrderConditionSql = '';
+        $transactionStatusConditionSql = '';
+        $customerIdConditionSql = '';
+        
+        $params = array();
+        
+        if (!empty($plateNumber)) {
+            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
+            $params[':plate_number'] = "%{$plateNumber}%";
+        }
+
+        if (!empty($carMakeId)) {
+            $carMakeConditionSql = ' AND v.car_make_id = :car_make_id';
+            $params[':car_make_id'] = $carMakeId;
+        }
+
+        if (!empty($carModelId)) {
+            $carModelConditionSql = ' AND v.car_model_id = :car_model_id';
+            $params[':car_model_id'] = $carModelId;
+        }
+
+        if (!empty($workOrderNumber)) {
+            $workOrderConditionSql = ' AND r.work_order_number LIKE :work_order_number';
+            $params[':plate_number'] = "%{$workOrderNumber}%";
+        }
+
+        if (!empty($transactionStatus)) {
+            $transactionStatusConditionSql = ' AND r.status = :transaction_status';
+            $params[':transaction_status'] = $transactionStatus;
+        }
+
+        if (!empty($customerId)) {
+            $customerIdConditionSql = ' AND r.customer_id LIKE :customer_id';
+            $params[':customer_id'] = $customerId;
+        }
+
+        $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
+                    r.work_order_number, r.work_order_date, r.work_order_time, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number, 
+                    r.sales_order_number, r.customer_work_order_number, cu.name AS customer_name, r.estimate_discharge_date
+                FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Customer::model()->tableName() . " cu on cu.id = r.customer_id
+                INNER JOIN " . Branch::model()->tableName() . " b on b.id = r.branch_id
+                INNER JOIN " . Vehicle::model()->tableName() . " v on v.id = r.vehicle_id
+                INNER JOIN " . VehicleCarMake::model()->tableName() . " c on c.id = v.car_make_id
+                INNER JOIN " . VehicleCarModel::model()->tableName() . " m on m.id = v.car_model_id
+                INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s on s.id = v.car_sub_model_id
+                INNER JOIN " . Colors::model()->tableName() . " o on o.id = v.color_id
+                INNER JOIN " . Users::model()->tableName() . " u on u.id = r.user_id
+                WHERE r.customer_id IN (60849, 60926, 63482) AND NOT EXISTS (
+                    SELECT i.registration_transaction_id
+                    FROM " . InvoiceHeader::model()->tableName() . " i
+                    WHERE r.id = i.registration_transaction_id
+                ) AND r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL" . 
+                    $plateNumberConditionSql . $carMakeConditionSql . $carModelConditionSql . $workOrderConditionSql . $transactionStatusConditionSql . 
+                    $customerIdConditionSql . "
+                ORDER BY r.transaction_date DESC, r.id DESC
+                LIMIT {$limit}";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
     public static function getOutstandingRegistrationData($branchId, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $customerName, $repairType) {
         $plateNumberConditionSql = '';
         $carMakeConditionSql = '';

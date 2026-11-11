@@ -93,6 +93,10 @@ $('.search-form form').submit(function(){
                     ),
                     'columns' => array(
                         array(
+                            'header' => 'No.',
+                            'value' => '$this->grid->dataProvider->pagination->currentPage * $this->grid->dataProvider->pagination->pageSize + ($row + 1)',
+                        ),
+                        array(
                             'name' => 'payment_number',
                             'value' => 'CHtml::link($data->payment_number, array("view", "id"=>$data->id))',
                             'type' => 'raw'

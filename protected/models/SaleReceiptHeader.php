@@ -57,13 +57,13 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, due_date, status, branch_id, user_id_created, created_datetime', 'required'),
+            array('transaction_number, transaction_date, status, branch_id, user_id_created, created_datetime', 'required'),
             array('customer_id, branch_id, user_id_created, user_id_updated, user_id_cancelled, insurance_company_id, company_bank_id', 'numerical', 'integerOnly' => true),
             array('transaction_number, delivery_receipt_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 20),
             array('total_invoice_amount, total_downpayment_amount, total_own_risk_amount, total_receivable_amount, tax_item_amount, tax_service_amount', 'length', 'max' => 18),
             array('tax_item_percentage, tax_service_percentage', 'length', 'max' => 10),
-            array('note, updated_datetime, cancelled_datetime', 'safe'),
+            array('note, due_date, updated_datetime, cancelled_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, transaction_number, transaction_date, due_date, status, note, total_invoice_amount, customer_id, branch_id, user_id_created, created_datetime, user_id_updated, updated_datetime, user_id_cancelled, cancelled_datetime, insurance_company_id, total_downpayment_amount, total_own_risk_amount, total_receivable_amount, delivery_receipt_number, tax_item_percentage, tax_service_percentage, tax_item_amount, tax_service_amount, company_bank_id', 'safe', 'on' => 'search'),
