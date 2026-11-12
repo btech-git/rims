@@ -140,9 +140,20 @@ class TechnicalReportController extends Controller {
         
         $dataProvider = $model->search();
         
+        $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $pendingDataProvider = $registrationTransaction->searchAdmin();
+        $pendingDataProvider->criteria->addCondition("t.customer_id IN (60849, 60926, 63482) AND t.warranty_report <> '' AND t.user_id_cancelled IS NULL AND NOT EXISTS (
+            SELECT p.registration_transaction_id 
+            FROM " . TechnicalReportHeader::model()->tableName() . " r 
+            INNER JOIN " . RegistrationProduct::model()->tableName() . " p ON p.id = r.registration_product_id
+            WHERE t.id = p.registration_transaction_id
+        )");
+        
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'registrationTransaction' => $registrationTransaction,
+            'pendingDataProvider' => $pendingDataProvider,
         ));
     }
 

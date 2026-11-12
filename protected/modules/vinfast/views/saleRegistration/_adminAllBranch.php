@@ -83,6 +83,5 @@
         )); ?>
         <span style="display: none"><?php echo $tabIndex; ?></span>
     </div>
-    <br />
-    <br />
+    <br /><br />
 </div>

@@ -29,6 +29,14 @@ $('#invoiceSearch').submit(function(){
 ");
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div id="maincontent">
     <div class="row">
         <div class="small-12 columns">
@@ -102,22 +110,32 @@ $('#invoiceSearch').submit(function(){
                             'value' => 'CHtml::link($data->document_number, array("view", "id"=>$data->id))', 
                             'type' => 'raw',
                         ),
-                        'dealer_name',
-                        'dealer_code',
                         'warranty_claim_number',
-//                        array(
-//                            'name' => 'registration_transaction_id', 
-//                            'value' => '$data->registration_transaction_id != null ? $data->registrationTransaction->transaction_number : ""'
-//                        ),
-//                        array(
-//                            'header' => 'Plat #', 
-//                            'value' => 'CHtml::encode(CHtml::value($data, "registrationTransaction.vehicle.plate_number"))'
-//                        ),
-//                        array(
-//                            'header' => 'Kendaraan', 
-//                            'value' => 'CHtml::encode(CHtml::value($data, "registrationTransaction.vehicle.carMakeModelSubCombination"))'
-//                        ),
-                        'vehicle_mileage',
+                        array(
+                            'header' => 'Registration #', 
+                            'value' => '$data->registration_product_id != null ? $data->registrationProduct->registrationTransaction->transaction_number : ""'
+                        ),
+                        array(
+                            'header' => 'Part Name', 
+                            'name' => 'main_part_name',
+                            'value' => 'CHtml::encode(CHtml::value($data, "main_part_name"))'
+                        ),
+                        array(
+                            'header' => 'Kendaraan', 
+                            'value' => 'CHtml::encode(CHtml::value($data, "registrationProduct.registrationTransaction.vehicle.carMakeModelSubCombination"))'
+                        ),
+                        array(
+                            'header' => 'Plat #', 
+                            'value' => 'CHtml::encode(CHtml::value($data, "registrationProduct.registrationTransaction.vehicle.plate_number"))'
+                        ),
+                        array(
+                            'header' => 'VIN #', 
+                            'value' => 'CHtml::encode(CHtml::value($data, "registrationProduct.registrationTransaction.vehicle.frame_number"))'
+                        ),
+                        array(
+                            'header' => 'Mileage (KM)', 
+                            'value' => 'CHtml::encode(CHtml::value($data, "registrationProduct.registrationTransaction.vehicle_mileage"))'
+                        ),
                     ),
                 )); ?>
             </div>
@@ -125,6 +143,15 @@ $('#invoiceSearch').submit(function(){
             <?php echo CHtml::endForm(); ?>
         </div>
     </div> <!-- end row -->
+    
+    <hr />
+    
+    <div class="row">
+        <?php $this->renderPartial('_pending', array(
+            'registrationTransaction' => $registrationTransaction,
+            'pendingDataProvider' => $pendingDataProvider,
+        )); ?>
+    </div>
 </div> <!-- end maintenance -->
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(

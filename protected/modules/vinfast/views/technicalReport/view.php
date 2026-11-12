@@ -91,7 +91,7 @@ $this->breadcrumbs = array(
             
             <tr>
                 <td>Mileage (KM)</td>
-                <td><?php echo CHtml::encode(CHtml::value($model, 'vehicle_mileage')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($model, 'registrationProduct.registrationTransaction.vehicle_mileage')); ?></td>
                 <td>Main Part Name</td>
                 <td><?php echo CHtml::encode(CHtml::value($model, 'main_part_name')); ?></td>
             </tr>
