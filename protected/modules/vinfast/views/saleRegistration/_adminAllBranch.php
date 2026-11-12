@@ -24,6 +24,7 @@
                 <th>Payment Status</th>
                 <th>Vehicle Status</th>
                 <th>Problem</th>
+                <th>Warranty Report</th>
             </tr>
         </thead>
         
@@ -69,6 +70,7 @@
                     <td><?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'payment_status')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'vehicle.status_location')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'problem')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'warranty_report')); ?></td>
                 </tr>
                 <?php $runningNumber++; ?>
             <?php endforeach; ?>
