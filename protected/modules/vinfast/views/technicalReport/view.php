@@ -74,8 +74,8 @@ $this->breadcrumbs = array(
                         'id' => $model->registrationProduct->registration_transaction_id
                     ), array('target' => '_blank')); ?>
                 </td>
-                <td>Plat #</td>
-                <td><?php echo CHtml::encode(CHtml::value($model, 'registrationProduct.registrationTransaction.vehicle.plate_number')); ?></td>
+                <td>Warranty Claim Number</td>
+                <td><?php echo CHtml::encode(CHtml::value($model, 'warranty_claim_number')); ?></td>
             </tr>
             
             <tr>
@@ -113,8 +113,8 @@ $this->breadcrumbs = array(
             <tr>
                 <td>Failure Phenomenon</td>
                 <td><?php echo CHtml::encode(CHtml::value($model, 'failure_phenomenon')); ?></td>
-                <td></td>
-                <td><?php //echo CHtml::encode(CHtml::value($model, 'failure_phenomenon')); ?></td>
+                <td>Plat #</td>
+                <td><?php echo CHtml::encode(CHtml::value($model, 'registrationProduct.registrationTransaction.vehicle.plate_number')); ?></td>
             </tr>
                
             <?php if (Yii::app()->user->checkAccess("director")): ?>

@@ -97,12 +97,12 @@ class SaleInvoiceProjectNonCogsController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Project');
 
-        $worksheet->mergeCells('A1:N1');
-        $worksheet->mergeCells('A2:N2');
-        $worksheet->mergeCells('A3:N3');
+        $worksheet->mergeCells('A1:P1');
+        $worksheet->mergeCells('A2:P2');
+        $worksheet->mergeCells('A3:P3');
 
-        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:P5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:P5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $customer = Customer::model()->findByPk($customerId);
@@ -110,7 +110,7 @@ class SaleInvoiceProjectNonCogsController extends Controller {
         $worksheet->setCellValue('A2', 'Penjualan Customer Project ' . CHtml::value($customer, 'name'));
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:P5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Penjualan #');
         $worksheet->setCellValue('B5', 'Tanggal');
@@ -118,34 +118,33 @@ class SaleInvoiceProjectNonCogsController extends Controller {
         $worksheet->setCellValue('D5', 'Asuransi');
         $worksheet->setCellValue('E5', 'Kendaraan');
         $worksheet->setCellValue('F5', 'Plat #');
-        $worksheet->setCellValue('G5', 'WO #');
-        $worksheet->setCellValue('H5', 'ODO');
-        $worksheet->setCellValue('I5', 'Jasa');
-        $worksheet->setCellValue('J5', 'Part');
-        $worksheet->setCellValue('K5', 'Jasa (IDR)');
-        $worksheet->setCellValue('L5', 'Part (IDR)');
-        $worksheet->setCellValue('M5', 'Quantity');
-        $worksheet->setCellValue('N5', 'Total Exc VAT (IDR)');
+        $worksheet->setCellValue('G5', 'SPK Customer #');
+        $worksheet->setCellValue('H5', 'WO #');
+        $worksheet->setCellValue('I5', 'ODO');
+        $worksheet->setCellValue('J5', 'Jasa');
+        $worksheet->setCellValue('K5', 'Part');
+        $worksheet->setCellValue('L5', 'Jasa (IDR)');
+        $worksheet->setCellValue('M5', 'Part (IDR)');
+        $worksheet->setCellValue('N5', 'Quantity');
+        $worksheet->setCellValue('O5', 'Discount');
+        $worksheet->setCellValue('P5', 'Total Exc VAT (IDR)');
 
-        $worksheet->getStyle('A5:N5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:P5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         
-        $totalServiceAmount = '0.00';
-        $totalProductAmount = '0.00';
         $totalQuantity = '0.00';
         $totalUnitPriceParts = '0.00';
         $totalUnitPriceService = '0.00';
+        $totalDiscount = '0.00';
         $grandTotalSum = '0.00';
         
         foreach ($saleProjectReport as $i => $dataItem) {
-            $serviceAmount = $dataItem['service'];
-            $productAmount = $dataItem['product'];
             $quantity = $dataItem['quantity'];
-            $unitPriceParts = $quantity * $dataItem['unit_price'] - $dataItem['discount'];
-            $unitPriceService = $dataItem['unit_price'] - $dataItem['discount'];
+            $discount = $dataItem['discount'];
+            $unitPriceParts = $dataItem['unit_price'];
+            $unitPriceService = $dataItem['unit_price'];
             $grandTotal = $dataItem['total_price'];
-            $worksheet->getStyle("J{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", $dataItem['invoice_number']);
             $worksheet->setCellValue("B{$counter}", $dataItem['invoice_date']);
@@ -154,37 +153,37 @@ class SaleInvoiceProjectNonCogsController extends Controller {
             $worksheet->setCellValue("E{$counter}", $dataItem['car_make'] . ' - ' . $dataItem['car_model'] . ' - ' . $dataItem['car_sub_model']);
             $worksheet->setCellValue("F{$counter}", $dataItem['plate_number']);
             $worksheet->setCellValue("G{$counter}", $dataItem['work_order_number']);
-            $worksheet->setCellValue("H{$counter}", $dataItem['vehicle_mileage']);
-            $worksheet->setCellValue("I{$counter}", $serviceAmount);
-            $worksheet->setCellValue("J{$counter}", $productAmount);
+            $worksheet->setCellValue("H{$counter}", $dataItem['customer_work_order_number']);
+            $worksheet->setCellValue("I{$counter}", $dataItem['vehicle_mileage']);
+            $worksheet->setCellValue("J{$counter}", $dataItem['service']);
+            $worksheet->setCellValue("K{$counter}", $dataItem['product']);
             if (empty($dataItem['product'])) {
-                $worksheet->setCellValue("K{$counter}", $unitPriceService);
-                $worksheet->setCellValue("L{$counter}", '0.00');
+                $worksheet->setCellValue("L{$counter}", $unitPriceService);
+                $worksheet->setCellValue("M{$counter}", '0.00');
                 $totalUnitPriceService += $unitPriceService;
             } else {
-                $worksheet->setCellValue("K{$counter}", '0.00');
-                $worksheet->setCellValue("L{$counter}", $unitPriceParts);
+                $worksheet->setCellValue("L{$counter}", '0.00');
+                $worksheet->setCellValue("M{$counter}", $unitPriceParts);
                 $totalUnitPriceParts += $unitPriceParts;
             }
-            $worksheet->setCellValue("M{$counter}", $quantity);
-            $worksheet->setCellValue("N{$counter}", $grandTotal);
+            $worksheet->setCellValue("N{$counter}", $quantity);
+            $worksheet->setCellValue("O{$counter}", $discount);
+            $worksheet->setCellValue("P{$counter}", $grandTotal);
             
-            $totalServiceAmount += $serviceAmount;
-            $totalProductAmount += $productAmount;
             $totalQuantity += $quantity;
             $grandTotalSum += $grandTotal;
+            $totalDiscount += $discount;
             $counter++;
         }
         
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:P{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:P{$counter}")->getFont()->setBold(true);
 
-        $worksheet->setCellValue("I{$counter}", $totalServiceAmount);
-        $worksheet->setCellValue("J{$counter}", $totalProductAmount);
-        $worksheet->setCellValue("K{$counter}", $totalUnitPriceService);
-        $worksheet->setCellValue("L{$counter}", $totalUnitPriceParts);
-        $worksheet->setCellValue("M{$counter}", $totalQuantity);
-        $worksheet->setCellValue("N{$counter}", $grandTotalSum);
+        $worksheet->setCellValue("L{$counter}", $totalUnitPriceService);
+        $worksheet->setCellValue("M{$counter}", $totalUnitPriceParts);
+        $worksheet->setCellValue("N{$counter}", $totalQuantity);
+        $worksheet->setCellValue("O{$counter}", $totalDiscount);
+        $worksheet->setCellValue("P{$counter}", $grandTotalSum);
         $counter++;
         
         for ($col = 'A'; $col !== 'Z'; $col++) {

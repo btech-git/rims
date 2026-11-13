@@ -26,6 +26,7 @@
                 <th>Tanggal</th>
                 <th>Customer</th>
                 <th>Plat #</th>
+                <th>SPK Customer #</th>
                 <th>WO #</th>
                 <th>ODO</th>
                 <th>Jasa</th>
@@ -33,13 +34,23 @@
                 <th>Jasa (IDR)</th>
                 <th>Part (IDR)</th>
                 <th>Qty</th>
+                <th>Disc</th>
                 <th>Total exc VAT (IDR)</th>
             </tr>
         </thead>
         <tbody>
+            <?php $totalUnitPriceService = '0.00'; ?>
+            <?php $totalUnitPriceParts = '0.00'; ?>
+            <?php $totalQuantity = '0.00'; ?>
+            <?php $totalDiscount = '0.00'; ?>
+            <?php $totalPriceSum = '0.00'; ?>
+            
             <?php foreach ($saleProjectReport as $i => $dataItem): ?>
                 <?php $quantity = $dataItem['quantity']; ?>
-                <?php $unitPrice = $quantity * $dataItem['unit_price'] - $dataItem['discount']; ?>
+                <?php $unitPrice = $dataItem['unit_price']; ?>
+                <?php $discountAmount = $dataItem['discount']; ?>
+                <?php $totalPrice = $dataItem['total_price']; ?>
+            
                 <tr>
                     <td>
                         <?php echo CHtml::link($dataItem['invoice_number'], Yii::app()->createUrl("transaction/invoiceHeader/view", array("id" => $dataItem['id'])), array('target' => '_blank')); ?>
@@ -49,6 +60,7 @@
                     </td>
                     <td><?php echo CHtml::encode($dataItem['customer_name']); ?></td>
                     <td><?php echo CHtml::encode($dataItem['plate_number']); ?></td>
+                    <td><?php echo CHtml::encode($dataItem['customer_work_order_number']); ?></td>
                     <td>
                         <?php echo CHtml::link($dataItem['work_order_number'], Yii::app()->createUrl("frontDesk/registrationTransaction/view", array("id" => $dataItem['registration_transaction_id'])), array('target' => '_blank')); ?>
                     </td>
@@ -58,6 +70,7 @@
                     <td style="text-align: right">
                         <?php if (empty($dataItem['product'])): ?>
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $unitPrice)); ?>
+                            <?php $totalUnitPriceParts += $unitPrice; ?>
                         <?php else: ?>
                             <?php echo ''; ?>
                         <?php endif; ?>
@@ -67,12 +80,28 @@
                             <?php echo ''; ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $unitPrice)); ?>
+                            <?php $totalUnitPriceService += $unitPrice; ?>
                         <?php endif; ?>
                     </td>
-                    <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $quantity)); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $dataItem['total_price'])); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantity)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $discountAmount)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPrice)); ?></td>
                 </tr>
+                
+                <?php $totalQuantity += $quantity; ?>
+                <?php $totalDiscount += $discountAmount; ?>
+                <?php $totalPriceSum += $totalPrice; ?>
             <?php endforeach; ?>
         </tbody>
+        <tfoot>
+            <tr>
+                <td style="font-weight: bold; text-align: right" colspan="9">TOTAL</td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalUnitPriceParts)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalUnitPriceService)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalQuantity)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDiscount)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSum)); ?></td>
+            </tr>
+        </tfoot>
     </table>
 </div>

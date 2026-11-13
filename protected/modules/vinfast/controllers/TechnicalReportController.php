@@ -48,23 +48,6 @@ class TechnicalReportController extends Controller {
         $filterChain->run();
     }
 
-    public function actionView($id) {
-        $model = $this->loadModel($id);
-        
-        $postFailedPartImages = TechnicalReportFailedPartPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $model->id));
-        $postFailedPartSerialNumberImages = TechnicalReportFailedPartSerialNumberPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $model->id));
-        $postNewPartImages = TechnicalReportNewPartPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $model->id));
-        $postOdometerImages = TechnicalReportOdometerPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $model->id));
-        
-        $this->render('view', array(
-            'model' => $model,
-            'postFailedPartImages' => $postFailedPartImages,
-            'postFailedPartSerialNumberImages' => $postFailedPartSerialNumberImages,
-            'postNewPartImages' => $postNewPartImages,
-            'postOdometerImages' => $postOdometerImages,
-        ));
-    }
-
     public function actionCreate($registrationProductId) {
         $technicalReport = $this->instantiate(null, 'create');
 
@@ -127,6 +110,23 @@ class TechnicalReportController extends Controller {
         ));
     }
 
+    public function actionView($id) {
+        $model = $this->loadModel($id);
+        
+        $postFailedPartImages = TechnicalReportFailedPartPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $model->id));
+        $postFailedPartSerialNumberImages = TechnicalReportFailedPartSerialNumberPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $model->id));
+        $postNewPartImages = TechnicalReportNewPartPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $model->id));
+        $postOdometerImages = TechnicalReportOdometerPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $model->id));
+        
+        $this->render('view', array(
+            'model' => $model,
+            'postFailedPartImages' => $postFailedPartImages,
+            'postFailedPartSerialNumberImages' => $postFailedPartSerialNumberImages,
+            'postNewPartImages' => $postNewPartImages,
+            'postOdometerImages' => $postOdometerImages,
+        ));
+    }
+
     /**
      * Manages all models.
      */
@@ -155,6 +155,28 @@ class TechnicalReportController extends Controller {
             'registrationTransaction' => $registrationTransaction,
             'pendingDataProvider' => $pendingDataProvider,
         ));
+    }
+
+    public function actionMemoPdf($id) {
+        $technicalReportHeader = TechnicalReportHeader::model()->findByPk($id);
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
+
+        $postFailedPartImages = TechnicalReportFailedPartPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $id));
+        $postFailedPartSerialNumberImages = TechnicalReportFailedPartSerialNumberPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $id));
+        $postNewPartImages = TechnicalReportNewPartPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $id));
+        $postOdometerImages = TechnicalReportOdometerPhoto::model()->findAllByAttributes(array('technical_report_header_id' => $id));
+        
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Technical Report');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('memoPdf', array(
+            'technicalReportHeader' => $technicalReportHeader,
+            'postFailedPartImages' => $postFailedPartImages,
+            'postFailedPartSerialNumberImages' => $postFailedPartSerialNumberImages,
+            'postNewPartImages' => $postNewPartImages,
+            'postOdometerImages' => $postOdometerImages,
+        ), true));
+        $mPDF1->Output('Technical Report ' . $technicalReportHeader->warranty_claim_number . '.pdf', 'I');
     }
 
     public function saveTransactionLog($actionType, $paymentIn) {
