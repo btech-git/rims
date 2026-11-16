@@ -33,13 +33,20 @@ class SaleRetailServiceSummary extends CComponent {
         $serviceTypeId = (empty($filters['serviceTypeId'])) ? '' : $filters['serviceTypeId'];
         $serviceCategoryId = (empty($filters['serviceCategoryId'])) ? '' : $filters['serviceCategoryId'];
         $customerType = (empty($filters['customerType'])) ? '' : $filters['customerType'];
+        $customerName = (empty($filters['customerName'])) ? '' : $filters['customerName'];
         
         $branchConditionSql = '';
         $customerTypeConditionSql = '';
+        $customerNameConditionSql = '';
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND h.branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
+
+        if (!empty($customerName)) {
+            $customerNameConditionSql = ' AND c.name LIKE :customer_name';
+            $this->dataProvider->criteria->params[':customer_name'] = "%{$customerName}%";
         }
 
         if (!empty($customerType)) {
@@ -52,7 +59,7 @@ class SaleRetailServiceSummary extends CComponent {
             INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
             WHERE d.service_id = t.id AND substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . 
-                $branchConditionSql . $customerTypeConditionSql . " 
+                $branchConditionSql . $customerNameConditionSql . $customerTypeConditionSql . " 
         )");
         
         $this->dataProvider->criteria->params[':start_date'] = $startDate;

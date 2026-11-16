@@ -44,13 +44,11 @@ $this->breadcrumbs = array(
 
                         <?php if ($model->status !== 'Finished'): ?>
                             <?php if (count($invoices) == 0): ?>
-                                <?php if (Yii::app()->user->checkAccess("generalRepairEdit")): ?>
-                                    <?php echo CHtml::link('<span class="fa fa-edit"></span> Edit', array("update", "id" => $model->id), array(
-                                        'class' => 'button warning left',
-                                        'style' => 'margin-right:10px', 
-                                        'visible' => Yii::app()->user->checkAccess("generalRepairEdit")
-                                    )); ?>
-                                <?php endif; ?>
+                                <?php echo CHtml::link('<span class="fa fa-edit"></span> Edit', array("update", "id" => $model->id), array(
+                                    'class' => 'button warning left',
+                                    'style' => 'margin-right:10px', 
+                                    'visible' => Yii::app()->user->checkAccess("generalRepairEdit")
+                                )); ?>
                             <?php endif; ?>
 
                             <?php if (empty($model->sales_order_number) && !empty($model->registrationProducts)): ?>
@@ -138,7 +136,7 @@ $this->breadcrumbs = array(
 
             <fieldset>
                 <legend>Information</legend>
-                <?php if ($model->user_id_cancelled == null): ?>
+                <?php if ($model->user_id_cancelled == null && empty($invoices)): ?>
                     <div class="row">
                         <?php echo CHtml::link('<span class="fa fa-plus"></span> KM Kendaraan', array("updateMileage", "id" => $model->id), array(
                             'class' => 'button success left', 
@@ -153,6 +151,18 @@ $this->breadcrumbs = array(
                         )); ?>
 
                         <?php echo CHtml::link('<span class="fa fa-plus"></span> SPK Customer', array("updateCustomerWorkOrder", "id" => $model->id), array(
+                            'class' => 'button success left', 
+                            'style' => 'margin-right:10px',
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+                        )); ?>
+                        
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span> Claim Warranty', array("updateWarrantyClaim", "id" => $model->id), array(
+                            'class' => 'button success left', 
+                            'style' => 'margin-right:10px',
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+                        )); ?>
+                        
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span> V-TAG', array("updateTechnicalNumber", "id" => $model->id), array(
                             'class' => 'button success left', 
                             'style' => 'margin-right:10px',
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")

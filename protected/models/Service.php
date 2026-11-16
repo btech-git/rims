@@ -458,8 +458,9 @@ class Service extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getSaleRetailServiceDetailReport($startDate, $endDate, $branchId, $customerType) {
+    public function getSaleRetailServiceDetailReport($startDate, $endDate, $branchId, $customerType, $customerName) {
         $branchConditionSql = '';
+        $customerNameConditionSql = '';
         $customerTypeConditionSql = '';
         
         $params = array(
@@ -471,6 +472,11 @@ class Service extends CActiveRecord {
         if (!empty($branchId)) {
             $branchConditionSql = ' AND r.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($customerName)) {
+            $customerNameConditionSql = ' AND c.name LIKE :customer_name';
+            $params[':customer_name'] = "%{$customerName}%";
         }
         
         if (!empty($customerType)) {
@@ -489,8 +495,8 @@ class Service extends CActiveRecord {
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " d ON d.id = v.car_model_id
                 INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
                 LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
-                WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND service_id = :service_id AND r.status NOT LIKE '%CANCEL%'" . 
-                    $branchConditionSql . $customerTypeConditionSql . "
+                WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND service_id = :service_id AND r.user_id_cancelled IS NULL" . 
+                    $branchConditionSql . $customerTypeConditionSql . $customerNameConditionSql . "
                 ORDER BY r.invoice_date ASC, r.invoice_number ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

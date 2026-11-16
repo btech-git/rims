@@ -398,6 +398,46 @@ class SaleRegistrationController extends Controller {
             'vehicle' => $vehicle,
         ));
     }
+    
+    public function actionUpdateWarrantyClaim($id) {
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+        $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+        
+        if (isset($_POST['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_POST['RegistrationTransaction'];
+            
+            if ($registrationTransaction->save()) {
+                $this->redirect(array('view', 'id' => $id));
+            }
+        }
+
+        $this->render('updateWarrantyClaim', array(
+            'registrationTransaction' => $registrationTransaction,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+        ));
+    }
+
+    public function actionUpdateTechnicalNumber($id) {
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+        $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+        
+        if (isset($_POST['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_POST['RegistrationTransaction'];
+            
+            if ($registrationTransaction->save()) {
+                $this->redirect(array('view', 'id' => $id));
+            }
+        }
+
+        $this->render('updateTechnicalNumber', array(
+            'registrationTransaction' => $registrationTransaction,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+        ));
+    }
 
     public function actionUpdateVehicleServicePosition($id) {
         $registrationTransaction = RegistrationTransaction::model()->findByPk($id);

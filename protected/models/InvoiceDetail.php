@@ -730,6 +730,38 @@ class InvoiceDetail extends CActiveRecord {
         ));
     }
     
+    public function searchByServiceTransactionInfo($serviceId, $startDate, $endDate, $branchId, $page) {
+        $branchConditionSql = '';
+        
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'invoice',
+            'product',
+        );
+
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND invoice.branch_id = :branch_id';
+            $criteria->params[':branch_id'] = $branchId;
+        }
+        
+        $criteria->compare('t.service_id', $serviceId);
+        $criteria->addBetweenCondition('invoice.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("invoice.user_id_cancelled IS NULL" . $branchConditionSql);
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'invoice.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
     public function searchByCustomerTransactionTireInfo($customerId, $startDate, $endDate, $branchId, $page) {
         $branchConditionSql = '';
         

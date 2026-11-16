@@ -37,6 +37,7 @@ class SaleRetailServiceDetailController extends Controller {
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $serviceTypeId = (isset($_GET['ServiceTypeId'])) ? $_GET['ServiceTypeId'] : '';
         $serviceCategoryId = (isset($_GET['ServiceCategoryId'])) ? $_GET['ServiceCategoryId'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
         $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
 
         $saleRetailServiceSummary = new SaleRetailServiceSummary($service->search());
@@ -50,6 +51,7 @@ class SaleRetailServiceDetailController extends Controller {
             'serviceTypeId' => $serviceTypeId,
             'serviceCategoryId' => $serviceCategoryId,
             'customerType' => $customerType,
+            'customerName' => $customerName,
         );
         $saleRetailServiceSummary->setupFilter($filters);
 
@@ -63,6 +65,7 @@ class SaleRetailServiceDetailController extends Controller {
                 'endDate' => $endDate, 
                 'branchId' => $branchId,
                 'customerType' => $customerType,
+                'customerName' => $customerName,
             ));
         }
 
@@ -78,6 +81,7 @@ class SaleRetailServiceDetailController extends Controller {
             'serviceTypeId' => $serviceTypeId,
             'serviceCategoryId' => $serviceCategoryId,
             'customerType' => $customerType,
+            'customerName' => $customerName,
         ));
     }
 
@@ -106,6 +110,7 @@ class SaleRetailServiceDetailController extends Controller {
         $endDate = $options['endDate'];
         $branchId = $options['branchId'];
         $customerType = $options['customerType'];
+        $customerName = $options['customerName'];
         
         $objPHPExcel = new PHPExcel();
 
@@ -148,8 +153,9 @@ class SaleRetailServiceDetailController extends Controller {
 
         $counter = 6;
         foreach ($dataProvider->data as $header) {
-            $saleRetailData = $header->getSaleRetailServiceDetailReport($startDate, $endDate, $branchId, $customerType);
+            $saleRetailData = $header->getSaleRetailServiceDetailReport($startDate, $endDate, $branchId, $customerType, $customerName);
             $totalSale = '0.00';
+            
             foreach ($saleRetailData as $saleRetailRow) {
                 $total = $saleRetailRow['total_price'];
                 

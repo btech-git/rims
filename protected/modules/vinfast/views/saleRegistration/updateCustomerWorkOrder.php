@@ -97,7 +97,7 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'RG #'); ?></label>
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'Registration #'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
                                                 <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_number')); ?>
@@ -130,6 +130,42 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'problem'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'problem')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix">DMS Reference #</label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo $form->textField($registrationTransaction, 'customer_document_order_number'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div> 
+                                <!-- END COLUMN 6-->
+                                <div class="medium-6 columns">
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'Work Order #'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'work_order_number')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
                                                 <label class="prefix"><?php echo $form->labelEx($registrationTransaction,'employee_id_assign_mechanic'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
@@ -152,16 +188,13 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'problem'); ?></label>
+                                                <label class="prefix">Permintaan Awal / Keluhan Customer</label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'problem')); ?>
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'customer_request_note')); ?>
                                             </div>
                                         </div>
                                     </div>
-                                </div> 
-                                <!-- END COLUMN 6-->
-                                <div class="medium-6 columns">
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
@@ -169,50 +202,6 @@ $this->breadcrumbs=array(
                                             </div>
                                             <div class="small-8 columns">
                                                 <?php echo $form->textField($registrationTransaction, 'customer_work_order_number'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">DMS Reference Number</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($registrationTransaction, 'customer_document_order_number'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">V-TAG #</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($registrationTransaction, 'technical_code_number'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">Warranty Report</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($registrationTransaction, 'warranty_report'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">Permintaan Awal / Keluhan Customer</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'customer_request_note')); ?>
                                             </div>
                                         </div>
                                     </div>

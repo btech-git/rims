@@ -6,6 +6,8 @@ Yii::app()->clientScript->registerCss('_report', '
     .width1-4 { width: 30% }
     .width1-5 { width: 5% }
     .width1-6 { width: 10% }
+    .width1-7 { width: 10% }
+    .width1-8 { width: 10% }
 ');
 ?>
 
@@ -26,8 +28,8 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-4">Name</th>
             <th class="width1-5">Quantity</th>
             <th class="width1-6">DPP</th>
-            <th class="width1-6">PPn</th>
-            <th class="width1-6">Amount</th>
+            <th class="width1-7">PPn</th>
+            <th class="width1-8">Amount</th>
         </tr>
     </thead>
     <tbody>
@@ -41,6 +43,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $taxAmount = $saleRetailServiceItem['total_tax']; ?>
             <?php $grandTotal = $saleRetailServiceItem['grand_total']; ?>
             <?php $totalQuantity = $saleRetailServiceItem['total_quantity']; ?>
+        
             <tr class="items1">
                 <td><?php echo CHtml::encode($saleRetailServiceItem['code']); ?></td>
                 <td><?php echo CHtml::encode($saleRetailServiceItem['type']); ?></td>
@@ -49,8 +52,17 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantity)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $unitPrice)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $taxAmount)); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
+                <td style="text-align: right">
+                    <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $grandTotal), array(
+                        'transactionInfo', 
+                        'serviceId' => $saleRetailServiceItem['id'], 
+                        'startDate' => $startDate, 
+                        'endDate' => $endDate,
+                        'branchId' => empty($branchId) ? null : $branch->id,
+                    ), array('target' => '_blank')); ?>
+                </td>
             </tr>
+            
             <?php $totalUnitPrice += $unitPrice; ?>
             <?php $totalTaxAmount += $taxAmount; ?>
             <?php $grandTotalSum += $grandTotal; ?>

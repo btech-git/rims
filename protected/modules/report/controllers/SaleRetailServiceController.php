@@ -60,6 +60,37 @@ class SaleRetailServiceController extends Controller {
         ));
     }
 
+    public function actionTransactionInfo($serviceId, $startDate, $endDate, $branchId) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceDetail::model()->searchByServiceTransactionInfo($serviceId, $startDate, $endDate, $branchId, $page);
+        $service = Service::model()->findByPk($serviceId);
+        $branch = Branch::model()->findByPk($branchId);
+        
+        if (isset($_GET['SaveToExcel'])) {
+            $this->saveToExcelTransactionInfo(array(
+                'dataProvider' => $dataProvider,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'branchId' => $branchId,
+                'serviceId' => $serviceId,
+            ));
+        }
+
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'service' => $service,
+            'branch' => $branch,
+            'serviceId' => $serviceId,
+            'branchId' => $branchId,
+        ));
+    }
+
     public function actionAjaxJsonService() {
         if (Yii::app()->request->isAjaxRequest) {
             $serviceId = (isset($_POST['Service']['id'])) ? $_POST['Service']['id'] : '';

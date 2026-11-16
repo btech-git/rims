@@ -36,24 +36,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Service Category</span>
-                                    </div>
-                                    <div class="small-8 columns" id="service_category">
-                                        <?php echo CHtml::dropDownList('ServiceCategoryId', $serviceCategoryId, CHtml::listData(ServiceCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --',)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="medium-6 columns">
+                            
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -123,27 +106,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="medium-6 columns">
+                            
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Branch </span>
+                                        <span class="prefix">Customer</span>
                                     </div>
                                      <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
-                                            'empty'=>'-- All Branch --',
-                                            'disabled' => Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : 'disabled',
-                                        )); ?>
+                                        <?php echo CHtml::textField('CustomerName', $customerName); ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="medium-6 columns">
+                            
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -181,8 +155,33 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Service Category</span>
+                                    </div>
+                                    <div class="small-8 columns" id="service_category">
+                                        <?php echo CHtml::dropDownList('ServiceCategoryId', $serviceCategoryId, CHtml::listData(ServiceCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --',)); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch </span>
+                                    </div>
+                                     <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
+                                            'empty'=>'-- All Branch --',
+                                            'disabled' => Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : 'disabled',
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -199,7 +198,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="clear"></div>
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
@@ -214,6 +213,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <hr />
 
+                <div class="right"><?php echo ReportHelper::summaryText($saleRetailServiceSummary->dataProvider); ?></div>
+                
+                <br />
+        
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'saleRetailServiceSummary' => $saleRetailServiceSummary,
@@ -222,6 +225,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'endDate' => $endDate,
                         'branchId' => $branchId,
                         'customerType' => $customerType,
+                        'customerName' => $customerName,
                     )); ?>
                 </div>
                 <div class="clear"></div>
