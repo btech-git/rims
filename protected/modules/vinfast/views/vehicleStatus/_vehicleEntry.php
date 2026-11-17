@@ -22,6 +22,7 @@
                 <th class="text-center" style="min-width: 100px">Tanggal</th>
                 <th class="text-center" style="min-width: 100px">WO #</th>
                 <th class="text-center" style="min-width: 100px">SL #</th>
+                <th class="text-center" style="min-width: 100px">Status</th>
                 <th class="text-center" style="min-width: 150px">User Entry</th>
                 <th class="text-center" colspan="3">Service</th>
             </tr>
@@ -55,6 +56,7 @@
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'work_order_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'sales_order_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($data, 'service_status')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'vehicle.entryUser.username')); ?></td>
                     <td><?php echo CHtml::link('Proses', array("updateToProgress", "id" => $data->id), array('confirm' => 'Are you confirmed to start services?')); ?></td>
                     <td><?php echo CHtml::link('Keluar', array("updateToExit", "id" => $data->id), array('confirm' => 'Are you confirmed to exit vehicle?')); ?></td>

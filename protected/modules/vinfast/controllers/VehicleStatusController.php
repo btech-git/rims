@@ -26,29 +26,35 @@ class VehicleStatusController extends Controller {
 
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $vehiclePosition = (isset($_GET['VehiclePosition'])) ? $_GET['VehiclePosition'] : '';
+        $serviceStatus = (isset($_GET['ServiceStatus'])) ? $_GET['ServiceStatus'] : '';
         
         $vehicleEntryDataprovider = $registrationTransaction->searchByEntryStatusLocation();
         $vehicleEntryDataprovider->pagination->pageVar = 'page_dialog_entry';
         $vehicleEntryDataprovider->criteria->compare('t.plate_number', $plateNumber, true);
         $vehicleEntryDataprovider->criteria->compare('customer.name', $customerName, true);
+        $vehicleEntryDataprovider->criteria->compare('t.service_status', $serviceStatus);
         $vehicleEntryDataprovider->criteria->addCondition("t.customer_id IN (60849, 60926, 63482)");
         
-        $vehicleProcessDataprovider = $registrationTransaction->searchByProcessStatusLocation();
-        $vehicleProcessDataprovider->pagination->pageVar = 'page_dialog_process';
-        $vehicleProcessDataprovider->criteria->compare('t.plate_number', $plateNumber, true);
-        $vehicleProcessDataprovider->criteria->compare('customer.name', $customerName, true);
-        $vehicleProcessDataprovider->criteria->addCondition("t.customer_id IN (60849, 60926, 63482)");
+        $vehicleExitDataprovider = $registrationTransaction->searchByExitStatusLocation();
+        $vehicleExitDataprovider->pagination->pageVar = 'page_dialog_process';
+        $vehicleExitDataprovider->criteria->compare('t.plate_number', $plateNumber, true);
+        $vehicleExitDataprovider->criteria->compare('customer.name', $customerName, true);
+        $vehicleExitDataprovider->criteria->compare('t.service_status', $serviceStatus);
+        $vehicleExitDataprovider->criteria->addCondition("t.customer_id IN (60849, 60926, 63482)");
 
 //        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($vehicleEntryDataprovider, $vehicleProcessDataprovider, $startDateIn, $endDateIn, $startDateProcess, $endDateProcess);
+//            $this->saveToExcel($vehicleEntryDataprovider, $vehicleExitDataprovider, $startDateIn, $endDateIn, $startDateProcess, $endDateProcess);
 //        }
 
         $this->render('index', array(
             'vehicle' => $registrationTransaction,
             'plateNumber' => $plateNumber,
             'customerName' => $customerName,
+            'vehiclePosition' => $vehiclePosition,
+            'serviceStatus' => $serviceStatus,
             'vehicleEntryDataprovider' => $vehicleEntryDataprovider,
-            'vehicleProcessDataprovider' => $vehicleProcessDataprovider,
+            'vehicleExitDataprovider' => $vehicleExitDataprovider,
         ));
     }
     
@@ -85,7 +91,7 @@ class VehicleStatusController extends Controller {
         $this->redirect(array('index'));
     }
 
-    protected function saveToExcel($vehicleEntryDataprovider, $vehicleProcessDataprovider, $startDateIn, $endDateIn, $startDateProcess, $endDateProcess) {
+    protected function saveToExcel($vehicleEntryDataprovider, $vehicleExitDataprovider, $startDateIn, $endDateIn, $startDateProcess, $endDateProcess) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -208,7 +214,7 @@ class VehicleStatusController extends Controller {
         $worksheet->getStyle("A{$counter}:P{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
-        foreach ($vehicleProcessDataprovider->data as $i => $data) {
+        foreach ($vehicleExitDataprovider->data as $i => $data) {
             $registrationTransaction = RegistrationTransaction::model()->find(array(
                 'condition' => 'vehicle_id = :vehicle_id AND DATE(transaction_date) BETWEEN :start_date AND :end_date', 
                 'params' => array(

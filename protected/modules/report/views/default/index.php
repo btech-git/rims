@@ -983,6 +983,16 @@
                                         'url' => array('/report/workOrderRework/summary'), 
 //                                        'visible' => Yii::app()->user->checkAccess('materialRequestReport'),
                                     ),
+                                    array(
+                                        'label' => 'Penjualan Customer Tahunan', 
+                                        'url' => array('/report/yearlyCustomerSale/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('materialRequestReport'),
+                                    ),
+                                    array(
+                                        'label' => 'Pembelian Supplier Tahunan', 
+                                        'url' => array('/report/yearlySupplierPurchase/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('materialRequestReport'),
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

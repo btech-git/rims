@@ -198,7 +198,7 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix">Claim Warranty?</label>
+                                                <label class="prefix">Warranty?</label>
                                             </div>
                                             <div class="small-8 columns">
                                                 <?php echo $form->checkBox($registrationTransaction, 'is_claim_warranty'); ?>

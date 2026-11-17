@@ -26,6 +26,7 @@ class SaleRetailCustomerController extends Controller {
 
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
+        $customerDataProvider->criteria->addCondition("t.customer_type = 'Company'");
         $customerDataProvider->pagination->pageVar = 'page_dialog';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
@@ -90,6 +91,33 @@ class SaleRetailCustomerController extends Controller {
             'customer' => $customer,
             'branch' => $branch,
             'customerId' => $customerId,
+            'branchId' => $branchId,
+        ));
+    }
+
+    public function actionTransactionRetailInfo($startDate, $endDate, $branchId) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByRetailTransactionInfo($startDate, $endDate, $branchId, $page);
+        $branch = Branch::model()->findByPk($branchId);
+        
+        if (isset($_GET['SaveToExcel'])) {
+            $this->saveToExcelTransactionInfo(array(
+                'dataProvider' => $dataProvider,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'branchId' => $branchId,
+            ));
+        }
+
+        $this->render('transactionRetailInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branch' => $branch,
             'branchId' => $branchId,
         ));
     }

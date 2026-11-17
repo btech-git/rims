@@ -121,8 +121,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 <div class="small-4 columns">
                                     <span class="prefix">Car Model</span>
                                 </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownList('CarModelId', $carModelId, CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
+                                <div class="small-8 columns" id="car_model">
+                                    <?php echo CHtml::dropDownList('CarModelId', $carModelId, CHtml::listData(VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carMakeId), array('order' => 't.name ASC')), 'id', 'name'), array(
                                         'empty' => '-- All --',
                                     )); ?>
                                 </div>

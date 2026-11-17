@@ -421,18 +421,12 @@ class WorkOrderController extends Controller {
 
     public function actionAjaxHtmlUpdateCarModelSelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $model = new RegistrationTransaction('search');
-            $model->unsetAttributes();  // clear any default values
-            if (isset($_GET['RegistrationTransaction'])) {
-                $model->attributes = $_GET['RegistrationTransaction'];
-            }
-
-            $carMakeId = isset($_GET['RegistrationTransaction']['car_make_code']) ? $_GET['RegistrationTransaction']['car_make_code'] : '';
-//            $carModelId = isset($_GET['CarModelId']) ? $_GET['CarModelId'] : '';
+            $carMakeId = (isset($_GET['CarMakeId'])) ? $_GET['CarMakeId'] : '';
+            $carModelId = (isset($_GET['CarModelId'])) ? $_GET['CarModelId'] : '';
 
             $this->renderPartial('_carModelSelect', array(
-                'model' => $model,
                 'carMakeId' => $carMakeId,
+                'carModelId' => $carModelId,
             ));
         }
     }

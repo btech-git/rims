@@ -1,9 +1,9 @@
 <div style="text-align: center">
-    <h3>Data Mobil Dalam Proses</h3>
+    <h3>Data Mobil Di luar Bengkel</h3>
 </div>
 
 <div style="text-align: right">
-    <?php echo ReportHelper::summaryText($vehicleProcessDataprovider); ?>
+    <?php echo ReportHelper::summaryText($vehicleExitDataprovider); ?>
 </div>
 
 <?php echo CHtml::beginForm(); ?>
@@ -21,13 +21,14 @@
                 <th class="text-center" style="min-width: 100px">Tanggal</th>
                 <th class="text-center" style="min-width: 100px">WO #</th>
                 <th class="text-center" style="min-width: 100px">SL #</th>
+                <th class="text-center" style="min-width: 100px">Status</th>
                 <th class="text-center" style="min-width: 100px">Invoice #</th>
                 <th class="text-center" style="min-width: 100px">Payment #</th>
                 <th class="text-center" style="min-width: 50px">Selesai</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($vehicleProcessDataprovider->data as $i => $data): ?>
+            <?php foreach ($vehicleExitDataprovider->data as $i => $data): ?>
                 <tr>
                     <td class="text-center"><?php echo CHtml::encode($i + 1); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'vehicle.plate_number')); ?></td>
@@ -47,6 +48,7 @@
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'work_order_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'sales_order_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($data, 'service_status')); ?></td>
                     <td>
                         <?php $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $data->id)); ?>
                         <?php echo empty($invoiceHeader) ? '' : CHtml::link(CHtml::value($invoiceHeader, 'invoice_number'), array("/transaction/invoiceHeader/view", "id" => $invoiceHeader->id), array('target' => '_blank')); ?>
@@ -69,6 +71,6 @@
 
 <div class="text-end">
     <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-        'pages' => $vehicleProcessDataprovider->pagination,
+        'pages' => $vehicleExitDataprovider->pagination,
     )); ?>
 </div>

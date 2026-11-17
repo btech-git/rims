@@ -727,5 +727,51 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         }
 
         return $this->search_product = implode('', $products);
-    }    
+    }
+    
+    public static function getYearlySupplierPurchase($year, $supplierName) {
+        $supplierNameConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($supplierName)) {
+            $supplierNameConditionSql = ' AND c.name LIKE :customer_name';
+            $params[':customer_name'] = "%{$supplierName}%";;
+        }
+        
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, recipient_branch_id, MIN(b.name) AS branch_name, 
+                    SUM(i.invoice_grand_total) AS total_price
+                FROM " . TransactionReceiveItem::model()->tableName() . " i 
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = i.recipient_branch_id
+                INNER JOIN " . Supplier::model()->tableName() . " c ON c.id = i.supplier_id
+                WHERE YEAR(invoice_date) = :year AND i.user_id_cancelled IS NULL" . $supplierNameConditionSql . "
+                GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), recipient_branch_id
+                ORDER BY year_month_value ASC, recipient_branch_id ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public function searchByYearlyPurchaseTransactionInfo($year, $month, $branchId, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.recipient_branch_id', $branchId);
+        $criteria->addCondition("t.user_id_cancelled IS NULL AND YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month");
+        $criteria->params[':year'] = $year;
+        $criteria->params[':month'] = $month;
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 5000,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
 }

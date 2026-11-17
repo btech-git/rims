@@ -34,7 +34,8 @@ class PurchaseInvoiceTaxOnlySummary extends CComponent {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $this->dataProvider->criteria->addCondition('t.user_id_cancelled IS null AND t.ppn_price > 0');
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT r.purchase_order_id FROM " . TransactionReceiveItem::model()->tableName() . " r
+            SELECT r.purchase_order_id 
+            FROM " . TransactionReceiveItem::model()->tableName() . " r
             WHERE r.purchase_order_id = t.id AND r.invoice_date BETWEEN :start_date AND :end_date AND r.user_id_cancelled IS NULL
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;

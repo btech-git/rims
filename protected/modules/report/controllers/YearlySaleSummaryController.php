@@ -88,6 +88,50 @@ class YearlySaleSummaryController extends Controller {
         ));
     }
     
+    public function actionTransactionInfo($year, $month, $branchId, $customerType) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByYearlySaleTransactionInfo($year, $month, $branchId, $customerType, $page);
+        $branch = Branch::model()->findByPk($branchId);
+        
+        if (isset($_GET['SaveToExcel'])) {
+            $this->saveToExcelTransactionDetailInfo($dataProvider, $year, $month, $branch);
+        }
+
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'year' => $year,
+            'month' => $month,
+            'branchId' => $branchId,
+            'branch' => $branch,
+        ));
+    }
+
+    public function actionTransactionVehicleInfo($year, $month, $branchId) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByYearlyVehicleTransactionInfo($year, $month, $branchId, $page);
+        $branch = Branch::model()->findByPk($branchId);
+        
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelTransactionDetailInfo($dataProvider, $year, $month, $branch);
+//        }
+
+        $this->render('transactionVehicleInfo', array(
+            'dataProvider' => $dataProvider,
+            'year' => $year,
+            'month' => $month,
+            'branchId' => $branchId,
+            'branch' => $branch,
+        ));
+    }
+
     protected function saveToExcel($yearlySaleSummaryData, $yearlyCompanySaleSummaryData, $yearlyIndividualSaleSummaryData, $yearlyVehicleSaleSummaryData, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

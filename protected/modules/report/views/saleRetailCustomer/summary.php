@@ -16,34 +16,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div>
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
-<!--                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Jumlah per Halaman</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Halaman saat ini</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
-                    
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
@@ -100,14 +72,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 array(
                                                     'name' => 'email',
                                                     'value' => 'CHtml::encode(CHtml::value($data, "email"))',
-                                                ),
-                                                array(
-                                                    'name' => 'customer_type',
-                                                    'filter' => CHtml::activeDropDownList($customer, 'customer_type', array(
-                                                        'Company' => 'Company', 
-                                                        'Individual' => 'Retail'
-                                                    ), array('empty' => 'All')),
-                                                    'value' => '$data->customer_type',
                                                 ),
                                                 array(
                                                     'name' => 'coa_id',

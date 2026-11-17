@@ -35,6 +35,20 @@ $this->breadcrumbs = array(
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Posisi Mobil</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownList('VehiclePosition', $vehiclePosition, array(
+                                        'Masuk Lokasi' => 'Dalam Bengkel', 
+                                        'Keluar Lokasi' => 'Di luar Bengkel',
+                                    ), array('empty' => '-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="medium-6 columns">
@@ -45,6 +59,21 @@ $this->breadcrumbs = array(
                                 </div>
                                 <div class="small-8 columns">
                                     <?php echo CHtml::textField('PlateNumber', $plateNumber, array('class' => 'form-select',)); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Status Pekerjaan</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownList('ServiceStatus', $serviceStatus, array(
+                                        'Pending' => 'Pending', 
+                                        'On-Progress' => 'On-Progress', 
+                                        'Completed' => 'Selesai'
+                                    ), array('empty' => '-- All --')); ?>
                                 </div>
                             </div>
                         </div>
@@ -67,19 +96,26 @@ $this->breadcrumbs = array(
             <hr />
 
             <div class="relative">
-                <div id="vehicle_entry_status_data_container">
-                    <?php $this->renderPartial('_vehicleEntry', array(
-                        'vehicleEntryDataprovider' => $vehicleEntryDataprovider,
-                    )); ?>
-                </div>
-
-                <hr />
-
-                <div id="vehicle_progress_status_data_container">
-                    <?php $this->renderPartial('_vehicleProcess', array(
-                        'vehicleProcessDataprovider' => $vehicleProcessDataprovider,
-                    )); ?>
-                </div>
+                <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                    'tabs' => array(
+                        'Dalam Bengkel' => array(
+                            'content' => $this->renderPartial('_vehicleEntry', array(
+                                'vehicleEntryDataprovider' => $vehicleEntryDataprovider,
+                            ), true),
+                        ),
+                        'Luar Bengkel' => array(
+                            'content' => $this->renderPartial('_vehicleExit', array(
+                                'vehicleExitDataprovider' => $vehicleExitDataprovider,
+                            ), true),
+                        ),
+                    ),
+                    // additional javascript options for the tabs plugin
+                    'options' => array(
+                        'collapsible' => true,
+                    ),
+                    // set id for this widgets
+                    'id' => 'view_tab',
+                )); ?>
             </div>
             <div class="clear"></div>
         </div>

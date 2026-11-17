@@ -30,9 +30,20 @@ Yii::app()->clientScript->registerCss('_report', '
     
     <tbody>
         <tr>
-            <?php $totalIndividual = Customer::getTotalSaleIndividual($startDate, $endDate, $branchId, $taxValue); ?>
-            <td colspan="5" style="text-align: center">Individual</td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalIndividual)); ?></td>
+            <?php $totalInvoiceIndividual = Customer::getTotalReportSaleIndividual($startDate, $endDate, $branchId, $taxValue); ?>
+            <?php $totalPaymentIndividual = Customer::getTotalReportPaymentIndividual($startDate, $endDate, $branchId, $taxValue); ?>
+            <?php $totalRemainingIndividual = Customer::getTotalReportRemainingIndividual($startDate, $endDate, $branchId, $taxValue); ?>
+            <td colspan="3" style="text-align: center">
+                <?php echo CHtml::link('Individual', array(
+                    'transactionRetailInfo', 
+                    'startDate' => $startDate, 
+                    'endDate' => $endDate,
+                    'branchId' => empty($branchId) ? null : $branch->id,
+                ), array('target' => '_blank')); ?>
+            </td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalInvoiceIndividual)); ?></td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPaymentIndividual)); ?></td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRemainingIndividual)); ?></td>
         </tr>
         <?php $totalSale = '0.00'; ?>
         <?php $totalPayment = '0.00'; ?>
@@ -75,7 +86,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <tfoot>
         <tr>
             <td style="text-align: right" colspan="3">Total</td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale + $totalIndividual)); ?></td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale + $totalInvoiceIndividual)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivable)); ?></td>
         </tr>

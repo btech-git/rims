@@ -25,14 +25,30 @@
                         <?php $amountSum = '0.00'; ?>
                         <?php foreach ($branches as $branch): ?>
                             <?php $amount = isset($yearlySaleSummaryData[$month][$branch->id]) ? $yearlySaleSummaryData[$month][$branch->id] : '0.00'; ?>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amount)); ?></td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $amount), array(
+                                    'transactionInfo', 
+                                    'year' => $year, 
+                                    'month' => $month, 
+                                    'branchId' => $branch->id,
+                                    'customerType' => null,
+                                ), array('target' => '_blank')); ?>
+                            </td>
                             <?php $amountSum += $amount; ?>
                             <?php if (!isset($amountTotals[$branch->id])): ?>
                                 <?php $amountTotals[$branch->id] = '0.00'; ?>
                             <?php endif; ?>
                             <?php $amountTotals[$branch->id] += $amount; ?>
                         <?php endforeach; ?>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountSum)), array(
+                                'transactionInfo', 
+                                'year' => $year, 
+                                'month' => $month, 
+                                'branchId' => null,
+                                'customerType' => null,
+                            ), array('target' => '_blank')); ?>
+                        </td>
                     </tr>
             <?php endfor; ?>
         </tbody>

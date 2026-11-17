@@ -78,13 +78,13 @@
             <tr>
                 <td colspan="8" style="text-align: right; font-weight: bold">TOTAL</td>
                 <td style="text-align: right; font-weight: bold">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalAmount)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalSum)); ?>
                 </td>
                 <td colspan="2" style="text-align: right; font-weight: bold">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalAmount)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $servicePriceSum)); ?>
                 </td>
                 <td colspan="2" style="text-align: right; font-weight: bold">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalAmount)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $productPriceSum)); ?>
                 </td>
             </tr>
         </tfoot>

@@ -18,21 +18,35 @@
             </tr>
         </thead>
         <tbody>
-            <?php $amountTotals = array(); ?>
+            <?php $quantityTotals = array(); ?>
             <?php for ($month = 1; $month <= 12; $month++): ?>
                     <tr class="items1">
                         <td style="text-align: left"><?php echo CHtml::encode($monthList[$month]); ?></td>
-                        <?php $amountSum = '0.00'; ?>
+                        <?php $quantitySum = '0.00'; ?>
                         <?php foreach ($branches as $branch): ?>
-                            <?php $amount = isset($yearlyVehicleSaleSummaryData[$month][$branch->id]) ? $yearlyVehicleSaleSummaryData[$month][$branch->id] : '0.00'; ?>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amount)); ?></td>
-                            <?php $amountSum += $amount; ?>
-                            <?php if (!isset($amountTotals[$branch->id])): ?>
-                                <?php $amountTotals[$branch->id] = '0.00'; ?>
+                            <?php $quantity = isset($yearlyVehicleSaleSummaryData[$month][$branch->id]) ? $yearlyVehicleSaleSummaryData[$month][$branch->id] : '0.00'; ?>
+                            <td style="text-align: right">
+                                <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $quantity), array(
+                                    'transactionVehicleInfo', 
+                                    'year' => $year, 
+                                    'month' => $month, 
+                                    'branchId' => $branch->id,
+                                ), array('target' => '_blank')); ?>
+                            </td>
+                            <?php $quantitySum += $quantity; ?>
+                            <?php if (!isset($quantityTotals[$branch->id])): ?>
+                                <?php $quantityTotals[$branch->id] = '0.00'; ?>
                             <?php endif; ?>
-                            <?php $amountTotals[$branch->id] += $amount; ?>
+                            <?php $quantityTotals[$branch->id] += $quantity; ?>
                         <?php endforeach; ?>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $quantitySum), array(
+                                'transactionVehicleInfo', 
+                                'year' => $year, 
+                                'month' => $month, 
+                                'branchId' => null,
+                            ), array('target' => '_blank')); ?>
+                        </td>
                     </tr>
             <?php endfor; ?>
         </tbody>
@@ -41,10 +55,10 @@
                 <td>Total</td>
                 <?php $grandTotal = '0.00'; ?>
                 <?php foreach ($branches as $branch): ?>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountTotals[$branch->id])); ?></td>
-                    <?php $grandTotal += $amountTotals[$branch->id]; ?>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantityTotals[$branch->id])); ?></td>
+                    <?php $grandTotal += $quantityTotals[$branch->id]; ?>
                 <?php endforeach; ?>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $grandTotal)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
             </tr>
         </tfoot>
     </table>

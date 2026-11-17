@@ -1942,7 +1942,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getOutstandingWorkOrderVinfastData($branchId, $limit, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $customerId) {
+    public static function getOutstandingWorkOrderVinfastData($branchId, $limit, $plateNumber, $startDate, $endDate, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $customerId) {
         $plateNumberConditionSql = '';
         $carMakeConditionSql = '';
         $carModelConditionSql = '';
@@ -1951,6 +1951,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $customerIdConditionSql = '';
         
         $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
             ':branch_id' => $branchId,
         );
         
@@ -2000,7 +2002,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                     SELECT i.registration_transaction_id
                     FROM " . InvoiceHeader::model()->tableName() . " i
                     WHERE r.id = i.registration_transaction_id
-                ) AND r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL AND r.branch_id = :branch_id AND r.status NOT IN ('Finished')" . $plateNumberConditionSql . $customerIdConditionSql .
+                ) AND r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL AND r.branch_id = :branch_id AND r.status NOT IN ('Finished') AND 
+                    SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $plateNumberConditionSql . $customerIdConditionSql .
                     $carMakeConditionSql . $carModelConditionSql . $workOrderConditionSql . $transactionStatusConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
                 LIMIT {$limit}";
@@ -2010,7 +2013,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getOutstandingAllBranchWorkOrderVinfastData($limit, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $customerId) {
+    public static function getOutstandingAllBranchWorkOrderVinfastData($limit, $plateNumber, $startDate, $endDate, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $customerId) {
         $plateNumberConditionSql = '';
         $carMakeConditionSql = '';
         $carModelConditionSql = '';
@@ -2018,7 +2021,10 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $transactionStatusConditionSql = '';
         $customerIdConditionSql = '';
         
-        $params = array();
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
         
         if (!empty($plateNumber)) {
             $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
@@ -2066,7 +2072,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                     SELECT i.registration_transaction_id
                     FROM " . InvoiceHeader::model()->tableName() . " i
                     WHERE r.id = i.registration_transaction_id
-                ) AND r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL" . 
+                ) AND r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL AND SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . 
                     $plateNumberConditionSql . $carMakeConditionSql . $carModelConditionSql . $workOrderConditionSql . $transactionStatusConditionSql . 
                     $customerIdConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
@@ -2436,7 +2442,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('customer_work_order_number', $this->customer_work_order_number, true);
 
         $criteria->order = 'vehicle.entry_datetime ASC';
-        $criteria->addCondition("vehicle.status_location LIKE '%Masuk%' AND t.service_status = 'Pending' AND t.user_id_cancelled IS NULL");
+        $criteria->addCondition("vehicle.status_location LIKE '%Masuk%' AND t.user_id_cancelled IS NULL");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -2446,7 +2452,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         ));
     }
     
-    public function searchByProcessStatusLocation() {
+    public function searchByExitStatusLocation() {
         $criteria = new CDbCriteria;
 
         $criteria->with = array(
@@ -2509,8 +2515,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('customer_document_order_number', $this->customer_document_order_number, true);
         $criteria->compare('customer_work_order_number', $this->customer_work_order_number, true);
 
-        $criteria->order = 'vehicle.entry_datetime ASC';
-        $criteria->addCondition("vehicle.status_location LIKE '%Masuk%' AND t.service_status = 'On-Progress' AND t.user_id_cancelled IS NULL");
+        $criteria->order = 'vehicle.exit_datetime ASC';
+        $criteria->addCondition("vehicle.status_location LIKE '%Keluar%' AND t.user_id_cancelled IS NULL");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
