@@ -120,11 +120,11 @@
                         'url' => array('/vinfast/vehicleStatus/index'), 
                         'visible' => (Yii::app()->user->checkAccess('vehicleStatusView')),
                     ),
-                    array(
-                        'label' => 'Piutang Overview', 
-                        'url' => array('/vinfast/receivableOverview/summary'),
-//                        'visible' => Yii::app()->user->checkAccess('outstandingWorkOrderView'),
-                    ),
+//                    array(
+//                        'label' => 'Piutang Overview', 
+//                        'url' => array('/vinfast/receivableOverview/summary'),
+////                        'visible' => Yii::app()->user->checkAccess('outstandingWorkOrderView'),
+//                    ),
                 ),
             )); ?>
         </li>

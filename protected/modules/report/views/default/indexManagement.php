@@ -178,6 +178,11 @@
                                         'visible' => Yii::app()->user->checkAccess('director'),
                                         'linkOptions' => array('target' => '_blank'), 
                                     ),
+                                    array(
+                                        'label' => 'Piutang Overview', 
+                                        'url' => array('/report/receivableOverview/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director'),
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

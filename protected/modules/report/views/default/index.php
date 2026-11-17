@@ -313,11 +313,6 @@
                                     'visible' => Yii::app()->user->checkAccess('customerUnpaidInvoiceReport'),
                                 ),
                                 array(
-                                    'label' => 'Piutang Overview', 
-                                    'url' => array('/report/receivableOverview/summary'), 
-                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport'),
-                                ),
-                                array(
                                     'label' => 'Piutang Customer Summary', 
                                     'url' => array('/report/receivableCustomer/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport'),
