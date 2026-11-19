@@ -527,4 +527,13 @@ class Vehicle extends CActiveRecord {
             ),
         ));
     }
+    
+    public function getLastServiceTransaction() {
+        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array(
+            'vehicle_id' => $this->id, 
+            'user_id_cancelled' => null
+        ), array('order' => 't.id DESC'));
+        
+        return empty($invoiceHeader) ? '' : $invoiceHeader->invoice_date;
+    }
 }

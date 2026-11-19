@@ -105,15 +105,15 @@ class SaleRetailController extends Controller {
         $worksheet->mergeCells('A2:Z2');
         $worksheet->mergeCells('A3:Z3');
 
-        $worksheet->getStyle('A1:Z5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:Z5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:AB5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:AB5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Rincian Penjualan per Customer');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:Z5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:AB5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Customer ID');
@@ -137,16 +137,21 @@ class SaleRetailController extends Controller {
         $worksheet->setCellValue('T5', 'Last Parts');
         $worksheet->setCellValue('U5', 'Invoice #');
         $worksheet->setCellValue('V5', 'Invoice Total');
-        $worksheet->setCellValue('W5', 'VSC #');
-        $worksheet->setCellValue('X5', 'Note from WO');
-        $worksheet->setCellValue('Y5', 'Salesman');
-        $worksheet->setCellValue('Z5', 'Mechanic');
+        $worksheet->setCellValue('W5', 'Pelunasan');
+        $worksheet->setCellValue('X5', 'Sisa');
+        $worksheet->setCellValue('Y5', 'VSC #');
+        $worksheet->setCellValue('Z5', 'Note from WO');
+        $worksheet->setCellValue('AA5', 'Salesman');
+        $worksheet->setCellValue('AB5', 'Mechanic');
 
-        $worksheet->getStyle('A5:Z5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:AB5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         $ordinal = 1;
         $totalSale = '0.00';
+        $totalPayment = '0.00';
+        $totalRemaining = '0.00';
+        
         foreach ($customerSaleReport as $i => $dataItem) {
             $params = array(
                 ':customer_id' => $dataItem['customer_id'],
@@ -165,7 +170,9 @@ class SaleRetailController extends Controller {
             ));
             if (!empty($saleReportData)) {
                 foreach ($saleReportData as $saleReportRow) {
-                    $grandTotal = CHtml::value($saleReportRow, 'total_price'); 
+                    $totalPrice = CHtml::value($saleReportRow, 'total_price'); 
+                    $paymentAmount = CHtml::value($saleReportRow, 'payment_amount');
+                    $paymentLeft = CHtml::value($saleReportRow, 'payment_left');
 
                     $worksheet->setCellValue("A{$counter}", $ordinal);
                     $worksheet->setCellValue("B{$counter}", $dataItem['customer_id']);
@@ -188,23 +195,29 @@ class SaleRetailController extends Controller {
                     $worksheet->setCellValue("S{$counter}", CHtml::value($saleReportRow, 'productLists'));
                     $worksheet->setCellValue("T{$counter}", CHtml::value($saleReportRow, 'serviceLists'));
                     $worksheet->setCellValue("U{$counter}", CHtml::value($saleReportRow, 'invoice_number'));
-                    $worksheet->setCellValue("W{$counter}", $grandTotal);
-                    $worksheet->setCellValue("X{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.note'));
-                    $worksheet->setCellValue("Y{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.employeeIdSalesPerson.name'));
-                    $worksheet->setCellValue("Z{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.employeeIdAssignMechanic.name'));
+                    $worksheet->setCellValue("V{$counter}", $totalPrice);
+                    $worksheet->setCellValue("W{$counter}", $paymentAmount);
+                    $worksheet->setCellValue("X{$counter}", $paymentLeft);
+                    $worksheet->setCellValue("Z{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.note'));
+                    $worksheet->setCellValue("AA{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.employeeIdSalesPerson.name'));
+                    $worksheet->setCellValue("AB{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.employeeIdAssignMechanic.name'));
                     
-                    $totalSale += $grandTotal;
+                    $totalSale += $totalPrice;
+                    $totalPayment += $paymentAmount;
+                    $totalRemaining += $paymentLeft;
                     $counter++; $ordinal++;
                 }
             }
         }
-        $worksheet->getStyle("A{$counter}:Z{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:Z{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:AB{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:AB{$counter}")->getFont()->setBold(true);
         
-        $worksheet->setCellValue("T{$counter}", 'TOTAL');
-        $worksheet->setCellValue("W{$counter}", $totalSale);
+        $worksheet->setCellValue("U{$counter}", 'TOTAL');
+        $worksheet->setCellValue("V{$counter}", $totalSale);
+        $worksheet->setCellValue("W{$counter}", $totalPayment);
+        $worksheet->setCellValue("X{$counter}", $totalRemaining);
 
-        for ($col = 'A'; $col !== 'Z'; $col++) {
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

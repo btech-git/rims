@@ -484,8 +484,8 @@ class Service extends CActiveRecord {
             $params[':customer_type'] = $customerType;
         }
         
-        $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number, p.total_price, t.work_order_number,
-                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, i.name AS insurance, t.customer_work_order_number
+        $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number, p.total_price, t.work_order_number, r.id AS invoice_id,
+                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, i.name AS insurance, t.customer_work_order_number, t.id AS registration_id
                 FROM " . InvoiceDetail::model()->tableName() . " p 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " t ON t.id = r.registration_transaction_id

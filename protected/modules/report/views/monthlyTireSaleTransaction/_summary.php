@@ -1,101 +1,94 @@
-<div style="text-align: right">
-    <?php echo ReportHelper::summaryText($productDataProvider); ?>
-</div>
-
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
     <div style="font-size: larger">Penjualan Ban Bulanan</div>
-    <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> - <?php echo CHtml::encode($year); ?></div>
+    <div><?php echo 'Periode: ' . CHtml::encode($monthList[$month]) . ' ' . CHtml::encode($year); ?></div>
 </div>
 
 <br />
 
-<table>
-    <thead style="position: sticky; top: 0">
-        <tr>
-            <th style="text-align: center">ID</th>
-            <th style="text-align: center">Code</th>
-            <th style="text-align: center">Name</th>
-            <th style="text-align: center">Size</th>
-            <th style="text-align: center">Brand</th>
-            <th style="text-align: center">Category</th>
-            <th style="text-align: center">Unit</th>
-            <?php foreach ($branches as $branch): ?>
-                <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
-            <?php endforeach; ?>
-            <th style="text-align: center">Total</th>
-        </tr>
-    </thead>
-    
-    <tbody>
-        <?php $groupTotalSums = array(); ?>
-        <?php foreach ($productDataProvider->data as $product): ?>
-            <?php $tireSaleTotalQuantities = $product->getTireSaleTotalQuantitiesReport($year, $month); ?>
-            <?php $totalQuantity = 0; ?>
-            <?php $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year); ?>
-            <?php $yearMonth = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT); ?>
-            <?php $startDate = $yearMonth . '-01'; ?>
-            <?php $endDate = $yearMonth . '-' . $daysInMonth; ?>
+<?php $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year); ?>
+
+<div class="table_wrapper">
+    <table class="responsive">
+        <thead>
             <tr>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?></td>
-                <td>
-                    <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
-                    <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
-                    <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
-                </td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'masterSubCategoryCode')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
-                
+                <th colspan="8"></th>
                 <?php foreach ($branches as $branch): ?>
-                    <?php $saleQuantity = '0'; ?>
-                    <?php foreach ($tireSaleTotalQuantities as $i => $tireSaleTotalQuantity): ?>
-                        <?php if ($tireSaleTotalQuantity['branch_id'] == $branch->id): ?>
-                            <?php $saleQuantity = CHtml::value($tireSaleTotalQuantities[$i], 'total_quantity'); ?>
-                            <?php break; ?>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                    <td style="text-align: center">
-                        <?php echo CHtml::link($saleQuantity, array(
-                            '/report/monthlyTireSaleTransaction/transactionInfo', 
-                            'productId' => $product->id, 
-                            'startDate' => $startDate, 
-                            'endDate' => $endDate,
-                            'branchId' => $branch->id,
-                        ), array('target' => '_blank')); ?>
-                    </td>
-                    <?php $totalQuantity += $saleQuantity; ?>
-                    <?php if (!isset($groupTotalSums[$branch->id])): ?>
-                        <?php $groupTotalSums[$branch->id] = 0; ?>
-                    <?php endif; ?>
-                    <?php $groupTotalSums[$branch->id] += $saleQuantity; ?>
+                    <th style="text-align: center" colspan="5"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
                 <?php endforeach; ?>
-                <td style="text-align: center">
-                    <?php echo CHtml::link($totalQuantity, array(
-                        '/report/monthlyTireSaleTransaction/transactionInfo', 
-                        'productId' => $product->id, 
-                        'startDate' => $startDate, 
-                        'endDate' => $endDate,
-                        'branchId' => null,
-                    ), array('target' => '_blank')); ?>
-                </td>
+                <th style="text-align: center" colspan="5">All Branch</th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-    <tfoot>
-        <tr>
-            <td style="text-align: right" colspan="7">Total</td>
-            <?php $grandTotal = 0; ?>
-            <?php foreach ($branches as $branch): ?>
-                <?php if (!isset($groupTotalSums[$branch->id])): ?>
-                    <?php $groupTotalSums[$branch->id] = 0; ?>
-                <?php endif; ?>
-                <td style="text-align: center"><?php echo CHtml::encode($groupTotalSums[$branch->id]); ?></td>
-                <?php $grandTotal += $groupTotalSums[$branch->id]; ?>
+            <tr>
+                <th style="width: 10px">No.</th>
+                <th style="text-align: center">ID</th>
+                <th style="text-align: center">Code</th>
+                <th style="text-align: center">Name</th>
+                <th style="text-align: center">Size</th>
+                <th style="text-align: center">Brand</th>
+                <th style="text-align: center">Category</th>
+                <th style="text-align: center">Unit</th>
+                <?php foreach ($branches as $branch): ?>
+                    <th style="text-align: center">Total Jual</th>
+                    <th style="text-align: center">Average Jual</th>
+                    <th style="text-align: center">Klasifikasi</th>
+                    <th style="text-align: center">Min Stok</th>
+                    <th style="text-align: center">Posisi Stok</th>
+                <?php endforeach; ?>
+                <th style="text-align: center">Total Jual</th>
+                <th style="text-align: center">Average Jual</th>
+                <th style="text-align: center">Klasifikasi</th>
+                <th style="text-align: center">Min Stok</th>
+                <th style="text-align: center">Posisi Stok</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $ordinal = 0; ?>
+            <?php foreach ($monthlyTireSaleTransactionReportData as $productId => $monthlyTireSaleTransactionReportDataItem): ?>
+                <?php $product = Product::model()->findByPk($productId); ?>
+                <?php $multiplier = in_array($product->product_sub_master_category_id, array(39, 40, 41, 42)) && $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1; ?>
+                <tr>
+                    <td style="text-align: center"><?php echo ++$ordinal; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
+                    <td><?php echo $monthlyTireSaleTransactionReportDataItem['product_name']; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?></td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
+                    </td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
+
+                    <?php $invoiceTotals = array(); ?>
+                    <?php $quantityStocks = array(); ?>
+                    <?php foreach ($branches as $branch): ?>
+                        <?php $minimumStock = $multiplier * $product->minimum_stock; ?>
+                        <?php $invoiceOriginal = isset($monthlyTireSaleTransactionReportDataItem['totals'][$branch->id]) ? $monthlyTireSaleTransactionReportDataItem['totals'][$branch->id] : '0.00'; ?>
+                        <?php $invoiceTotal = $multiplier * $invoiceOriginal; ?>
+                        <?php $quantityStockOriginal = isset($inventoryAllBranchCurrentStockData[$productId][$branch->id]) ? $inventoryAllBranchCurrentStockData[$productId][$branch->id] : '0.00'; ?>
+                        <?php $quantityStock = $multiplier * $quantityStockOriginal; ?>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $invoiceTotal)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $invoiceTotal / $numberOfDays)); ?></td>
+                        <td style="text-align: right"></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $minimumStock)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantityStock)); ?></td>
+                        <?php $invoiceTotals[] = $invoiceTotal; ?>
+                        <?php $quantityStocks[] = $quantityStock; ?>
+                    <?php endforeach; ?>
+                    <?php $invoiceTotalSum = array_sum($invoiceTotals); ?>
+                    <?php $quantityStockSum = array_sum($quantityStocks); ?>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $invoiceTotalSum)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $invoiceTotalSum / $numberOfDays)); ?></td>
+                    <td style="text-align: right"></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $minimumStock)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantityStockSum)); ?></td>
+                </tr>
             <?php endforeach; ?>
-            <td style="text-align: center"><?php echo CHtml::encode($grandTotal); ?></td>
-        </tr>
-    </tfoot>
-</table>
+        </tbody>
+    </table>
+</div>

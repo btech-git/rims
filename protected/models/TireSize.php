@@ -148,6 +148,6 @@ class TireSize extends CActiveRecord {
 
     public function getTireName() {
         
-        return $this->section_width . ' ' . $this->aspect_ratio . ' ' . $this->construction_type . ' ' . $this->rim_diameter . ' ' . $this->load_rating . ' ' . $this->speed_rating;
+        return $this->section_width . '/' . $this->aspect_ratio . ' ' . $this->construction_type . '' . $this->rim_diameter . ' ' . $this->load_rating . ' ' . $this->speed_rating;
     }
 }

@@ -52,7 +52,6 @@ class YearlyProductSaleTransactionController extends Controller {
             $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['unit_name'] = $reportItem['unit_name'];
             $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['totals'][$monthValue] = $reportItem['total_quantity'];
         }
-
         
         $productIds = array_map(function($reportItem) { return $reportItem['product_id']; }, $yearlyProductSaleTransactionReport);
         

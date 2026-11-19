@@ -187,9 +187,11 @@ class SaleRetailProductDetailController extends Controller {
         foreach ($dataProvider->data as $header) {
             $saleRetailData = $header->getSaleRetailProductDetailReport($startDate, $endDate, $branchId, $customerType);
             $totalSale = '0.00';
+            $totalQuantity = '0';
             
             foreach ($saleRetailData as $saleRetailRow) {
                 $total = $saleRetailRow['total_price'];
+                $quantity = $saleRetailRow['quantity'];
 
                 $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'id'));
                 $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'manufacturer_code'));
@@ -204,10 +206,11 @@ class SaleRetailProductDetailController extends Controller {
                 $worksheet->setCellValue("K{$counter}", $saleRetailRow['car_make'] . ' - ' . $saleRetailRow['car_model'] . ' - ' . $saleRetailRow['car_sub_model']);
                 $worksheet->setCellValue("L{$counter}", $saleRetailRow['work_order_number']);
                 $worksheet->setCellValue("M{$counter}", $saleRetailRow['customer_work_order_number']);
-                $worksheet->setCellValue("N{$counter}", $saleRetailRow['quantity']);
+                $worksheet->setCellValue("N{$counter}", $quantity);
                 $worksheet->setCellValue("O{$counter}", $saleRetailRow['unit_price']);
                 $worksheet->setCellValue("P{$counter}", $total);
 
+                $totalQuantity += $quantity;
                 $totalSale += $total;
                 $counter++;
             }
@@ -215,7 +218,8 @@ class SaleRetailProductDetailController extends Controller {
             $worksheet->getStyle("A{$counter}:P{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
             $worksheet->getStyle("A{$counter}:P{$counter}")->getFont()->setBold(true);
 
-            $worksheet->setCellValue("O{$counter}", 'TOTAL');
+            $worksheet->setCellValue("M{$counter}", 'TOTAL');
+            $worksheet->setCellValue("N{$counter}", $totalQuantity);
             $worksheet->setCellValue("P{$counter}", $totalSale);
             $counter++;$counter++;
         }

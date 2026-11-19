@@ -9,78 +9,104 @@
 
 <br />
 
-<?php $startDate = $year . '-01-01'; ?>
-<?php $endDate = $year . '-12-31'; ?>
+<?php $maxMonthNum = (int) $year === (int) $yearNow ? $monthNow : 12; ?>
 
-<table style="width: 110%">
+<div class="table_wrapper">
+    <table class="responsive">
     <thead>
         <tr>
-            <th style="width: 3%">No.</th>
-            <th style="width: 5%">ID</th>
-            <th style="width: 10%">Code</th>
-            <th style="width: 10%">Name</th>
-            <th style="width: 10%">Size</th>
-            <th style="width: 10%">Brand</th>
-            <th style="width: 10%">Category</th>
+            <th>No.</th>
+            <th>ID</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Brand</th>
+            <th>Category</th>
             <?php for ($month = 1; $month <= 12; $month++): ?>
-                <th style="width: 256px"><?php echo CHtml::encode($monthList[$month]); ?></th>
+                <th><?php echo CHtml::encode($monthList[$month]); ?></th>
             <?php endfor; ?>
             <th>Total</th>
+            <th style="text-align: center">Jual Rata2</th>
+            <th style="text-align: center">Jual Min</th>
+            <th style="text-align: center">Jual Max</th>
+            <th style="text-align: center">Jual Median</th>
+            <th style="text-align: center">Klasifikasi</th>
+            <th style="text-align: center">Stock</th>
+            <th style="text-align: center">Min</th>
+            <th style="text-align: center">Target</th>
+            <th style="text-align: center">Order Plan</th>
         </tr>
     </thead>
     <tbody>
-        <?php $groupTotalSums = array(); ?>
-        <?php $autoNumber = 1; ?>
-        <?php foreach ($invoiceTireInfo as $invoiceTireSaleInfo): ?>
+            <?php $ordinal = 0; ?>
+            <?php foreach ($yearlyTireSaleTransactionReportData as $productId => $yearlyTireSaleTransactionReportDataItem): ?>
             <tr>
-                <td style="text-align: center"><?php echo $autoNumber; ?></td>
-                <td><?php echo $invoiceTireSaleInfo['product_id']; ?></td>
-                <td><?php echo $invoiceTireSaleInfo['product_code']; ?></td>
-                <td><?php echo $invoiceTireSaleInfo['product_name']; ?></td>
-                <td><?php echo $invoiceTireSaleInfo['tire_name']; ?></td>
+                <td style="text-align: center"><?php echo ++$ordinal; ?></td>
+                <td><?php echo $yearlyTireSaleTransactionReportDataItem['product_id']; ?></td>
+                <td><?php echo $yearlyTireSaleTransactionReportDataItem['product_code']; ?></td>
+                <td><?php echo $yearlyTireSaleTransactionReportDataItem['product_name']; ?></td>
+                <td><?php echo $yearlyTireSaleTransactionReportDataItem['tire_name']; ?></td>
                 <td>
-                    <?php echo $invoiceTireSaleInfo['brand_name']; ?> -
-                    <?php echo $invoiceTireSaleInfo['sub_brand_name']; ?> -
-                    <?php echo $invoiceTireSaleInfo['sub_brand_series_name']; ?>
+                    <?php echo $yearlyTireSaleTransactionReportDataItem['brand_name']; ?> -
+                    <?php echo $yearlyTireSaleTransactionReportDataItem['sub_brand_name']; ?> -
+                    <?php echo $yearlyTireSaleTransactionReportDataItem['sub_brand_series_name']; ?>
                 </td>
                 <td>
-                    <?php echo $invoiceTireSaleInfo['master_category_name']; ?> -
-                    <?php echo $invoiceTireSaleInfo['sub_category_name']; ?> -
-                    <?php echo $invoiceTireSaleInfo['sub_master_category_name']; ?>
+                    <?php echo $yearlyTireSaleTransactionReportDataItem['master_category_name']; ?> -
+                    <?php echo $yearlyTireSaleTransactionReportDataItem['sub_category_name']; ?> -
+                    <?php echo $yearlyTireSaleTransactionReportDataItem['sub_master_category_name']; ?>
                 </td>
                 <?php $totalSum = 0; ?>
                 <?php for ($month = 1; $month <= 12; $month++): ?>
-                    <?php $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year); ?>
-                    <?php $yearMonth = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT); ?>
-                    <?php $startDate = $yearMonth . '-01'; ?>
-                    <?php $endDate = $yearMonth . '-' . $daysInMonth; ?>
-                    <?php $total = isset($invoiceTireSaleInfo['totals'][$month]) ? $invoiceTireSaleInfo['totals'][$month] : ''; ?>
-                    <td style="text-align: right">
-                        <?php echo CHtml::link($total, array(
-                            '/report/yearlyTireSaleTransaction/transactionInfo', 
-                            'productId' => $invoiceTireSaleInfo['product_id'], 
-                            'startDate' => $startDate, 
-                            'endDate' => $endDate,
-                            'branchId' => $branchId,
-                        ), array('target' => '_blank')); ?>
-                    </td>
-                    <?php $totalSum += $total; ?>
+                        <?php $invoiceTotal = isset($yearlyTireSaleTransactionReportDataItem['totals'][$month]) ? $yearlyTireSaleTransactionReportDataItem['totals'][$month] : '0.00'; ?>
+                    <?php if ($month <= $maxMonthNum): ?>
+                        <td style="text-align: right">
+                            <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $invoiceTotal), array(
+                                '/report/yearlyTireSaleTransaction/transactionInfo', 
+                                'productId' => $productId, 
+                                'month' => $month, 
+                                'year' => $year,
+                                'branchId' => $branchId,
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                    <?php else: ?>
+                        <td></td>
+                    <?php endif; ?>
+                    <?php $invoiceTotals[] = $invoiceTotal; ?>
                     <?php if (!isset($groupTotalSums[$month])): ?>
                         <?php $groupTotalSums[$month] = 0; ?>
                     <?php endif; ?>
-                    <?php $groupTotalSums[$month] += $total; ?>
+                    <?php $groupTotalSums[$month] += $invoiceTotal; ?>
                 <?php endfor; ?>
+                <?php $invoiceTotalSum = array_sum($invoiceTotals); ?>
                 <td style="text-align: right">
-                    <?php echo CHtml::link($totalSum, array(
+                    <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $invoiceTotalSum), array(
                         '/report/yearlyTireSaleTransaction/transactionInfo', 
-                        'productId' => $invoiceTireSaleInfo['product_id'], 
-                        'startDate' => $startDate, 
-                        'endDate' => $endDate,
+                        'productId' => $productId, 
+                        'month' => $month, 
+                        'year' => $year,
                         'branchId' => $branchId,
                     ), array('target' => '_blank')); ?>
                 </td>
+                <?php $invoiceMean = $invoiceTotalSum / $maxMonthNum; ?>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceMean)); ?></td>
+                <?php $invoiceMinAmount = min($invoiceTotals); ?>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $invoiceMinAmount)); ?></td>
+                <?php $invoiceMaxAmount = max($invoiceTotals); ?>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $invoiceMaxAmount)); ?></td>
+                <?php sort($invoiceTotals); ?>
+                <?php $invoiceMedian = ($invoiceTotals[5] + $invoiceTotals[6]) / 2; ?>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $invoiceMedian)); ?></td>
+                <td></td>
+                <?php $quantityStock = isset($inventoryCurrentStockData[$productId]) ? $inventoryCurrentStockData[$productId] : '0.00'; ?>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantityStock)); ?></td>
+                <?php $product = Product::model()->findByPk($productId); ?>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $product->minimum_stock)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $invoiceMedian)); ?></td>
+                <td style="text-align: right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $product->minimum_stock - $quantityStock)); ?>
+                </td>
             </tr>
-            <?php $autoNumber++; ?>
         <?php endforeach; ?>
     </tbody>
     <tfoot>
@@ -91,11 +117,12 @@
                 <?php if (!isset($groupTotalSums[$month])): ?>
                     <?php $groupTotalSums[$month] = 0; ?>
                 <?php endif; ?>
-                <td style="text-align: right"><?php echo CHtml::encode($groupTotalSums[$month]); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $groupTotalSums[$month])); ?></td>
                 <?php $grandTotal += $groupTotalSums[$month]; ?>
             <?php endfor; ?>
-            <td style="text-align: right"><?php echo CHtml::encode($grandTotal); ?></td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
+            <td colspan="9">&nbsp;</td>
         </tr>
     </tfoot>
 </table>
-    
+</div>

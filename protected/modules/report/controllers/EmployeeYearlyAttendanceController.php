@@ -72,6 +72,44 @@ class EmployeeYearlyAttendanceController extends Controller {
         ));
     }
     
+    public function actionAttendanceDetail() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $employeeId = (isset($_GET['EmployeeId'])) ? $_GET['EmployeeId'] : '';
+        $year = (isset($_GET['Year'])) ? $_GET['Year'] : date('Y');
+        $month = (isset($_GET['Month'])) ? $_GET['Month'] : date('m');
+
+        $employeeTimesheet = new EmployeeTimesheet('search');
+        $employeeTimesheet->unsetAttributes();
+        
+        if (isset($_GET['EmployeeTimesheet'])) {
+            $employeeTimesheet->attributes = $_GET['EmployeeTimesheet'];
+        }
+
+        $employeeTimesheetDataProvider = $employeeTimesheet->searchByReport();
+        $employeeTimesheetDataProvider->criteria->addCondition("t.employee_id = :employee_id AND YEAR(t.date) = :year AND MONTH(t.date) = :month");
+        $employeeTimesheetDataProvider->criteria->params = array(
+            ':employee_id' => $employeeId, 
+            ':year' => $year,
+            ':month' => $month,
+        );
+        $employee = Employee::model()->findByPk($employeeId);
+        
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelTransactionJournal($transactionJournalSummary, $coaId, $startDate, $endDate, $branchId);
+//        }
+
+        $this->render('attendanceDetail', array(
+            'employeeTimesheet' => $employeeTimesheet,
+            'employeeTimesheetDataProvider' => $employeeTimesheetDataProvider,
+            'year' => $year,
+            'month' => $month,
+            'employeeId' => $employeeId,
+            'employee' => $employee,
+        ));
+    }
+
     protected function saveToExcel($employeeYearlyAttendanceData, $yearList, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

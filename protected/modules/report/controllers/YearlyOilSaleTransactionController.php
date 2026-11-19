@@ -24,6 +24,7 @@ class YearlyOilSaleTransactionController extends Controller {
         ini_set('memory_limit', '1024M');
         
         $yearNow = date('Y');
+        $monthNow = date('m');
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         $productId = isset($_GET['ProductId']) ? $_GET['ProductId'] : '';
         $productCode = isset($_GET['ProductCode']) ? $_GET['ProductCode'] : '';
@@ -32,46 +33,37 @@ class YearlyOilSaleTransactionController extends Controller {
         $brandId = (isset($_GET['BrandId'])) ? $_GET['BrandId'] : '';
         $subBrandId = (isset($_GET['SubBrandId'])) ? $_GET['SubBrandId'] : '';
         $subBrandSeriesId = (isset($_GET['SubBrandSeriesId'])) ? $_GET['SubBrandSeriesId'] : '';
-        $masterCategoryId = (isset($_GET['MasterCategoryId'])) ? $_GET['MasterCategoryId'] : 4;
         $subCategoryId = (isset($_GET['SubCategoryId'])) ? $_GET['SubCategoryId'] : '';
         $subMasterCategoryId = (isset($_GET['SubMasterCategoryId'])) ? $_GET['SubMasterCategoryId'] : '';
         $oilSaeId = isset($_GET['OilSaeId']) ? $_GET['OilSaeId'] : '';
         $convertToLitre = isset($_GET['ConvertToLitre']) ? $_GET['ConvertToLitre'] : '';
         
-        if (isset($_GET['ResetFilter'])) {
-            $year = $yearNow;
-            $productId = '';
-            $productCode = '';
-            $productName = '';
-            $branchId = '';
-            $brandId = '';
-            $subBrandId = '';
-            $subBrandSeriesId = '';
-            $masterCategoryId = 4;
-            $subCategoryId = '';
-            $subMasterCategoryId = '';
-            $oilSaeId = '';
-            $convertToLitre = '';
+        $yearlyOilSaleTransactionReportData = array();
+        $yearlyOilSaleTransactionReport = InvoiceDetail::getYearlyOilSaleTransactionReport($year, $productId, $productCode, $productName, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $subCategoryId, $subMasterCategoryId, $oilSaeId);
+        foreach ($yearlyOilSaleTransactionReport as $reportItem) {
+            $monthValue = intval($reportItem['invoice_month']);
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['product_id'] = $reportItem['product_id'];
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['product_name'] = $reportItem['product_name'];
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['product_code'] = $reportItem['product_code'];
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['brand_name'] = $reportItem['brand_name'];
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['sub_brand_name'] = $reportItem['sub_brand_name'];
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['sub_brand_series_name'] = $reportItem['sub_brand_series_name'];
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['master_category_name'] = $reportItem['master_category_name'];
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['sub_category_name'] = $reportItem['sub_category_name'];
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['sub_master_category_name'] = $reportItem['sub_master_category_name'];
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['unit_name'] = $reportItem['unit_name'];
+            $yearlyOilSaleTransactionReportData[$reportItem['product_id']]['totals'][$monthValue] = $reportItem['total_quantity'];
         }
         
-        $invoiceOilInfo = array();
-        $yearlySaleSummary = InvoiceDetail::getYearlyOilSaleTransactionData($year, $productId, $productCode, $productName, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $subCategoryId, $subMasterCategoryId, $oilSaeId);
-        foreach ($yearlySaleSummary as $yearlySaleSummaryItem) {
-            $monthValue = intval(substr($yearlySaleSummaryItem['year_month_value'], 4, 2));
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['product_id'] = $yearlySaleSummaryItem['product_id'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['product_name'] = $yearlySaleSummaryItem['product_name'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['product_code'] = $yearlySaleSummaryItem['product_code'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['brand_name'] = $yearlySaleSummaryItem['brand_name'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['sub_brand_name'] = $yearlySaleSummaryItem['sub_brand_name'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['sub_brand_series_name'] = $yearlySaleSummaryItem['sub_brand_series_name'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['master_category_name'] = $yearlySaleSummaryItem['master_category_name'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['sub_category_name'] = $yearlySaleSummaryItem['sub_category_name'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['sub_master_category_name'] = $yearlySaleSummaryItem['sub_master_category_name'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['oil_name'] = $yearlySaleSummaryItem['oil_name'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['unit_name'] = $yearlySaleSummaryItem['unit_name'];
-            $invoiceOilInfo[$yearlySaleSummaryItem['product_id']]['totals'][$monthValue] = $yearlySaleSummaryItem['total_quantity'];
+        $productIds = array_map(function($reportItem) { return $reportItem['product_id']; }, $yearlyOilSaleTransactionReport);
+        
+        $inventoryCurrentStocks = InventoryDetail::getInventoryCurrentStocks($productIds, $branchId);
+        
+        $inventoryCurrentStockData = array();
+        foreach ($inventoryCurrentStocks as $inventoryCurrentStockItem) {
+            $inventoryCurrentStockData[$inventoryCurrentStockItem['product_id']] = $inventoryCurrentStockItem['total_stock'];
         }
-
+        
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;
@@ -79,22 +71,28 @@ class YearlyOilSaleTransactionController extends Controller {
         
         $unitConversion = UnitConversion::model()->findByAttributes(array('unit_to_id' => $convertToLitre));
         
-        if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($invoiceOilInfo, $year, $branchId, $unitConversion, $convertToLitre);
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
         }
-
+        
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($yearlyOilSaleTransactionReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow, $unitConversion);
+        }
+        
         $this->render('summary', array(
+            'yearlyOilSaleTransactionReportData' => $yearlyOilSaleTransactionReportData,
+            'inventoryCurrentStockData' => $inventoryCurrentStockData,
             'yearList' => $yearList,
             'year' => $year,
+            'yearNow' => $yearNow,
+            'monthNow' => $monthNow,
             'productId' => $productId,
             'productCode' => $productCode,
             'productName' => $productName,
             'branchId' => $branchId,
-            'invoiceOilInfo' => $invoiceOilInfo,
             'brandId' => $brandId,
             'subBrandId' => $subBrandId,
             'subBrandSeriesId' => $subBrandSeriesId,
-            'masterCategoryId' => $masterCategoryId,
             'subCategoryId' => $subCategoryId,
             'subMasterCategoryId' => $subMasterCategoryId,
             'convertToLitre' => $convertToLitre,
@@ -144,18 +142,6 @@ class YearlyOilSaleTransactionController extends Controller {
         }
     }
 
-    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : '';
-            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
-
-            $this->renderPartial('_productSubMasterCategorySelect', array(
-                'masterCategoryId' => $masterCategoryId,
-                'subMasterCategoryId' => $subMasterCategoryId,
-            ));
-        }
-    }
-
     public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
@@ -168,7 +154,7 @@ class YearlyOilSaleTransactionController extends Controller {
         }
     }
 
-    protected function saveToExcel($invoiceOilInfo, $year, $branchId, $unitConversion, $convertToLitre) {
+    protected function saveToExcel($yearlyOilSaleTransactionReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow, $unitConversion) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -189,18 +175,11 @@ class YearlyOilSaleTransactionController extends Controller {
         $worksheet->mergeCells('A2:U2');
         $worksheet->mergeCells('A3:U3');
         
-        $worksheet->getStyle('A1:U3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:U3')->getFont()->setBold(true);
-        
-        $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Penjualan Oli Tahunan');
         $worksheet->setCellValue('A3', $year);
 
-        $worksheet->getStyle("A5:U5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:U5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle('A5:U5')->getFont()->setBold(true);
-
+        $maxMonthNum = (int) $year === (int) $yearNow ? $monthNow : 12;
         $monthList = array(
             1 => 'Jan',
             2 => 'Feb',
@@ -226,61 +205,96 @@ class YearlyOilSaleTransactionController extends Controller {
         $worksheet->setCellValue("H5", 'Satuan');
         $columnCounter = 'I';
         for ($month = 1; $month <= 12; $month++) {
-            $worksheet->setCellValue("{$columnCounter}5", CHtml::encode($monthList[$month]));
+            $worksheet->setCellValue("{$columnCounter}5", $monthList[$month]);
             $columnCounter++;
         }
         $worksheet->setCellValue("{$columnCounter}5", 'Total');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Jual Rata2');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Jual Min');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Jual Max');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Jual Median');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Klasifikasi');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Stock');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Min');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Target');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Order Plan');
+        
         $counter = 6;
+        $ordinal = 0;
+        $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A1:{$columnCounter}5")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:{$columnCounter}5")->getFont()->setBold(true);
 
-        $groupTotalSums = array();
-        $autoNumber = 1;
-        foreach ($invoiceOilInfo as $invoiceOilSaleInfo) {
-            $totalSum = 0;
-            $columnCounter = 'I';
-            $product = Product::model()->findByPk($invoiceOilSaleInfo['product_id']);
+        foreach ($yearlyOilSaleTransactionReportData as $productId => $yearlyOilSaleTransactionReportDataItem) {
+            $product = Product::model()->findByPk($productId);
             $multiplier = $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1;
-            $worksheet->setCellValue("A{$counter}", $autoNumber);
-            $worksheet->setCellValue("B{$counter}", $invoiceOilSaleInfo['product_id']);
-            $worksheet->setCellValue("C{$counter}", $invoiceOilSaleInfo['product_code']);
-            $worksheet->setCellValue("D{$counter}", $invoiceOilSaleInfo['product_name']);
-            $worksheet->setCellValue("E{$counter}", $invoiceOilSaleInfo['oil_name']);
-            $worksheet->setCellValue("F{$counter}", $invoiceOilSaleInfo['brand_name'] . ' - ' . $invoiceOilSaleInfo['sub_brand_name'] . ' - ' . $invoiceOilSaleInfo['sub_brand_series_name']);
-            $worksheet->setCellValue("G{$counter}", $invoiceOilSaleInfo['master_category_name'] . ' - ' . $invoiceOilSaleInfo['sub_category_name'] . ' - ' . $invoiceOilSaleInfo['sub_master_category_name']);
-            $worksheet->setCellValue("H{$counter}", empty($convertToLitre) ? $invoiceOilSaleInfo['unit_name'] : 'Liter');
+            $unitName = $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->unitTo->name : $product->unit->name;
+
+            $worksheet->setCellValue("A{$counter}", ++$ordinal);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($product, 'id'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($product, 'manufacturer_code'));
+            $worksheet->setCellValue("D{$counter}", $yearlyOilSaleTransactionReportDataItem['product_name']);
+            $worksheet->setCellValue("E{$counter}", CHtml::value($product, 'oilSae.oilName'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($product, 'brand.name') . ' - ' . CHtml::value($product, 'subBrand.name') . ' - ' . CHtml::value($product, 'subBrandSeries.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($product, 'productMasterCategory.name') . ' - ' . CHtml::value($product, 'productSubMasterCategory.name') . ' - ' . CHtml::value($product, 'productSubCategory.name'));
+            $worksheet->setCellValue("H{$counter}", $unitName);
+            
+            $invoiceTotals = array();
+            $columnCounter = 'I';
             for ($month = 1; $month <= 12; $month++) {
-                $originalQuantity = isset($invoiceOilSaleInfo['totals'][$month]) ? $invoiceOilSaleInfo['totals'][$month] : '';
-                $total = $multiplier * $originalQuantity;
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $total);
-                $totalSum += $total; 
-                if (!isset($groupTotalSums[$month])) {
-                    $groupTotalSums[$month] = 0;
+                $invoiceOriginal = isset($yearlyOilSaleTransactionReportDataItem['totals'][$month]) ? $yearlyOilSaleTransactionReportDataItem['totals'][$month] : '0.00';
+                $invoiceTotal = $multiplier * $invoiceOriginal;
+                
+                if ($month <= $maxMonthNum) {
+                    $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotal);
+                } else {
+                    $worksheet->setCellValue("{$columnCounter}{$counter}", '');
                 }
-                $groupTotalSums[$month] += $total;
+                
+                $invoiceTotals[] = $invoiceTotal;
                 $columnCounter++;
             }
             
-            $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($totalSum));
+            $invoiceTotalSum = array_sum($invoiceTotals);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSum);
+            $columnCounter++;
+            $invoiceMean = $multiplier * ($invoiceTotalSum / $maxMonthNum);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", round($invoiceMean, 2));
+            $columnCounter++;
+            $invoiceMinAmount = min($invoiceTotals);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMinAmount);
+            $columnCounter++;
+            $invoiceMaxAmount = max($invoiceTotals);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMaxAmount);
+            $columnCounter++;
+            sort($invoiceTotals);
+            $invoiceMedian = $multiplier * (($invoiceTotals[5] + $invoiceTotals[6]) / 2);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMedian);
+            $columnCounter++;$columnCounter++;
+            $quantityStockOriginal = isset($inventoryCurrentStockData[$productId]) ? $inventoryCurrentStockData[$productId] : '0.00';
+            $quantityStock = $multiplier * $quantityStockOriginal;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $quantityStock);
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock);
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMedian);
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock - $quantityStock);
+            $columnCounter++;
             $counter++;
-            $autoNumber++;
         }
         
-        $worksheet->getStyle("A{$counter}:U{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:U{$counter}")->getFont()->setBold(true);
-        
-        $worksheet->setCellValue("H{$counter}", 'Total');
-        $grandTotal = 0;
-        $footerCounter = 'I';
-        for ($month = 1; $month <= 12; $month++) {
-            if (!isset($groupTotalSums[$month])) {
-                $groupTotalSums[$month] = 0;
-            }
-            $worksheet->setCellValue("{$footerCounter}{$counter}", $groupTotalSums[$month]);
-            $grandTotal += $groupTotalSums[$month];
-            $footerCounter++;
-        }
-        $worksheet->setCellValue("{$footerCounter}{$counter}", $grandTotal);
-
-        for ($col = 'A'; $col !== 'Z'; $col++) {
+        for ($col = 'A'; $col !== 'BZ'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

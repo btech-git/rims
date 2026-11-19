@@ -9,7 +9,13 @@ Yii::app()->clientScript->registerScript('search', "
 ");
 ?>
 
-<div class="clear"></div>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div class="tab reportTab">
     <div class="tabHead"></div>
@@ -38,7 +44,6 @@ Yii::app()->clientScript->registerScript('search', "
                         'brandId' => $brandId,
                         'subBrandId' => $subBrandId,
                         'subBrandSeriesId' => $subBrandSeriesId,
-                        'masterCategoryId' => $masterCategoryId,
                         'subCategoryId' => $subCategoryId,
                         'subMasterCategoryId' => $subMasterCategoryId,
                         'convertToLitre' => $convertToLitre,
@@ -70,17 +75,19 @@ Yii::app()->clientScript->registerScript('search', "
 
             <div class="relative">
                 <div class="reportDisplay">
-                    <?php $dataCount = count($invoiceOilInfo); ?>
+                    <?php $dataCount = count($yearlyOilSaleTransactionReportData); ?>
                     <?php if ($dataCount > 0): ?>
                         <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
                     <?php endif; ?>
                 </div>
                 
                 <?php $this->renderPartial('_summary', array(
-                    'invoiceOilInfo' => $invoiceOilInfo,
+                    'yearlyOilSaleTransactionReportData' => $yearlyOilSaleTransactionReportData,
+                    'inventoryCurrentStockData' => $inventoryCurrentStockData,
                     'year' => $year,
+                    'yearNow' => $yearNow,
+                    'monthNow' => $monthNow,
                     'monthList' => $monthList,
-                    'branchId' => $branchId,
                     'unitConversion' => $unitConversion,
                     'convertToLitre' => $convertToLitre,
                 )); ?>

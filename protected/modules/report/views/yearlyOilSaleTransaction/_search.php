@@ -49,30 +49,25 @@
                 </td>
 
                 <td>
-                    <?php $productMasterCategory = ProductMasterCategory::model()->findByPk($masterCategoryId); ?>
+                    <?php $productMasterCategory = ProductMasterCategory::model()->findByPk(4); ?>
                     <?php echo CHtml::encode(CHtml::value($productMasterCategory, 'name')); ?>
                 </td>
 
                 <td>
-                    <div id="product_sub_master_category">
-                        <?php echo CHtml::dropDownList('SubMasterCategoryId', $subMasterCategoryId, CHtml::listData(ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => $masterCategoryId), array('order' => 'name ASC')), 'id', 'name'), array(
-                            'empty' => '-- All --',
-                            'order' => 'name',
-                            'onchange' => CHtml::ajax(array(
-                                'type' => 'GET',
-                                'url' => CController::createUrl('ajaxHtmlUpdateProductSubCategorySelect'),
-                                'update' => '#product_sub_category',
-                            )),
-                        )); ?>
-                    </div>
+                    <?php echo CHtml::dropDownList('SubMasterCategoryId', $subMasterCategoryId, CHtml::listData(ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => $productMasterCategory->id), array('order' => 'name ASC')), 'id', 'name'), array(
+                        'empty' => '-- All --',
+                        'order' => 'name',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubCategorySelect'),
+                            'update' => '#product_sub_category',
+                        )),
+                    )); ?>
                 </td>
 
                 <td>
                     <div id="product_sub_category">
-                        <?php echo CHtml::dropDownList('SubCategoryId', $subCategoryId, CHtml::listData(ProductSubCategory::model()->findAll(array(
-                            'condition' => 'product_sub_master_category_id IN (25, 26, 27)',
-                            'order' => 'name ASC'
-                        )), 'id', 'name'), array(
+                        <?php echo CHtml::dropDownList('SubCategoryId', $subCategoryId, CHtml::listData(ProductSubCategory::model()->findAll(), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'order' => 'name',
                         )); ?>
@@ -93,7 +88,6 @@
                 <td>ID</td>
                 <td>Code</td>
                 <td>Name</td>
-                <td>Branch</td>
                 <td>Tahun</td>
                 <td>Convert Liter</td>
             </tr>
@@ -104,12 +98,6 @@
                 <td><?php echo CHtml::textField('ProductId', $productId); ?></td>
                 <td><?php echo CHtml::textField('ProductCode', $productCode); ?></td>
                 <td><?php echo CHtml::textField('ProductName', $productName); ?></td>
-                <td>
-                    <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
-                        'empty'=>'-- All Branch --',
-                        'disabled' => Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : 'disabled',
-                    )); ?>
-                </td>
                 <td><?php echo CHtml::dropDownList('Year', $year, $yearList); ?></td>
                 <td>
                     <?php echo CHtml::dropDownList('ConvertToLitre', $convertToLitre, array(

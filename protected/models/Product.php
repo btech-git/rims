@@ -504,40 +504,40 @@ class Product extends CActiveRecord {
         ));
     }
 
-    public function searchByTireSaleReport($pageNumber, $year, $month) {
-
-        $criteria = new CDbCriteria;
-
-        $criteria->compare('t.id', $this->id);
-        $criteria->compare('t.code', $this->code, true);
-        $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
-        $criteria->compare('t.name', $this->name, true);
-        $criteria->compare('t.brand_id', $this->brand_id);
-        $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
-        $criteria->compare('t.sub_brand_series_id', $this->sub_brand_series_id);
-        $criteria->compare('t.product_master_category_id', 4);
-        $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
-        $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
-        $criteria->compare('t.unit_id', $this->unit_id);
-        $criteria->compare('t.status', 'Active');
-
-        $criteria->addCondition("EXISTS (
-            SELECT d.product_id
-            FROM " . InvoiceDetail::model()->tableName() . " d
-            INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
-            WHERE t.id = d.product_id AND h.user_id_cancelled IS NULL AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month
-        ) AND t.product_sub_category_id IN (442, 443, 444)");
-        $criteria->params[':year'] = $year;
-        $criteria->params[':month'] = $month;
-        
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-            'pagination' => array(
-                'pageSize' => 500,
-                'currentPage' => $pageNumber - 1,
-            ),
-        ));
-    }
+//    public function searchByTireSaleReport($pageNumber, $year, $month) {
+//
+//        $criteria = new CDbCriteria;
+//
+//        $criteria->compare('t.id', $this->id);
+//        $criteria->compare('t.code', $this->code, true);
+//        $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
+//        $criteria->compare('t.name', $this->name, true);
+//        $criteria->compare('t.brand_id', $this->brand_id);
+//        $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
+//        $criteria->compare('t.sub_brand_series_id', $this->sub_brand_series_id);
+//        $criteria->compare('t.product_master_category_id', 4);
+//        $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
+//        $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
+//        $criteria->compare('t.unit_id', $this->unit_id);
+//        $criteria->compare('t.status', 'Active');
+//
+//        $criteria->addCondition("EXISTS (
+//            SELECT d.product_id
+//            FROM " . InvoiceDetail::model()->tableName() . " d
+//            INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+//            WHERE t.id = d.product_id AND h.user_id_cancelled IS NULL AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month
+//        ) AND t.product_sub_category_id IN (442, 443, 444)");
+//        $criteria->params[':year'] = $year;
+//        $criteria->params[':month'] = $month;
+//        
+//        return new CActiveDataProvider($this, array(
+//            'criteria' => $criteria,
+//            'pagination' => array(
+//                'pageSize' => 500,
+//                'currentPage' => $pageNumber - 1,
+//            ),
+//        ));
+//    }
 
     public function searchByVehicleSystemCheck() {
 
@@ -1050,7 +1050,37 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM(d.total_price), 0) AS total_purchase 
             FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
-            WHERE d.product_id = :product_id AND substr(h.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+            WHERE d.product_id = :product_id AND substr(h.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND 
+                h.status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+            GROUP BY d.product_id
+            HAVING total_purchase > 0
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getTotalQuantityPurchase($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(d.quantity), 0) AS total_quantity
+            FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d
+            INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
+            WHERE d.product_id = :product_id AND substr(h.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND 
+                h.status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . "
             GROUP BY d.product_id
         ";
 

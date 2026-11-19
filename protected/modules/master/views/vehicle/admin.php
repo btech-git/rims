@@ -124,6 +124,7 @@ Yii::app()->clientScript->registerScript('search', "
                     'filter'=>CHtml::textField('Vehicle[color_id]', ''),					
                 ),				
                 'year',
+                'lastServiceTransaction',
                 array(
                     'name'=>'status_location', 
                     'value'=>'$data->status_location', 

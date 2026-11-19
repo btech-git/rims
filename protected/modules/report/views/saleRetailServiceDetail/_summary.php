@@ -55,11 +55,21 @@
                             <?php foreach ($saleRetailData as $saleRetailRow): ?>
                                 <?php $total = $saleRetailRow['total_price']; ?>
                                 <tr>
-                                    <td><?php echo CHtml::encode($saleRetailRow['invoice_number']); ?></td>
+                                    <td>
+                                        <?php echo CHtml::link($saleRetailRow['invoice_number'], array(
+                                            "/transaction/invoiceHeader/view", 
+                                            "id" => $saleRetailRow['invoice_id'],
+                                        ), array("target" => "_blank")); ?>
+                                    </td>
                                     <td>
                                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($saleRetailRow['invoice_date']))); ?>
                                     </td>
-                                    <td><?php echo CHtml::encode($saleRetailRow['work_order_number']); ?></td>
+                                    <td>
+                                        <?php echo CHtml::link($saleRetailRow['work_order_number'], array(
+                                            "/frontDesk/registrationTransaction/view", 
+                                            "id" => $saleRetailRow['registration_id'],
+                                        ), array("target" => "_blank")); ?>
+                                    </td>
                                     <td><?php echo CHtml::encode($saleRetailRow['customer']); ?></td>
                                     <td><?php echo CHtml::encode($saleRetailRow['insurance']); ?></td>
                                     <td><?php echo CHtml::encode($saleRetailRow['plate_number']); ?></td>

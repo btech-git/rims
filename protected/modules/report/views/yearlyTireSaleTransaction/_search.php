@@ -48,13 +48,13 @@
                 </td>
 
                 <td>
-                    <?php $productMasterCategory = ProductMasterCategory::model()->findByPk($masterCategoryId); ?>
+                    <?php $productMasterCategory = ProductMasterCategory::model()->findByPk(4); ?>
                     <?php echo CHtml::encode(CHtml::value($productMasterCategory, 'name')); ?>
                 </td>
 
                 <td>
                     <div id="product_sub_master_category">
-                        <?php echo CHtml::dropDownList('SubMasterCategoryId', $subMasterCategoryId, CHtml::listData(ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => $masterCategoryId), array('order' => 'name ASC')), 'id', 'name'), array(
+                        <?php echo CHtml::dropDownList('SubMasterCategoryId', $subMasterCategoryId, CHtml::listData(ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => 4), array('order' => 'name ASC')), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'order' => 'name',
                             'onchange' => CHtml::ajax(array(

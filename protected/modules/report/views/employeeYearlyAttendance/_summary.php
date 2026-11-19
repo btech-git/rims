@@ -41,10 +41,22 @@
                         )); ?>
 
                         <tr class="items1">
-                            <td style="text-align: left"><?php echo CHtml::encode($monthList[$month]); ?></td>
+                            <td>
+                                <?php echo CHtml::link($monthList[$month], Yii::app()->createUrl("report/employeeYearlyAttendance/attendanceDetail", array(
+                                    "EmployeeId" => $employee->id, 
+                                    "Year" => $year, 
+                                    "Month" => $month, 
+                                )), array('target' => '_blank')); ?>
+                            </td>
                             <?php foreach ($onleaveCategories as $onleaveCategory): ?>
                                 <?php $days = isset($employeeYearlyAttendanceData[$month][$onleaveCategory->id]['days']) ? $employeeYearlyAttendanceData[$month][$onleaveCategory->id]['days'] : '0'; ?>
-                                <td style="text-align: right"><?php echo CHtml::encode($days); ?></td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::link($days, Yii::app()->createUrl("report/employeeYearlyAttendance/attendanceDetail", array(
+                                        "EmployeeId" => $employee->id, 
+                                        "Year" => $year, 
+                                        "Month" => $month, 
+                                    )), array('target' => '_blank')); ?>
+                                </td>
                             <?php endforeach; ?>
                             <?php $lateDays = isset($employeeYearlyAttendanceData[$month][16]['late_days']) ? $employeeYearlyAttendanceData[$month][16]['late_days'] : '0'; ?>
                             <?php $workingDays = $daysOfMonth - $holidaysCount - $nationalHolidaysCount; ?>

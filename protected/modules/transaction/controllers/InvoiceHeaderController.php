@@ -54,7 +54,7 @@ class InvoiceHeaderController extends Controller {
             'registration_transaction_id' => $registrationId,
             'user_id_cancelled' => null,
         ));
-        $ownRiskAmount = (!empty($saleInvoiceInsuranceOwnRisk) && $saleInvoiceInsuranceOwnRisk->payment_remaining == '0.00') ? $saleInvoiceInsuranceOwnRisk->amount_invoice : '0.00';
+        $ownRiskAmount = !empty($saleInvoiceInsuranceOwnRisk) ? $saleInvoiceInsuranceOwnRisk->amount_invoice : '0.00';
         
         $invoice->header->reference_type = 2;
         $invoice->header->registration_transaction_id = $registrationId;

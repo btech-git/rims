@@ -53,7 +53,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Merk</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('CarMake', $carMake, CHtml::listData(VehicleCarMake::model()->findAll(), 'id', 'name'), array(
+                                        <?php echo CHtml::dropDownList('CarMake', $carMake, CHtml::listData(VehicleCarMake::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                                             'empty' => '-- All --',
                                             'onchange' => CHtml::ajax(array(
                                                 'type' => 'GET',
@@ -73,7 +73,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Model</span>
                                     </div>
                                     <div class="small-8 columns" id="car_model">
-                                        <?php echo CHtml::dropDownList('CarModel', $carModel, CHtml::listData(VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carMake), array('order' => 'name')), 'id', 'name'), array(
+                                        <?php echo CHtml::dropDownList('CarModel', $carModel, CHtml::listData(VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carMake), array('order' => 't.name ASC')), 'id', 'name'), array(
                                             'empty' => '-- All --',
                                             'onchange' => CHtml::ajax(array(
                                                 'type' => 'GET',
