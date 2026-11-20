@@ -112,15 +112,20 @@ class PayableSupplierController extends Controller {
         }
         
         $invoiceHeaders = TransactionReceiveItem::model()->with('purchaseOrder')->findAll(array(
-            'condition' => "t.invoice_date BETWEEN :start_date AND :end_date AND t.supplier_id = :supplier_id AND t.user_id_cancelled IS NULL AND 
-                t.invoice_grand_total - (
-                    SELECT COALESCE(SUM(d.amount), 0)
-                    FROM " . PayOutDetail::model()->tableName() . " d
-                    INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
-                    WHERE t.id = d.receive_item_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
-                ) > 100" . $branchConditionSql,
+            'condition' => "t.invoice_date BETWEEN :start_date AND :end_date AND t.supplier_id = :supplier_id AND t.user_id_cancelled IS NULL" . $branchConditionSql,
             'params' => $params,
         ));
+        
+//        $invoiceHeaders = TransactionReceiveItem::model()->with('purchaseOrder')->findAll(array(
+//            'condition' => "t.invoice_date BETWEEN :start_date AND :end_date AND t.supplier_id = :supplier_id AND t.user_id_cancelled IS NULL AND 
+//                t.invoice_grand_total - (
+//                    SELECT COALESCE(SUM(d.amount), 0)
+//                    FROM " . PayOutDetail::model()->tableName() . " d
+//                    INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+//                    WHERE t.id = d.receive_item_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+//                ) > 100" . $branchConditionSql,
+//            'params' => $params,
+//        ));
         
 //        if (isset($_GET['SaveExcelDetail'])) {
 //            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $coa);
