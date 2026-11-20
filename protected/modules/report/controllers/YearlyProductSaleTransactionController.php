@@ -10,7 +10,7 @@ class YearlyProductSaleTransactionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('yearlyProductSaleTransactionReport'))) {
+            if (!(Yii::app()->user->checkAccess('partsComponentSaleTransactionReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }
