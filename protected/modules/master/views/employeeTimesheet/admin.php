@@ -29,12 +29,12 @@ $('.search-form form').submit(function(){
 <div id="maincontent">
     <div class="clearfix page-action">
         <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/employeeTimesheet/create'; ?>">
-            <span class="fa fa-plus"></span>New Absensi
+            <span class="fa fa-plus"></span>New
         </a>
         <a class="button cbutton primary right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl . '/master/employeeTimesheet/import'; ?>">
             <span class="fa fa-upload"></span>Import Absensi
         </a>
-        <h1>Manage Employee Absensi</h1>
+        <h1>Manage Absensi Karyawan</h1>
 
         <p>
             You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>

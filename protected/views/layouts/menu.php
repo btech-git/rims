@@ -739,13 +739,13 @@
 //                        'visible' => Yii::app()->user->checkAccess('employeeAbsencyReport')
                     ),
                     array(
-                        'label' => 'Approval Cuti Karyawan', 
+                        'label' => 'Pengajuan Cuti Karyawan', 
                         'url' => array('/master/employeeDayoff/admin'), 
                         'visible' => Yii::app()->user->checkAccess('employeeLeaveApplicationEdit') || Yii::app()->user->checkAccess('employeeLeaveApplicationView') || 
                             Yii::app()->user->checkAccess('employeeLeaveApplicationApproval')
                     ),
                     array(
-                        'label' => 'Import Absensi Karyawan', 
+                        'label' => 'Absensi Karyawan', 
                         'url' => array('/master/employeeTimesheet/admin'), 
                         'visible' => Yii::app()->user->checkAccess('employeeTimesheetCreate') || Yii::app()->user->checkAccess('employeeTimesheetEdit') || 
                             Yii::app()->user->checkAccess('employeeTimesheetView')
@@ -755,12 +755,12 @@
                         'style' => 'text-decoration: underline'
                     )),
                     array(
-                        'label' => 'Jadwal Karyawan', 
+                        'label' => 'Jadwal Karyawan Mingguan', 
                         'url' => array('/master/employeeSchedule/index'), 
                         'visible' => Yii::app()->user->checkAccess('employeeScheduleReport')
                     ),
                     array(
-                        'label' => 'Rekap Absensi Karyawan', 
+                        'label' => 'Rekap Daftar Hadir Karyawan', 
                         'url' => array('/report/employeeAttendance/summary'), 
                         'visible' => Yii::app()->user->checkAccess('employeeAbsencyReport')
                     ),

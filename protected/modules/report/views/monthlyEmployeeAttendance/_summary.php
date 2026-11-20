@@ -15,7 +15,7 @@
 <div style="font-weight: bold; text-align: center">
     <?php $employee = Employee::model()->findByPk($employeeId); ?>
     <div style="font-size: larger">Raperind Motor</div>
-    <div style="font-size: larger">Kehadiran Hari Kerja <?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></div>
+    <div style="font-size: larger">Kehadiran Hari Kerja Karyawan <?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></div>
     <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo $year; ?></div>
 </div>
 

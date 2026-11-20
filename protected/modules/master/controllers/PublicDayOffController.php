@@ -136,9 +136,12 @@ class PublicDayOffController extends Controller {
         if (isset($_GET['PublicDayOff'])) {
             $model->attributes = $_GET['PublicDayOff'];
         }
+        
+        $dataprovider = $model->search();
 
         $this->render('admin', array(
             'model' => $model,
+            'dataprovider' => $dataprovider,
         ));
     }
 

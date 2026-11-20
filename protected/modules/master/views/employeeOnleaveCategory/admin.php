@@ -33,7 +33,7 @@ $('.search-form form').submit(function(){
                 <span class="fa fa-plus"></span>New Category
             </a>
         <?php endif; ?>
-        <h1>Manage Kategori Cuti Karyawan</h1>
+        <h3>Manage Kategori Cuti Karyawan</h3>
 
         <p>
         You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>&lt;&gt;</b>
@@ -57,22 +57,30 @@ $('.search-form form').submit(function(){
                 'header' => '',
             ),
             'columns'=>array(
-                'id',
+                array(
+                    'header'=>'ID',
+                    'name'=>'id', 
+                    'value'=>'$data->id',
+                    'htmlOptions' => array('style' => 'width:50px; text-align:center'),
+                ),
                 'name',
                 array(
                     'header'=>'Jumlah Hari',
                     'name'=>'number_of_days', 
-                    'value'=>'$data->number_of_days'
+                    'value'=>'$data->number_of_days',
+                    'htmlOptions' => array('style' => 'width:100px; text-align:center'),
                 ),
                 array(
                     'header'=>'Potong Cuti',
                     'name'=>'is_using_quota', 
-                    'value'=>'$data->is_using_quota == 1 ? "YES" : "NO"'
+                    'value'=>'$data->is_using_quota == 1 ? "YES" : "NO"',
+                    'htmlOptions' => array('style' => 'width:150px;'),
                 ),
                 array(
                     'header'=>'Status',
                     'name'=>'is_inactive', 
-                    'value'=>'$data->is_inactive == 1 ? "Inactive" : "Active"'
+                    'value'=>'$data->is_inactive == 1 ? "Inactive" : "Active"',
+                    'htmlOptions' => array('style' => 'width:150px;'),
                 ),
                 array(
                     'class'=>'CButtonColumn',

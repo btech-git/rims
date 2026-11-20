@@ -52,7 +52,7 @@ $('.search-form form').submit(function(){
             <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'public-day-off-grid',
-                    'dataProvider' => $model->search(),
+                    'dataProvider' => $dataprovider,
                     'filter' => $model,
                     // 'summaryText'=>'',
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
@@ -61,9 +61,17 @@ $('.search-form form').submit(function(){
                         'header' => '',
                     ),
                     'columns' => array(
-                        'id',
-                        'date',
-                        'type',
+                        array(
+                            'header'=>'Tanggal',
+                            'name'=>'date', 
+                            'value'=> 'date("d-M-Y", strtotime($data->date))',
+                            'htmlOptions' => array('style' => 'width:200px;'),
+                        ),
+                        array(
+                            'name'=>'type', 
+                            'value'=> '$data->type',
+                            'htmlOptions' => array('style' => 'width:150px;'),
+                        ),
                         'description',
                         array(
                             'class' => 'CButtonColumn',
