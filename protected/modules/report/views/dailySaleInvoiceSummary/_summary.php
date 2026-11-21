@@ -120,8 +120,9 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="14">TOTAL</td>
+                <td colspan="15">TOTAL</td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSum)); ?></td>
+                <td colspan="12">&nbsp;</td>
             </tr>
         </tfoot>
     </table>
