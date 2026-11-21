@@ -125,14 +125,14 @@
                 </tr>
                 
                 <?php $totalPriceSum += $totalPrice; ?>
-                <?php $totalPartsAmount = $partsAmount; ?>
-                <?php $totalServiceAmount = $serviceAmount; ?>
-                <?php $totalPriceBeforeTax = $priceBeforeTax; ?>
+                <?php $totalPartsAmount += $partsAmount; ?>
+                <?php $totalServiceAmount += $serviceAmount; ?>
+                <?php $totalPriceBeforeTax += $priceBeforeTax; ?>
             <?php endforeach; ?>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="10">TOTAL</td>
+                <td colspan="10" style="text-align:right">TOTAL</td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPartsAmount)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalServiceAmount)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPriceBeforeTax)); ?></td>
