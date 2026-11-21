@@ -47,7 +47,7 @@
             
             <?php foreach ($saleProjectReport as $i => $dataItem): ?>
                 <?php $quantity = $dataItem['quantity']; ?>
-                <?php $unitPrice = $dataItem['unit_price']; ?>
+                <?php $unitPrice = $quantity * $dataItem['unit_price']; ?>
                 <?php $discountAmount = $dataItem['discount']; ?>
                 <?php $totalPrice = $dataItem['total_price']; ?>
             
