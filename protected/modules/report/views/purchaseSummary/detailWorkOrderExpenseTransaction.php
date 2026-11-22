@@ -16,6 +16,14 @@ Yii::app()->clientScript->registerCss('_report', '
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
+<div class="clear"></div>
+
+<?php echo CHtml::beginForm('', 'get'); ?>
+    <div class="row buttons">
+        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
+    </div>
+<?php echo CHtml::endForm(); ?>
+
 <br />
 
 <div class="tab reportTab">
@@ -34,12 +42,20 @@ Yii::app()->clientScript->registerCss('_report', '
                     <th class="width1-5">Note</th>
                     <th class="width1-6">Status</th>
                     <th class="width1-7">Total</th>
+                    <th class="width1-10">Pembayaran</th>
+                    <th class="width1-11">Sisa</th>
                 </tr>
             </thead>
             <tbody>
                 <?php $grandTotal = '0.00'; ?>
+                <?php $totalPayment = '0.00'; ?>
+                <?php $totalRemaining = '0.00'; ?>
+                
                 <?php foreach ($workOrderExpenses as $i => $workOrderExpense): ?>
                     <?php $totalPrice = CHtml::value($workOrderExpense, 'grand_total'); ?>
+                    <?php $paymentAmount = CHtml::value($workOrderExpense, 'total_payment'); ?>
+                    <?php $paymentRemaining = CHtml::value($workOrderExpense, 'payment_remaining'); ?>
+                
                     <tr class="items1">
                         <td class="width1-1"><?php echo ++$i; ?></td>
                         <td class="width1-2">
@@ -55,8 +71,17 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td class="width1-7 " style="text-align: right">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPrice)); ?>
                         </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentAmount)); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentRemaining)); ?>
+                        </td>
                     </tr>
+                    
                     <?php $grandTotal += $totalPrice; ?>
+                    <?php $totalPayment += $paymentAmount; ?>
+                    <?php $totalRemaining += $paymentRemaining; ?>
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
@@ -64,6 +89,12 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td colspan="6" style="text-align: right; font-weight: bold">TOTAL</td>
                     <td style="text-align: right; font-weight: bold">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $grandTotal)); ?>
+                    </td>
+                    <td style="text-align: right; font-weight: bold">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPayment)); ?>
+                    </td>
+                    <td style="text-align: right; font-weight: bold">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalRemaining)); ?>
                     </td>
                 </tr>
             </tfoot>

@@ -26,7 +26,7 @@ Yii::app()->clientScript->registerCss('_report', '
     
     <?php echo CHtml::beginForm('', 'get'); ?>
         <div class="row buttons">
-            <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
+            <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
         </div>
     <?php echo CHtml::endForm(); ?>
 

@@ -53,10 +53,18 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?>
                     </td>
                     <td style="text-align: center;">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseQuantity)); ?>
+                        <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $purchaseQuantity), Yii::app()->createUrl("report/purchasePerProduct/transactionInfo", array(
+                            "productId" => $header->id,
+                            "startDate" => $startDate,
+                            "endDate" => $endDate,
+                        )), array('target' => '_blank'));?>
                     </td>
                     <td style="text-align: right;">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchasePrice)); ?>
+                        <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $purchasePrice), Yii::app()->createUrl("report/purchasePerProduct/transactionInfo", array(
+                            "productId" => $header->id,
+                            "startDate" => $startDate,
+                            "endDate" => $endDate,
+                        )), array('target' => '_blank'));?>
                     </td>
                 </tr>
                 

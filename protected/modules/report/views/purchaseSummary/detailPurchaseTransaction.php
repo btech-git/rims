@@ -21,10 +21,18 @@ Yii::app()->clientScript->registerCss('_report', '
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
+<div class="clear"></div>
+
+<?php echo CHtml::beginForm('', 'get'); ?>
+    <div class="row buttons">
+        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
+    </div>
+<?php echo CHtml::endForm(); ?>
+
 <br />
 
 <div class="tab reportTab">
-    <div class="tabHead"><span style="float: right"><?php //echo ReportHelper::summaryText($dataProvider); ?></span></div>
+    <div class="tabHead"><span style="float: right"><?php //echo ReportHelper::summaryText($purchaseOrders); ?></span></div>
     
     <br /><br />
     
@@ -38,11 +46,11 @@ Yii::app()->clientScript->registerCss('_report', '
                     <th class="width1-4">Penerimaan #</th>
                     <th class="width1-5">Tanggal</th>
                     <th class="width1-6">Type</th>
-                    <th class="width1-7">Payment</th>
-                    <th class="width1-8">Status</th>
+                    <th class="width1-7">Status Hutang</th>
+                    <th class="width1-8">Status Invoice</th>
                     <th class="width1-9">Total</th>
-                    <th class="width1-10">Payment</th>
-                    <th class="width1-11">Remaining</th>
+                    <th class="width1-10">Pembayaran</th>
+                    <th class="width1-11">Sisa</th>
                 </tr>
             </thead>
             <tbody>

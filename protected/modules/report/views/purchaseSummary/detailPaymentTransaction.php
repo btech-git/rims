@@ -16,6 +16,14 @@ Yii::app()->clientScript->registerCss('_report', '
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
+<div class="clear"></div>
+
+<?php echo CHtml::beginForm('', 'get'); ?>
+    <div class="row buttons">
+        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
+    </div>
+<?php echo CHtml::endForm(); ?>
+
 <br />
 
 <div class="tab reportTab">
