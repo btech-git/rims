@@ -22,8 +22,8 @@ class PurchasePerSupplierSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.name');
-        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
+//        $this->dataProvider->sort->attributes = array('t.name');
+        $this->dataProvider->criteria->order = 't.name'; //$this->dataProvider->sort->orderBy;
     }
 
     public function setupFilter($startDate, $endDate, $branchId) {
