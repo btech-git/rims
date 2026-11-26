@@ -110,6 +110,11 @@ $this->breadcrumbs = array(
                                 )); ?>
                             <?php endif; ?>
 
+                        <?php $customerRegistration = RegistrationTransaction::model()->find(array(
+                            'condition' => 't.id = :registration_id AND t.customer_id IN (60849, 60926, 63482)',
+                            'params' => array(':registration_id' => $model->id),
+                        )); ?>
+                        <?php if (empty($customerRegistration)): ?>
                             <?php if (empty($invoices) && !($model->status == 'Approved' || $model->status == 'Finished')): ?>
                                 <?php if (!empty($model->registrationServices) && (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0)): ?>
                                     <?php echo CHtml::link('<span class="fa fa-plus"></span> Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
@@ -130,6 +135,7 @@ $this->breadcrumbs = array(
                                         'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                                     )); ?>
                                 <?php endif; ?>
+                            <?php endif; ?>
                             <?php endif; ?>
 
                             <?php if (empty($invoices) && !empty($model->insurance_company_id)): ?>
