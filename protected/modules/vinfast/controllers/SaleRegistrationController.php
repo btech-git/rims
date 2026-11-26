@@ -335,7 +335,37 @@ class SaleRegistrationController extends Controller {
             'branches' => $branches,
         ));
     }
+    
+    public function actionAddVehicleChecklist($id) {
+        $registrationTransaction = $this->loadModel($id);
+        $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+        $warrantyChecklistItems = WarrantyChecklistItem::model()->findAllByAttributes(array('status' => 'Approved'));
+        $isChecked = (isset($_GET['IsChecked'])) ? $_GET['IsChecked'] : '';
+        
+        foreach ($warrantyChecklistItems as $warrantyChecklistItem) {        
+            $registrationWarrantyChecklist = new RegistrationWarrantyChecklist();
+            $registrationWarrantyChecklist->warranty_checklist_item_id = $warrantyChecklistItem->id;
+            $registrationWarrantyChecklist->registration_transaction_id = $id;
+        }
 
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('view', 'id' => $registrationTransaction->id));
+        }
+
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->redirect(array('view', 'id' => $registrationTransaction->id));
+        }
+
+        $this->render('addVehicleChecklist', array(
+            'registrationTransaction' => $registrationTransaction,
+            'vehicle' => $vehicle,
+            'customer' => $customer,
+            'warrantyChecklistItems' => $warrantyChecklistItems,
+            'isChecked' => $isChecked,
+        ));
+    }
+    
     public function actionUpdateMileage($id) {
         $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
         $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
