@@ -21,7 +21,7 @@ $this->breadcrumbs = array(
                         <?php echo CHtml::link('<span class="fa fa-list"></span> Manage', array("admin"), array(
                             'class' => 'button cbutton left', 
                             'style' => 'margin-right:10px', 
-                            'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit") || Yii::app()->user->checkAccess("generalRepairView")
+//                            'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit") || Yii::app()->user->checkAccess("generalRepairView")
                         )); ?>
 
                         <?php if (!empty($model->work_order_number) && $model->total_service > 0 && $model->status !== 'Finished'): ?>
@@ -29,7 +29,7 @@ $this->breadcrumbs = array(
                                 'class'=>'button info right', 
                                 'style' => 'margin-right:10px', 
                                 'target' =>'_blank',
-                                'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+//                                'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                             )); ?>
                         <?php endif; ?>
 
@@ -38,7 +38,7 @@ $this->breadcrumbs = array(
                                 'class'=>'button info right', 
                                 'style' => 'margin-right:10px', 
                                 'target' =>'_blank',
-                                'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+//                                'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                             )); ?>
                         <?php endif; ?>
 
@@ -47,7 +47,7 @@ $this->breadcrumbs = array(
                                 <?php echo CHtml::link('<span class="fa fa-edit"></span> Edit', array("update", "id" => $model->id), array(
                                     'class' => 'button warning left',
                                     'style' => 'margin-right:10px', 
-                                    'visible' => Yii::app()->user->checkAccess("generalRepairEdit")
+//                                    'visible' => Yii::app()->user->checkAccess("generalRepairEdit")
                                 )); ?>
                             <?php endif; ?>
 
@@ -57,7 +57,7 @@ $this->breadcrumbs = array(
                                     'name' => 'Detail',
                                     'class' => 'button cbutton left',
                                     'style' => 'margin-right:10px',
-                                    'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"),
+//                                    'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"),
                                     'onclick' => '$.ajax({
                                         type: "POST",
                                         //dataType: "JSON",
@@ -77,37 +77,37 @@ $this->breadcrumbs = array(
                                 <?php echo CHtml::link('<span class="fa fa-check"></span> Generate WO', array("generateWorkOrder", "id" => $model->id), array(
                                     'class' => 'button success left', 
                                     'style' => 'margin-right:10px',
-                                    'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+//                                    'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                                 )); ?>
                             <?php endif; ?>
 
-                            <?php if (empty($invoices) && !($model->status == 'Approved' || $model->status == 'Finished')): ?>
+                            <?php /*if (empty($invoices) && !($model->status == 'Approved' || $model->status == 'Finished')): ?>
                                 <?php if (!empty($model->registrationServices) && (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0)): ?>
                                     <?php echo CHtml::link('<span class="fa fa-plus"></span> Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                         'class' => 'button success left', 
                                         'style' => 'margin-right:10px',
-                                        'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+//                                        'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                                     )); ?>
                                 <?php elseif (!empty($model->registrationServices) && empty($model->registrationProducts)): ?>
                                     <?php echo CHtml::link('<span class="fa fa-plus"></span> Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                         'class' => 'button success left', 
                                         'style' => 'margin-right:10px',
-                                        'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+//                                        'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                                     )); ?>
                                 <?php elseif (empty($model->registrationServices) && !empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0): ?>
                                     <?php echo CHtml::link('<span class="fa fa-plus"></span> Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                         'class' => 'button success left', 
                                         'style' => 'margin-right:10px',
-                                        'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+//                                        'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                                     )); ?>
                                 <?php endif; ?>
-                            <?php endif; ?>
+                            <?php endif;*/ ?>
 
                             <?php if (empty($invoices) && !empty($model->insurance_company_id)): ?>
                                 <?php echo CHtml::link('<span class="fa fa-plus"></span> Generate Invoice OR', array("/accounting/saleInvoiceInsuranceOwnRisk/create", "registrationId" => $model->id), array(
                                     'class' => 'button success left', 
                                     'style' => 'margin-right:10px',
-                                    'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+//                                    'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                                 )); ?>
                             <?php endif; ?>
                         <?php endif; ?>
@@ -116,7 +116,7 @@ $this->breadcrumbs = array(
                             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("cancel", "id" => $model->id), array(
                                 'class' => 'button alert right', 
                                 'style' => 'margin-right:10px',
-                                'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"),
+//                                'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"),
                             )); ?> 
                         <?php endif; ?>
 
@@ -125,7 +125,7 @@ $this->breadcrumbs = array(
                             <?php echo CHtml::link($downpaymentText, array("addDownpayment", "id" => $model->id), array(
                                 'class' => 'button success left', 
                                 'style' => 'margin-left:10px', 
-                                'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+//                                'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                             )); ?>
                         <?php endif; ?>
                     </div>
@@ -142,44 +142,50 @@ $this->breadcrumbs = array(
                             <?php echo CHtml::link('<span class="fa fa-plus"></span> KM Kendaraan', array("updateMileage", "id" => $model->id), array(
                                 'class' => 'button success left', 
                                 'style' => 'margin-right:10px',
-                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+//                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                             )); ?>
 
                             <?php echo CHtml::link('<span class="fa fa-plus"></span> Problem', array("updateProblem", "id" => $model->id), array(
                                 'class' => 'button success left', 
                                 'style' => 'margin-right:10px',
-                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+//                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                             )); ?>
                         
                             <?php echo CHtml::link('<span class="fa fa-plus"></span> SPK Customer', array("updateCustomerWorkOrder", "id" => $model->id), array(
                                 'class' => 'button success left', 
                                 'style' => 'margin-right:10px',
-                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+//                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::link('WO Rework', array("reworkTransaction", "id" => $model->id), array(
                                 'class' => 'button warning right', 
                                 'style' => 'margin-right:10px',
-                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+//                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                             )); ?>
                         <?php endif; ?>
 
                         <?php echo CHtml::link('<span class="fa fa-plus"></span> Claim Warranty', array("updateWarrantyClaim", "id" => $model->id), array(
                             'class' => 'button success left', 
                             'style' => 'margin-right:10px',
-                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+//                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                         
                         <?php echo CHtml::link('<span class="fa fa-plus"></span> V-TAG', array("updateTechnicalNumber", "id" => $model->id), array(
                             'class' => 'button success left', 
                             'style' => 'margin-right:10px',
-                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+//                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+                        )); ?>
+                        
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span> Checklist Kendaraan', array("addVehicleChecklist", "id" => $model->id), array(
+                            'class' => 'button success left', 
+                            'style' => 'margin-right:10px',
+//                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                         
                         <?php echo CHtml::link('<span class="fa fa-edit"></span> Posisi Mobil + Service', array("updateVehicleServicePosition", "id" => $model->id), array(
                             'class' => 'button warning left', 
                             'style' => 'margin-right:10px',
-                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+//                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     </div>
                 <?php endif; ?>
