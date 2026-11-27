@@ -92,7 +92,7 @@ class InvoiceHeaderController extends Controller {
             $this->redirect(array('admin'));
         }
         
-        if ($invoice->header->customer_id != 60849 && $invoice->header->customer_id != 60926 && $invoice->header->customer_id != 63482) {
+//        if ($invoice->header->customer_id != 60849 && $invoice->header->customer_id != 60926 && $invoice->header->customer_id != 63482) {
         if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
 
             $this->loadState($invoice);
@@ -105,7 +105,7 @@ class InvoiceHeaderController extends Controller {
                 $this->redirect(array('view', 'id' => $invoice->header->id));
             }
         }
-        }
+//        }
 
         $this->render('create', array(
             'invoice' => $invoice,
